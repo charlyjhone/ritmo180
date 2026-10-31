@@ -1,0 +1,66 @@
+[
+  {
+    "externalId": "exemplo-mt-01",
+    "source": "authored",
+    "area": "MT",
+    "discipline": "Matemática",
+    "topic": "Porcentagem",
+    "contextHtml": "<p>Uma loja vende um tênis por R$ 200,00 e anuncia 15% de desconto para pagamento à vista.</p>",
+    "stemHtml": "<p>Qual é o valor pago à vista?</p>",
+    "alternatives": [
+      { "letter": "A", "html": "R$ 30,00", "trap": "Esse é o valor do desconto, não o preço final." },
+      { "letter": "B", "html": "R$ 170,00" },
+      { "letter": "C", "html": "R$ 185,00", "trap": "Subtraiu 15 reais, tratando a porcentagem como valor." },
+      { "letter": "D", "html": "R$ 215,00", "trap": "Somou 15 em vez de calcular o desconto." },
+      { "letter": "E", "html": "R$ 230,00", "trap": "Somou o desconto ao preço." }
+    ],
+    "answer": "B",
+    "solutionHtml": "<p>15% de 200 = 30. Preço à vista: 200 − 30 = R$ 170,00.</p>",
+    "hint": "Descubra quanto vale 10% e depois some a metade disso.",
+    "prerequisites": ["proporcao"],
+    "rightsCleared": true,
+    "rightsNote": "Exemplo autoral."
+  },
+  {
+    "externalId": "exemplo-ch-01",
+    "source": "authored",
+    "area": "CH",
+    "discipline": "Geografia",
+    "topic": "Urbanização",
+    "contextHtml": "<p>Em várias capitais brasileiras, o preço da moradia nas áreas centrais levou famílias de baixa renda a se mudar para bairros distantes, com menos serviços públicos e longos deslocamentos diários.</p>",
+    "stemHtml": "<p>O processo descrito é conhecido como</p>",
+    "alternatives": [
+      { "letter": "A", "html": "conurbação.", "trap": "Conurbação é o encontro de cidades vizinhas." },
+      { "letter": "B", "html": "metropolização.", "trap": "Metropolização é o crescimento de uma metrópole e sua influência." },
+      { "letter": "C", "html": "segregação socioespacial." },
+      { "letter": "D", "html": "êxodo rural.", "trap": "O texto trata de mudança dentro da cidade, não do campo para a cidade." },
+      { "letter": "E", "html": "desconcentração industrial.", "trap": "O texto fala de moradia, não de indústrias." }
+    ],
+    "answer": "C",
+    "solutionHtml": "<p>A renda define quem pode morar em cada lugar e separa os grupos sociais no espaço urbano: é a segregação socioespacial.</p>",
+    "prerequisites": ["interpretacao_texto"],
+    "rightsCleared": true,
+    "rightsNote": "Exemplo autoral."
+  },
+  {
+    "externalId": "exemplo-lc-01",
+    "source": "authored",
+    "area": "LC",
+    "discipline": "Português",
+    "topic": "Interpretação de texto",
+    "contextHtml": "<p>Aviso em um condomínio: “Prezados moradores, solicitamos a gentileza de não deixar objetos nos corredores, a fim de facilitar a circulação em caso de emergência.”</p>",
+    "stemHtml": "<p>A expressão “a fim de” introduz, no aviso, uma ideia de</p>",
+    "alternatives": [
+      { "letter": "A", "html": "finalidade." },
+      { "letter": "B", "html": "condição.", "trap": "Condição seria “caso”, “se”." },
+      { "letter": "C", "html": "oposição.", "trap": "Oposição seria “mas”, “porém”." },
+      { "letter": "D", "html": "consequência.", "trap": "Consequência é resultado; aqui se indica o objetivo." },
+      { "letter": "E", "html": "comparação.", "trap": "Nada está sendo comparado no aviso." }
+    ],
+    "answer": "A",
+    "solutionHtml": "<p>“A fim de” equivale a “para”: indica o objetivo do pedido.</p>",
+    "prerequisites": ["interpretacao_texto"],
+    "rightsCleared": true,
+    "rightsNote": "Exemplo autoral."
+  }
+]

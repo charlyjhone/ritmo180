@@ -16,7 +16,7 @@
     "check": "npm run typecheck && npm test",
     "db:seed": "node apps/api/src/cli/seed.ts",
     "db:calibrate": "node apps/api/src/cli/calibrate.ts",
-    "ingest": "node packages/ingest/src/cli.ts"
+    "ingest": "node apps/api/src/cli/ingest.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

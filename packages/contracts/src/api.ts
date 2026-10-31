@@ -12,6 +12,8 @@ export interface Me {
   school: { id: string; name: string; brandColor: string; isDemo: boolean; released: boolean } | null;
   grade: string | null;
   className: string | null;
+  /** Motivo pelo qual o aluno ainda não pode usar a plataforma. */
+  blocked: "school_not_released" | "consent_required" | null;
 }
 
 export const PhaseTimesSchema = z.object({
@@ -254,11 +256,13 @@ export interface OnboardingState {
   blockers: string[];
 }
 
-export const UpdateOnboarding = z.object({
+export const UpdateOnboardingInput = z.object({
   school: z.object({ name: z.string().min(3).max(120), slug: z.string().regex(/^[a-z0-9-]{2,40}$/), brandColor: z.string().regex(/^#[0-9a-fA-F]{6}$/), grades: z.string().min(2).max(60) }).optional(),
   terms: z.object({ dpaSigned: z.boolean(), dpoContact: z.string().max(160) }).optional(),
   diagnostic: z.object({ date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable(), scope: z.string().max(60) }).optional(),
 });
+
+export type UpdateOnboarding = z.infer<typeof UpdateOnboardingInput>;
 
 export const ImportRoster = z.object({ filename: z.string().max(160), csv: z.string().min(1).max(5_000_000) });
 
@@ -269,7 +273,14 @@ export interface RosterPreview {
   sample: { name: string; className: string; guardian: string; status: string }[];
 }
 
-export const Accommodation = z.object({ studentId: z.string().uuid(), kind: z.string().min(2).max(80), extraMinutes: z.number().int().min(0).max(120), resources: z.string().max(160) });
+export interface RosterCommitResult {
+  created: number;
+  skipped: number;
+  /** CSV com as senhas provisórias. Mostrado uma única vez, nunca guardado em texto. */
+  credentialsCsv: string;
+}
+
+export const AccommodationInput = z.object({ studentId: z.string().uuid(), kind: z.string().min(2).max(80), extraMinutes: z.number().int().min(0).max(120), resources: z.string().max(160) });
 
 export const HintRequest = z.object({ itemId: z.string().uuid(), stage: z.enum(["command", "path"]), question: z.string().max(400).optional() });
 export interface HintResponse {

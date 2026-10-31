@@ -153,6 +153,15 @@ CREATE TABLE items (
 );
 CREATE INDEX items_serving ON items (status, area, discipline, topic);
 
+-- Agregados entre escolas, sem dado pessoal: alimentam o tempo-alvo empírico
+CREATE TABLE item_stats (
+  item_id uuid PRIMARY KEY REFERENCES items(id) ON DELETE CASCADE,
+  median_correct_ms double precision,
+  correct_samples int NOT NULL DEFAULT 0,
+  responses int NOT NULL DEFAULT 0,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
 CREATE TABLE topics (
   area text NOT NULL,
   discipline text NOT NULL,
@@ -358,7 +367,7 @@ GRANT SELECT, INSERT, UPDATE ON schools TO app_user;
 -- As tentativas são imutáveis: correção se faz com nova linha, nunca reescrevendo o passado
 REVOKE UPDATE, DELETE ON attempts FROM app_user;
 
-GRANT SELECT ON items, topics, prerequisites, item_pipeline, calibration_runs, reading_texts, ingest_runs TO app_user;
+GRANT SELECT ON items, item_stats, topics, prerequisites, item_pipeline, calibration_runs, reading_texts, ingest_runs TO app_user;
 GRANT SELECT, UPDATE ON item_flags TO app_user;
 GRANT INSERT ON item_flags TO app_user;
 GRANT SELECT, INSERT, UPDATE, DELETE ON sessions TO app_user;
