@@ -39,3 +39,35 @@ PDFs de prova não entram direto. Eles precisam primeiro ser convertidos para um
 - **Parâmetros TRI:** com `irt_a`, `irt_b` e `irt_c`, a questão já vale para a nota. Sem eles, ela entra em calibração e serve só para treino até juntar 200 respostas.
 - **Erros comentados:** `erro_a` a `erro_e` alimentam o feedback de pegadinha e o painel do professor.
 - **Imagens:** a planilha aceita texto. Questões com figura devem vir em JSON, com a imagem em SVG ou `data:`.
+
+## Importar livros em PDF
+
+O PDF vira um JSON canônico em duas etapas. Elas precisam de Python com `pypdfium2`, `pypdf` e `pillow`, além do banco de metadados `banco_ENEM_2009_2025_v2.json` e dos mapas de distratores.
+
+```bash
+python3 scripts/extrair_figuras_livros.py "pasta dos PDFs" caminho/banco_ENEM_2009_2025_v2.json data/importacao/livros
+```
+
+```bash
+python3 scripts/montar_questoes_livros.py "pasta do banco" data/importacao/livros data/importacao/questoes-livros.json data/importacao/revisar-livros.json
+```
+
+```bash
+npm run ingest -- data/importacao/questoes-livros.json --relatorio data/importacao/recusadas.json
+```
+
+- A primeira etapa recorta as figuras e localiza cada questão no PDF. A segunda repara o texto, posiciona as figuras e aplica o gabarito oficial.
+- O que não pode ser conferido automaticamente vai para `revisar-livros.json`, com o motivo, e não entra no banco.
+- Tudo entra com `rightsCleared: false`, portanto em revisão e invisível para os alunos.
+
+## Publicar depois de confirmar os direitos
+
+```bash
+npm run content:liberar -- "Nome de quem confirmou"
+```
+
+O comando publica as questões oficiais em revisão e registra o nome em cada uma. Use-o só depois de confirmar que o material pode ser usado.
+
+## Banco local
+
+O banco embutido em `data/pg` aceita um processo por vez. Importar ou publicar com o servidor ligado pode corrompê-lo, por isso esses comandos recusam rodar enquanto `data/pg.lock` aponta para um processo ativo. Desligue o servidor antes.

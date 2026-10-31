@@ -25,13 +25,15 @@ export interface CatalogItem {
   topicWeight: number;
 }
 
-const SELECT = `
-  SELECT i.*, st.median_correct_ms, coalesce(st.correct_samples, 0) AS correct_samples, coalesce(t.weight, 0) AS weight
+const FROM = `
   FROM items i
   LEFT JOIN item_stats st ON st.item_id = i.id
   LEFT JOIN topics t ON t.area = i.area AND t.discipline = i.discipline AND t.topic = i.topic`;
+const SELECT = `SELECT i.*, st.median_correct_ms, coalesce(st.correct_samples, 0) AS correct_samples, coalesce(t.weight, 0) AS weight ${FROM}`;
 
 const SCORING = new Set(["official", "calibrated"]);
+
+const irtOf = (r: Record<string, any>): IrtParams | null => (SCORING.has(r.calibration) && r.irt_a !== null ? { a: r.irt_a, b: r.irt_b, c: r.irt_c } : null);
 
 function toItem(r: Record<string, any>): CatalogItem {
   return {
@@ -48,7 +50,7 @@ function toItem(r: Record<string, any>): CatalogItem {
     hint: r.hint,
     prerequisites: r.prerequisites,
     wordCount: r.word_count,
-    irt: SCORING.has(r.calibration) && r.irt_a !== null ? { a: r.irt_a, b: r.irt_b, c: r.irt_c } : null,
+    irt: irtOf(r),
     medianCorrectMs: r.median_correct_ms,
     correctSamples: r.correct_samples,
     topicWeight: r.weight,
@@ -61,6 +63,27 @@ export async function loadServable(tx: Tx, filter: { area?: Area; discipline?: s
     [filter.area ?? null, filter.discipline ?? null],
   );
   return rows.map(toItem);
+}
+
+/** Só o que o motor precisa para escolher. Enunciados e figuras ficam de fora: o banco inteiro passa de 30 MB. */
+export async function loadCandidates(tx: Tx, filter: { area?: Area } = {}): Promise<Candidate[]> {
+  const rows = await tx.query(
+    `SELECT i.id, i.area, i.discipline, i.topic, i.word_count, i.calibration, i.irt_a, i.irt_b, i.irt_c,
+       st.median_correct_ms, coalesce(st.correct_samples, 0) AS correct_samples, coalesce(t.weight, 0) AS weight
+     ${FROM} WHERE i.status = 'published' AND ($1::text IS NULL OR i.area = $1)`,
+    [filter.area ?? null],
+  );
+  return rows.map((r) => ({
+    id: r.id,
+    area: r.area,
+    discipline: r.discipline,
+    topic: r.topic,
+    wordCount: r.word_count,
+    irt: irtOf(r),
+    medianCorrectMs: r.median_correct_ms,
+    correctSamples: r.correct_samples,
+    topicWeight: r.weight,
+  }));
 }
 
 /** Inclui itens aposentados: uma tentativa antiga continua sendo corrigível. */

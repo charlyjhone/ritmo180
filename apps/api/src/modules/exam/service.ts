@@ -7,7 +7,7 @@ import {
 } from "@ritmo/engine";
 import type { Row, Tx } from "../../platform/db.ts";
 import { HttpError } from "../../platform/http.ts";
-import { loadItems, loadServable, toCandidate, toPracticeItem } from "../catalog/index.ts";
+import { loadCandidates, loadItems, toPracticeItem } from "../catalog/index.ts";
 import { createSessionRow, extraMinutesOf, recordAttempts, scoreViewOf } from "../practice/index.ts";
 
 const GRACE_MS = 60_000;
@@ -17,8 +17,7 @@ export async function createExam(
   input: { schoolId: string; classId: string; teacherId: string; title: string; parts: { area: Area; discipline?: string; count: number }[] },
   now: number,
 ) {
-  const items = await loadServable(tx);
-  const assembled = assembleExam(input.parts, items.map(toCandidate), new SeededRng(now % 2_147_483_647));
+  const assembled = assembleExam(input.parts, await loadCandidates(tx), new SeededRng(now % 2_147_483_647));
   if (assembled.itemIds.length === 0) throw new HttpError(422, "no_items", "Não há questões publicadas para esta prova.");
   const seconds = Math.round(DEFAULT_SECONDS_PER_QUESTION);
   const id = randomUUID();

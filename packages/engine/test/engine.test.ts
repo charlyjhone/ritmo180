@@ -151,6 +151,19 @@ describe("seleção", () => {
     expect(blocks[0]!.items.map((i) => i.itemId)).toEqual(["long"]);
   });
 
+  it("mistura disciplinas e varia entre alunos sem completar menos que o pedido", () => {
+    const pool = ["Física", "Química", "Biologia", "Matemática"].flatMap((discipline, d) =>
+      Array.from({ length: 20 }, (_, i) => ({ ...candidate(`${d}-${i}`, `${discipline} ${i % 4}`, 60, 0.2), discipline })),
+    );
+    const plan = (seed: string, items = pool) => planSession(items, { ...base, seed, bottleneck: "readMs" }, 24).flatMap((b) => b.items.map((i) => i.itemId));
+    const perDiscipline = new Map<string, number>();
+    for (const id of plan("aluno-1")) perDiscipline.set(id[0]!, (perDiscipline.get(id[0]!) ?? 0) + 1);
+    expect(Math.max(...perDiscipline.values())).toBeLessThanOrEqual(3);
+    expect(perDiscipline.size).toBeGreaterThanOrEqual(3);
+    expect(plan("aluno-2")).not.toEqual(plan("aluno-1"));
+    expect(plan("aluno-1", pool.filter((c) => c.discipline === "Física"))).toHaveLength(8);
+  });
+
   it("não repete questão recente e traz erro antigo para revisão", () => {
     const pool = [candidate("seen", "Energia", 60, 0.2), candidate("wrong", "Energia", 60, 0.2), candidate("new", "Energia", 60, 0.2)];
     const attempts = [

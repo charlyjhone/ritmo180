@@ -16,6 +16,8 @@ export interface LearnerSnapshot {
   bottleneck: Phase | null;
   attempts: readonly AttemptFact[];
   now: number;
+  /** Desempata questões de mesma prioridade, para alunos diferentes não receberem o mesmo treino. */
+  seed?: string;
 }
 
 export interface PlannedItem {
@@ -78,27 +80,49 @@ export function scoreCandidate(item: Candidate, learner: LearnerSnapshot, histor
   return { itemId: item.id, reason, score };
 }
 
+function tieBreak(seed: string, id: string): number {
+  let hash = 0x811c9dc5;
+  for (const char of seed + id) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619);
+  return hash >>> 0;
+}
+
 export function rankCandidates(candidates: readonly Candidate[], learner: LearnerSnapshot): PlannedItem[] {
   const history = historyOf(learner.attempts);
+  const seed = learner.seed ?? "";
   return candidates
     .filter((item) => !isBlocked(history.get(item.id), learner.now))
     .map((item) => scoreCandidate(item, learner, history.get(item.id)))
-    .sort((x, y) => y.score - x.score || x.itemId.localeCompare(y.itemId));
+    .sort((x, y) => y.score - x.score || tieBreak(seed, x.itemId) - tieBreak(seed, y.itemId) || x.itemId.localeCompare(y.itemId));
 }
 
-/** Evita que um assunto ocupe a sessão inteira, sem deixar de priorizar os mais pesados. */
-function pickVaried(ranked: readonly PlannedItem[], topicOf: (id: string) => string, count: number, maxPerTopic: number): PlannedItem[] {
-  const picked: PlannedItem[] = [];
+/**
+ * Evita que um assunto ou uma disciplina ocupe a sessão inteira, sem deixar de priorizar os mais pesados.
+ * Se faltar variedade no banco, completa a sessão acima do limite de disciplina.
+ */
+function pickVaried(
+  ranked: readonly PlannedItem[],
+  factsOf: (id: string) => Candidate,
+  count: number,
+  perDiscipline: Map<string, number>,
+  maxPerDiscipline: number,
+): PlannedItem[] {
+  const maxPerTopic = Math.max(2, Math.ceil(count / 2));
+  const picked = new Map<string, PlannedItem>();
   const perTopic = new Map<string, number>();
-  for (const entry of ranked) {
-    if (picked.length === count) break;
-    const topic = topicOf(entry.itemId);
-    const used = perTopic.get(topic) ?? 0;
-    if (used >= maxPerTopic) continue;
-    perTopic.set(topic, used + 1);
-    picked.push(entry);
+  for (const limitDiscipline of [true, false]) {
+    for (const entry of ranked) {
+      if (picked.size === count) break;
+      if (picked.has(entry.itemId)) continue;
+      const { topic, discipline } = factsOf(entry.itemId);
+      const inTopic = perTopic.get(topic) ?? 0;
+      const inDiscipline = perDiscipline.get(discipline) ?? 0;
+      if (inTopic >= maxPerTopic || (limitDiscipline && inDiscipline >= maxPerDiscipline)) continue;
+      perTopic.set(topic, inTopic + 1);
+      perDiscipline.set(discipline, inDiscipline + 1);
+      picked.set(entry.itemId, entry);
+    }
   }
-  return picked;
+  return [...picked.values()];
 }
 
 const MINUTES_PER_ITEM = 3;
@@ -106,20 +130,21 @@ const MINUTES_PER_ITEM = 3;
 /** Monta os blocos do treino do dia. O texto de cada bloco explica o motivo com dados do próprio aluno. */
 export function planSession(candidates: readonly Candidate[], learner: LearnerSnapshot, minutes = 25): PlannedBlock[] {
   const byId = new Map(candidates.map((c) => [c.id, c]));
-  const topicOf = (id: string) => byId.get(id)?.topic ?? "";
   const ranked = rankCandidates(candidates, learner);
   const taken = new Set<string>();
   const blocks: PlannedBlock[] = [];
+  const total = Math.max(3, Math.floor(minutes / MINUTES_PER_ITEM));
+  const perDiscipline = new Map<string, number>();
+  const maxPerDiscipline = Math.max(2, Math.ceil(total / 3));
 
   const addBlock = (kind: BlockKind, title: string, reason: string, count: number, filter: (c: Candidate) => boolean) => {
     const pool = ranked.filter((r) => !taken.has(r.itemId) && filter(byId.get(r.itemId)!));
-    const items = pickVaried(pool, topicOf, count, Math.max(2, Math.ceil(count / 2)));
+    const items = pickVaried(pool, (id) => byId.get(id)!, count, perDiscipline, maxPerDiscipline);
     if (items.length === 0) return;
     items.forEach((i) => taken.add(i.itemId));
     blocks.push({ kind, title, reason, minutes: items.length * MINUTES_PER_ITEM, items });
   };
 
-  const total = Math.max(3, Math.floor(minutes / MINUTES_PER_ITEM));
   const reviews = ranked.filter((r) => r.reason.startsWith("Revisão"));
   if (reviews.length > 0) {
     addBlock("REVISAO", "Revisão dos erros", `${reviews.length} ${reviews.length === 1 ? "erro pronto" : "erros prontos"} para rever`, Math.min(2, reviews.length), (c) => reviews.some((r) => r.itemId === c.id));

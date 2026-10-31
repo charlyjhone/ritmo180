@@ -13,11 +13,19 @@ export interface IngestBatch {
   rejected: Rejection[];
 }
 
+/** Texto vindo de PDF pode trazer caracteres de controle, que o Postgres recusa. */
+function withoutControlChars(value: unknown): unknown {
+  if (typeof value === "string") return value.replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, "");
+  if (Array.isArray(value)) return value.map(withoutControlChars);
+  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, withoutControlChars(v)]));
+  return value;
+}
+
 export function normalizeItems(raw: readonly unknown[]): IngestBatch {
   const batch: IngestBatch = { items: [], rejected: [] };
   const seen = new Set<string>();
   raw.forEach((candidate, position) => {
-    const parsed = CanonicalItemSchema.safeParse(candidate);
+    const parsed = CanonicalItemSchema.safeParse(withoutControlChars(candidate));
     const id = String((candidate as { externalId?: unknown } | null)?.externalId ?? `linha ${position + 1}`);
     if (!parsed.success) {
       batch.rejected.push({ position, id, errors: parsed.error.issues.map((i) => (i.path[0] === "area" ? `disciplina não reconhecida: ${(candidate as { discipline?: unknown }).discipline}` : `${i.path.join(".") || "questão"}: ${i.message}`)) });

@@ -1,12 +1,15 @@
 import { randomUUID } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { LightMyRequestResponse } from "fastify";
 import type { PracticeSessionPack, StudentDashboard, SyncResult } from "@ritmo/contracts";
+import { normalizeItems, parseCanonicalJson } from "@ritmo/ingest";
 import { buildApp } from "../src/app.ts";
 import { openPglite } from "../src/platform/db-pglite.ts";
 import { migrate } from "../src/platform/migrate.ts";
 import type { Database } from "../src/platform/db.ts";
 import { seedDemo, type DemoAccounts } from "../src/seed/demo.ts";
+import { importBatch, releaseOfficialItems } from "../src/seed/install.ts";
 import { generateItems, reviewItem, reviewQueue } from "../src/modules/content/index.ts";
 import type { Llm } from "../src/platform/llm.ts";
 
@@ -269,6 +272,22 @@ describe("conteúdo com IA", () => {
     expect((await db.system((tx) => tx.query(`SELECT status FROM items WHERE id = $1`, [id])))[0]!.status).toBe("review");
     await db.system((tx) => reviewItem(tx, id, true, "Prof"));
     expect((await db.system((tx) => tx.query(`SELECT status FROM items WHERE id = $1`, [id])))[0]!.status).toBe("published");
+  });
+});
+
+describe("liberação de conteúdo", () => {
+  it("só publica questão oficial depois da confirmação e registra quem confirmou", async () => {
+    const [example] = parseCanonicalJson(readFileSync(new URL("../../../packages/ingest/examples/exemplo-disciplinas.json", import.meta.url), "utf8")) as Record<string, unknown>[];
+    const batch = normalizeItems([{ ...example, externalId: "livro-teste-1", source: "inep_official", rightsCleared: false }]);
+    expect(batch.rejected).toEqual([]);
+    await importBatch(db, batch, "json", "teste");
+    const row = () => db.system(async (tx) => (await tx.query(`SELECT status, rights_cleared, rights_note FROM items WHERE external_id = 'livro-teste-1'`))[0]!);
+    expect((await row()).status).toBe("review");
+    expect(await releaseOfficialItems(db, "Coordenação")).toBeGreaterThan(0);
+    const released = await row();
+    expect(released.status).toBe("published");
+    expect(released.rights_cleared).toBe(true);
+    expect(released.rights_note).toContain("Direitos confirmados por Coordenação.");
   });
 });
 
