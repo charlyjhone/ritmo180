@@ -64,6 +64,8 @@ function Sitting({ view }: { view: ExamSittingView }) {
   const [current, setCurrent] = useState(0);
   const [choice, setChoice] = useState<Letter | null>(null);
   const shownAt = useRef(Date.now());
+  const [confirming, setConfirming] = useState(false);
+  const [finishing, setFinishing] = useState(false);
   const [, redraw] = useState(0);
   useInterval(() => redraw((n) => n + 1), 1000);
 
@@ -78,10 +80,16 @@ function Sitting({ view }: { view: ExamSittingView }) {
   const item = view.items[current]!;
 
   async function finish() {
-    await api.post(`/api/sittings/${view.id}/finish`);
-    await client.invalidateQueries({ queryKey: ["exams"] });
-    await client.invalidateQueries({ queryKey: ["student"] });
-    navigate(`/simulado/${view.id}/resultado`, { replace: true });
+    setFinishing(true);
+    try {
+      await api.post(`/api/sittings/${view.id}/finish`);
+      await client.invalidateQueries({ queryKey: ["exams"] });
+      await client.invalidateQueries({ queryKey: ["student"] });
+      navigate(`/simulado/${view.id}/resultado`, { replace: true });
+    } catch (error) {
+      setFinishing(false);
+      toast(error instanceof ApiError ? error.message : "Sem conexão: a prova não foi entregue. Tente de novo.");
+    }
   }
   useEffect(() => {
     if (remaining <= 0) void finish();
@@ -115,7 +123,17 @@ function Sitting({ view }: { view: ExamSittingView }) {
 
   return (
     <div className="page">
-      <PageHead size="t30" kicker={`${view.title} · ${total} questões`} title={`Questão ${current + 1}: decida se resolve, adia ou pula`} actions={<button className="btn outline" type="button" onClick={() => { if (window.confirm("Entregar a prova agora?")) void finish(); }}>Entregar prova</button>} />
+      <PageHead size="t30" kicker={`${view.title} · ${total} questões`} title={`Questão ${current + 1}: decida se resolve, adia ou pula`} actions={<button className="btn outline" type="button" onClick={() => setConfirming(true)}>Entregar prova</button>} />
+      {confirming ? (
+        <div className="notice warn" role="alert">
+          <b>Entregar a prova agora?</b> Você respondeu {count("answered")} de {total}.{count("answered") < total ? " As demais contam como erro." : ""} A entrega não pode ser desfeita.
+          {choice && marks[current]?.choice !== choice ? ` A alternativa ${choice} da questão ${current + 1} ainda não foi salva: clique em Responder antes de entregar.` : ""}
+          <div className="btn-row">
+            <button className="btn" type="button" disabled={finishing} onClick={() => void finish()}>{finishing ? "Entregando…" : "Confirmar entrega"}</button>
+            <button className="btn soft" type="button" disabled={finishing} onClick={() => setConfirming(false)}>Continuar a prova</button>
+          </div>
+        </div>
+      ) : null}
       <Metrics label="Situação da prova">
         <Metric label="Tempo restante" value={hhmmss(remaining)} note={`${clock(view.secondsPerQuestion)} por questão`} />
         <Metric label="Ritmo" value={`${signed(paceMinutes)} min`} valueTone={paceMinutes >= 0 ? "ok" : "amber"} note={paceMinutes === 0 ? "no ritmo do plano" : paceMinutes > 0 ? "adiantado em relação ao plano" : "atrasado em relação ao plano"} />
