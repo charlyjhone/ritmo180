@@ -21,6 +21,7 @@ function Exercise({ next, onAgain }: { next: ReadingNext; onAgain: () => void })
   const [t1, setT1] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [result, setResult] = useState<ReadingResultView | null>(null);
+  const [showAreas, setShowAreas] = useState(false);
   const [, redraw] = useState(0);
   useInterval(() => redraw((n) => n + 1), 500, phase === 1);
   const seconds = t0 ? ((t1 || Date.now()) - t0) / 1000 : 0;
@@ -38,8 +39,9 @@ function Exercise({ next, onAgain }: { next: ReadingNext; onAgain: () => void })
         <div className="tags">
           <Pill tone="brand">Leitura com compreensão</Pill>
           <Pill>{me.name.split(" ")[0]}{me.grade ? ` · ${me.grade}` : ""}</Pill>
-          <Pill>Prepara para LC e CH</Pill>
+          <button className="pill gray pill-button" type="button" aria-expanded={showAreas} aria-controls="areas-note" onClick={() => setShowAreas((open) => !open)}>Prepara para LC e CH <span aria-hidden="true">{showAreas ? "▴" : "▾"}</span></button>
         </div>
+        {showAreas ? <p id="areas-note" className="notice" style={{ marginTop: 12 }}>LC é Linguagens, Códigos e suas Tecnologias, e CH é Ciências Humanas e suas Tecnologias. São as áreas do ENEM que mais dependem de leitura: entender o texto de primeira poupa tempo e ajuda a evitar as pegadinhas.</p> : null}
         {phase === 0 ? (
           <>
             <h1 id="headline" style={{ marginTop: 24, fontSize: 28, letterSpacing: 0 }}>Leia no seu ritmo natural. Depois, 4 perguntas sem o texto.</h1>

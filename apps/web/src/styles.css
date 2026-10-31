@@ -87,6 +87,8 @@ h2.lg { font-size: 20px; }
 .pill.warn { color: var(--amber-ink); background: var(--amber-soft); }
 .pill.good { color: var(--ok-ink); background: var(--ok-soft); }
 .pill.tight { padding: 4px 10px; }
+.pill-button { border: 0; cursor: pointer; font-family: inherit; }
+.pill-button:hover { background: var(--line); }
 .topbar-end .pill { font-weight: 600; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 12px; font-weight: 700; font-size: 14px; text-decoration: none; border: 0; cursor: pointer; font-family: inherit; background: var(--brand); color: #fff; }
 .btn:hover { background: var(--brand-dark); color: #fff; }
