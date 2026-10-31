@@ -20,7 +20,7 @@ export function normalizeItems(raw: readonly unknown[]): IngestBatch {
     const parsed = CanonicalItemSchema.safeParse(candidate);
     const id = String((candidate as { externalId?: unknown } | null)?.externalId ?? `linha ${position + 1}`);
     if (!parsed.success) {
-      batch.rejected.push({ position, id, errors: parsed.error.issues.map((i) => `${i.path.join(".") || "questão"}: ${i.message}`) });
+      batch.rejected.push({ position, id, errors: parsed.error.issues.map((i) => (i.path[0] === "area" ? `disciplina não reconhecida: ${(candidate as { discipline?: unknown }).discipline}` : `${i.path.join(".") || "questão"}: ${i.message}`)) });
       return;
     }
     if (seen.has(parsed.data.externalId)) {

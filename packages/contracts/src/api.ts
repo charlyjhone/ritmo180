@@ -26,6 +26,8 @@ export const PhaseTimesSchema = z.object({
 export const PRACTICE_MODES = ["guided", "exam", "diagnostic"] as const;
 export type PracticeModeName = (typeof PRACTICE_MODES)[number];
 
+export type PhaseTimes = z.infer<typeof PhaseTimesSchema>;
+
 export const AttemptInput = z.object({
   /** Gerado no aparelho: reenviar a mesma tentativa não cria duplicata. */
   id: z.string().uuid(),
@@ -185,7 +187,7 @@ export interface ClassRef {
 export interface TeacherDashboard {
   class: ClassRef;
   headline: string;
-  metrics: { ritmo: number | null; ritmoDelta: number | null; avgSeconds: number | null; score: ScoreView | null; activeWeek: number; total: number; inactive: number };
+  metrics: { ritmo: number | null; ritmoDelta: number | null; avgSeconds: number | null; goalSeconds: number; score: ScoreView | null; activeWeek: number; total: number; inactive: number };
   heat: { topics: string[]; rows: { studentId: string; name: string; cells: (number | null)[]; ritmo: number | null }[] };
   time: TimeBreakdown | null;
   suggestion: string | null;
@@ -251,6 +253,7 @@ export interface OnboardingState {
   consent: { accepted: number; total: number };
   roster: { students: number; pendingEmail: number; lastFile: string | null };
   accommodations: { id: string; student: string; className: string; kind: string; extraMinutes: number; targetSeconds: number; resources: string }[];
+  students: { id: string; name: string; className: string }[];
   diagnostic: { date: string | null; scope: string };
   released: boolean;
   blockers: string[];

@@ -118,6 +118,7 @@ export async function teacherDashboard(tx: Tx, actor: { id: string; role: string
       ritmo: rounded(ritmo),
       ritmoDelta: ritmo !== null && ritmoBefore !== null ? Math.round(ritmo - ritmoBefore) : null,
       avgSeconds: avgMs === null ? null : Math.round(avgMs / 1000),
+      goalSeconds: Math.round(target / 1000),
       score,
       activeWeek: activeSince(now - WEEK_MS),
       total: ids.length,

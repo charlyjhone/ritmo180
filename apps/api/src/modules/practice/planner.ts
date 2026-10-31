@@ -61,6 +61,6 @@ export async function createPracticeSession(
   const wanted = Math.floor(input.minutes / 3);
   let notice: string | null = null;
   if (chosen.length === 0) notice = "Você já praticou todas as questões disponíveis nas últimas semanas. Novas questões aparecem aqui assim que entrarem no banco.";
-  else if (chosen.length < wanted) notice = `Só há ${chosen.length} questão(ões) inéditas para você agora; o restante do tempo fica para quando o banco crescer.`;
+  else if (chosen.length < wanted) notice = `Só há ${chosen.length} ${chosen.length === 1 ? "questão inédita" : "questões inéditas"} para você agora; o restante do tempo fica para quando o banco crescer.`;
   return { sessionId, mode: input.mode, blocks: views, items: chosen, notice };
 }

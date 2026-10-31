@@ -54,7 +54,12 @@ export async function buildApp(deps: AppDeps, options: { webRoot?: string; logge
 
   const webRoot = options.webRoot;
   if (webRoot && existsSync(join(webRoot, "index.html"))) {
-    await app.register(fastifyStatic, { root: webRoot, wildcard: false });
+    await app.register(fastifyStatic, {
+      root: webRoot,
+      cacheControl: false,
+      // Arquivos com hash nunca mudam. O restante é revalidado para uma nova versão chegar logo.
+      setHeaders: (response, path) => response.header("cache-control", path.includes("/assets/") ? "public, max-age=31536000, immutable" : "no-cache"),
+    });
     app.setNotFoundHandler((request, reply) => {
       const hasExtension = /\.[a-z0-9]+$/i.test(request.url.split("?")[0]!);
       if (request.url.startsWith("/api/") || hasExtension || !["GET", "HEAD"].includes(request.method)) {

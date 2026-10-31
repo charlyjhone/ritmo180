@@ -116,7 +116,7 @@ export function whatIfScenarios(area: Area, responses: readonly ExamResponse[]):
       const ranked = [...blanks].sort((x, y) => x.params!.b - y.params!.b).slice(0, fit);
       const ids = new Set(ranked.map((r) => r.itemId));
       const gain = ids.size ? scoreWith((r) => (ids.has(r.itemId) ? { ...r, correct: true } : r)) - base : 0;
-      scenarios.push({ gain, title: "Pular antes de insistir", detail: `${sinks.length} questão(ões) custaram o tempo de cerca de ${fit} outras e foram erradas.` });
+      scenarios.push({ gain, title: "Pular antes de insistir", detail: sinks.length === 1 ? `Uma questão custou o tempo de cerca de ${fit} outras e foi errada.` : `${sinks.length} questões custaram o tempo de cerca de ${fit} outras e foram erradas.` });
     }
   }
   return scenarios.sort((x, y) => y.gain - x.gain);

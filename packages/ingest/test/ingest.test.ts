@@ -64,4 +64,9 @@ describe("Banco ENEM", () => {
       .toMatchObject({ area: "CN", skill: "H11", irt: { a: 2.1, b: 2, c: 0.04 } });
     expect(bancoRow(columns({ 1: "BIO-2", 2: "Biologia", 3: "Genética", 11: "BIO-1" }))).toBeNull();
   });
+
+  it("explica quando a disciplina não existe", () => {
+    const batch = normalizeItems([{ externalId: "x", discipline: "Astrologia" }]);
+    expect(batch.rejected[0]!.errors).toContain("disciplina não reconhecida: Astrologia");
+  });
 });

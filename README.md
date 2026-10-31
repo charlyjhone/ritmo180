@@ -1,40 +1,55 @@
 # Ritmo 180
 
-Protótipo navegável da plataforma Ritmo 180: treino de tempo e leitura para o ENEM, com painéis para aluno, professor, direção, família e rede. Todos os dados são fictícios e as questões foram criadas para a demonstração. Ainda não há back-end nem contas.
+Plataforma de treino de tempo e leitura para o ENEM, para várias escolas. Mede em que fase da questão o aluno perde tempo, escolhe o próximo treino e estima a nota por TRI de 3 parâmetros.
 
-## Telas
+Não há integração com CRM nesta fase.
 
-| Rota | Tela |
-|---|---|
-| `#/` | Painel do aluno |
-| `#/treino` | Treino com Raio-X do Tempo |
-| `#/leitura` | Leitura e interpretação |
-| `#/simulado` | Simulado no modo prova |
-| `#/professor` | Painel do professor |
-| `#/direcao` | Painel da direção |
-| `#/familia` | Portal da família (celular) |
-| `#/rede` | Administração da rede |
-| `#/implantacao` | Implantação de uma escola |
+## Rodar localmente
 
-Os botões que dependeriam de back-end (exportar relatório, enviar trilha, avisar família) só mostram um aviso de demonstração.
+Requer Node 24.
+
+```bash
+npm install
+npm run build
+npm run db:seed
+npm start
+```
+
+Abra `http://localhost:5180`. Os acessos de demonstração ficam em `data/credenciais-demonstracao.txt`, fora do Git.
+
+Para desenvolver a interface com recarga automática, rode `npm run dev:api` e `npm run dev:web` e abra `http://localhost:5181`.
+
+## Comandos
+
+| Comando | O que faz |
+| --- | --- |
+| `npm run check` | Tipos e todos os testes |
+| `npm run build` | Compila a interface |
+| `npm run db:seed` | Cria a escola de demonstração |
+| `npm run ingest -- <arquivo>` | Importa questões. Veja [docs/importar-questoes.md](docs/importar-questoes.md) |
+| `npm run db:calibrate` | Recalibra as questões com respostas suficientes |
+
+## Configuração
+
+| Variável | Uso | Padrão |
+| --- | --- | --- |
+| `PORT` | Porta do servidor | `5180` |
+| `DATABASE_URL` | Postgres de produção | PGlite em `data/pg` |
+| `ANTHROPIC_API_KEY` | Liga o tutor e a geração de questões | Desligados |
+| `RITMO_MODEL` | Modelo do Claude | `claude-opus-5-5` |
+
+Sem a chave da Anthropic, o tutor usa a dica escrita na questão e a geração fica indisponível.
 
 ## Estrutura
 
-```
-server.js            HTTP: arquivos estáticos
-public/app.js        roteador
-public/ui.js         cabeçalho, indicadores, barras, cronômetro, toast
-public/content.js    questões do treino e texto de leitura
-public/screens/      uma tela por rota
-public/styles.css    tokens de cor e componentes
-```
-
-## Como rodar
-
-Requer Node 20 ou mais recente. Não há dependências para instalar.
-
-```bash
-cd ritmo180 && npm start
+```text
+apps/api          Servidor, banco, módulos de negócio
+apps/web          Interface React, instalável e com treino offline
+packages/engine   Motor pedagógico e TRI, sem banco e sem rede
+packages/contracts  Tipos e validações compartilhados
+packages/ingest   Leitura e validação de questões
+content           Conteúdo autoral
+docs              Arquitetura e importação
 ```
 
-Depois abra http://localhost:5180.
+As regras que mantêm as partes independentes estão em [docs/arquitetura.md](docs/arquitetura.md).

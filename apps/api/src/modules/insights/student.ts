@@ -39,6 +39,8 @@ export async function studentDashboard(tx: Tx, student: { id: string; name: stri
   const timestamps = attempts.map((a) => a.answeredAt);
   const items = await loadItems(tx, attempts.map((a) => a.itemId));
   const disciplineOf = new Map([...items.values()].map((i) => [i.topic, i.discipline]));
+  const scores = AREAS.map((area) => scoreViewOf(area, snapshot.thetas[area]));
+  const measured = new Set(scores.filter((s) => s.score !== null).map((s) => s.area));
   return {
     student: { name: student.name, grade: student.grade, className: klass?.name ?? null },
     ritmo: {
@@ -54,14 +56,14 @@ export async function studentDashboard(tx: Tx, student: { id: string; name: stri
       diagnosis: diagnosis?.message ?? null,
       bottleneck: diagnosis?.bottleneck ? PHASE_LABEL[diagnosis.bottleneck as Phase] : null,
     },
-    scores: AREAS.map((area) => scoreViewOf(area, snapshot.thetas[area])),
+    scores,
     streak: { current: trainingStreak(timestamps, now), best: bestStreak(timestamps) },
     skills: Object.entries(snapshot.mastery)
       .map(([topic, m]) => ({ topic, discipline: disciplineOf.get(topic) ?? "", stage: m.stage, stageName: STAGES[m.stage - 1]!, mastery: Math.round(m.mastery * 100), attempts: m.attempts }))
       .sort((x, y) => x.mastery - y.mastery),
     gaps: await gapsOf(tx, attempts),
     plan: await previewPlan(tx, student.id, now),
-    diagnosticPending: await pendingDiagnostics(tx, student),
+    diagnosticPending: (await pendingDiagnostics(tx, student)).filter((area) => !measured.has(area)),
     syncedAttempts: attempts.length,
   };
 }

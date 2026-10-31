@@ -1,0 +1,10 @@
+{
+  "name": "Ritmo 180",
+  "short_name": "Ritmo 180",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4F5F8",
+  "theme_color": "#2447D6",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

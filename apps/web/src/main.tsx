@@ -1,0 +1,138 @@
+import { StrictMode, useEffect, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Navigate, NavLink, Outlet, Route, Routes, useLocation } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "@fontsource/manrope/400.css";
+import "@fontsource/manrope/500.css";
+import "@fontsource/manrope/600.css";
+import "@fontsource/manrope/700.css";
+import "@fontsource/manrope/800.css";
+import "@fontsource/jetbrains-mono/500.css";
+import "@fontsource/jetbrains-mono/700.css";
+import "@fontsource/source-serif-4/400.css";
+import "@fontsource/source-serif-4/600.css";
+import "./styles.css";
+import { onQueueChange, pendingCount, startSync } from "./lib/offline.ts";
+import { DiagnosticPage } from "./features/diagnostic.tsx";
+import { ExamList, ResultPage, SittingPage } from "./features/exam.tsx";
+import { FamilyHome } from "./features/family.tsx";
+import { NetworkHome } from "./features/network.tsx";
+import { OnboardingPage } from "./features/onboarding.tsx";
+import { PracticePage } from "./features/practice.tsx";
+import { ReadingPage } from "./features/reading.tsx";
+import { SchoolHome } from "./features/school.tsx";
+import { logout, NAV, SessionGate, useMe } from "./features/session.tsx";
+import { StudentHome } from "./features/student.tsx";
+import { TeacherHome } from "./features/teacher.tsx";
+import { Pill } from "./ui/kit.tsx";
+import { ToastProvider } from "./ui/toast.tsx";
+
+const client = new QueryClient({ defaultOptions: { queries: { retry: 1, staleTime: 30_000 } } });
+
+function SyncStatus() {
+  const [pending, setPending] = useState(0);
+  const [online, setOnline] = useState(navigator.onLine);
+  useEffect(() => {
+    const refresh = () => void pendingCount().then(setPending).catch(() => {});
+    const net = () => setOnline(navigator.onLine);
+    refresh();
+    const off = onQueueChange(refresh);
+    window.addEventListener("online", net);
+    window.addEventListener("offline", net);
+    return () => {
+      off();
+      window.removeEventListener("online", net);
+      window.removeEventListener("offline", net);
+    };
+  }, []);
+  if (online && pending === 0) return null;
+  return <Pill tone="warn">{online ? "Enviando" : "Sem internet"}{pending ? ` · ${pending} ${pending === 1 ? "resposta guardada" : "respostas guardadas"}` : ""}</Pill>;
+}
+
+function Shell() {
+  const me = useMe();
+  const location = useLocation();
+  const main = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const section = NAV[me.role].filter((link) => location.pathname.startsWith(link.to)).at(-1);
+    document.title = section ? `${section.label} · Ritmo 180` : "Ritmo 180";
+    main.current?.focus();
+    window.scrollTo(0, 0);
+  }, [location.pathname, me.role]);
+  const dark = me.role === "network_admin";
+  return (
+    <>
+      <a className="skip-link" href="#main">Pular para o conteúdo</a>
+      <header id="topbar" className={dark ? "dark" : ""}>
+        <div className="topbar-inner">
+          <div className="brand">
+            <div className="logo">180</div>
+            <div><div className="brand-name">{dark ? "Ritmo 180 · Rede" : "Ritmo 180"}</div><div className="brand-sub">{me.school?.name ?? "Administração de todas as escolas"}</div></div>
+          </div>
+          <nav aria-label="Áreas da plataforma">
+            {NAV[me.role].map((link) => <NavLink key={link.to} className="navlink" to={link.to} end={link.to === "/"}>{link.label}</NavLink>)}
+          </nav>
+          <div className="topbar-end">
+            <SyncStatus />
+            {me.school?.isDemo ? <Pill tone="warn">Demonstração</Pill> : null}
+            <button className="btn soft slim" type="button" onClick={() => void logout()}>Sair</button>
+          </div>
+        </div>
+      </header>
+      <main id="main" ref={main} tabIndex={-1}><Outlet /></main>
+    </>
+  );
+}
+
+function Home() {
+  const { role } = useMe();
+  if (role === "student") return <StudentHome />;
+  if (role === "teacher") return <TeacherHome />;
+  if (role === "coordinator") return <SchoolHome />;
+  return <NetworkHome />;
+}
+
+function Router() {
+  const { role } = useMe();
+  if (role === "guardian") return <FamilyHome />;
+  return (
+    <Routes>
+      <Route element={<Shell />}>
+        <Route index element={<Home />} />
+        {role === "student" ? (
+          <>
+            <Route path="treino" element={<PracticePage />} />
+            <Route path="leitura" element={<ReadingPage />} />
+            <Route path="simulado" element={<ExamList />} />
+            <Route path="simulado/:id" element={<SittingPage />} />
+            <Route path="simulado/:id/resultado" element={<ResultPage />} />
+            <Route path="diagnostico/:area" element={<DiagnosticPage />} />
+          </>
+        ) : null}
+        {role === "coordinator" ? <Route path="professor" element={<TeacherHome />} /> : null}
+        {role === "coordinator" || role === "network_admin" ? (
+          <>
+            <Route path="implantacao" element={<OnboardingPage />} />
+            <Route path="implantacao/:id" element={<OnboardingPage />} />
+          </>
+        ) : null}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
+  );
+}
+
+startSync();
+if (import.meta.env.PROD && "serviceWorker" in navigator) void navigator.serviceWorker.register("/sw.js");
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <QueryClientProvider client={client}>
+      <ToastProvider>
+        <BrowserRouter>
+          <SessionGate><Router /></SessionGate>
+        </BrowserRouter>
+      </ToastProvider>
+    </QueryClientProvider>
+  </StrictMode>,
+);

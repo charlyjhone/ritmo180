@@ -122,7 +122,7 @@ export function planSession(candidates: readonly Candidate[], learner: LearnerSn
   const total = Math.max(3, Math.floor(minutes / MINUTES_PER_ITEM));
   const reviews = ranked.filter((r) => r.reason.startsWith("Revisão"));
   if (reviews.length > 0) {
-    addBlock("REVISAO", "Revisão dos erros", `${reviews.length} erro(s) prontos para rever`, Math.min(2, reviews.length), (c) => reviews.some((r) => r.itemId === c.id));
+    addBlock("REVISAO", "Revisão dos erros", `${reviews.length} ${reviews.length === 1 ? "erro pronto" : "erros prontos"} para rever`, Math.min(2, reviews.length), (c) => reviews.some((r) => r.itemId === c.id));
   }
   if (learner.bottleneck === "readMs") {
     addBlock("LEITURA", "Questões com texto-base longo", "Ataca seu maior gargalo de tempo", Math.ceil(total / 3), (c) => c.wordCount >= LONG_TEXT_WORDS);

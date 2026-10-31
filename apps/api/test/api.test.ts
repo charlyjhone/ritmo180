@@ -171,6 +171,27 @@ describe("painéis", () => {
     expect(sent.statusCode).toBe(200);
   });
 
+  it("recado do professor aparece para a família do aluno", async () => {
+    const guardian = as(await login(a.guardian));
+    const [child] = json<any[]>(await guardian.get("/api/insights/family"));
+    const sent = await as(await login(a.teacher)).post("/api/teacher/notify-family", { studentId: child.id, message: "Vamos retomar a rotina." });
+    expect(sent.statusCode).toBe(200);
+    const [after] = json<any[]>(await guardian.get("/api/insights/family"));
+    expect(after.note.body).toBe("Vamos retomar a rotina.");
+  });
+
+  it("questão descartada pelo professor sai do banco e do treino", async () => {
+    const item = await db.system(async (tx) => (await tx.query(`SELECT id FROM items WHERE status = 'published' AND discipline = 'Física' LIMIT 1`))[0]!.id as string);
+    await db.system((tx) => tx.query(`INSERT INTO item_flags (item_id, reason) VALUES ($1, 'teste de sinalização')`, [item]));
+    const teacher = as(await login(a.teacher));
+    const classes = json<any[]>(await teacher.get("/api/teacher/classes"));
+    const board = json<any>(await teacher.get(`/api/teacher/classes/${classes[3].id}`));
+    const flag = board.flags.find((f: any) => f.itemId === item);
+    expect((await teacher.post(`/api/teacher/flags/${flag.id}`, { resolution: "retired" })).statusCode).toBe(200);
+    const status = await db.system(async (tx) => (await tx.query(`SELECT status FROM items WHERE id = $1`, [item]))[0]!.status);
+    expect(status).not.toBe("published");
+  });
+
   it("família escreve para a coordenação e a direção recebe", async () => {
     const guardian = as(await login(a.guardian));
     const [child] = json<any[]>(await guardian.get("/api/insights/family"));
