@@ -51,6 +51,8 @@ export const NextSessionInput = z
     minutes: z.number().int().min(5).max(90).default(25),
     discipline: z.string().min(1).max(60).optional(),
     topic: z.string().min(1).max(160).optional(),
+    /** Refaz só as questões do caderno de erros. */
+    mistakes: z.boolean().default(false),
   })
   .refine((input) => !input.topic || input.discipline, { message: "Escolha a disciplina do assunto." });
 
@@ -110,6 +112,7 @@ export interface StudentDashboard {
   plan: PlannedBlockView[];
   diagnosticPending: Area[];
   syncedAttempts: number;
+  enem: StudyPlan["enem"];
 }
 
 export const ReadingSubmit = z.object({
@@ -145,12 +148,46 @@ export const CreateExamInput = z.object({
   parts: z.array(z.object({ area: z.enum(AREAS), discipline: z.string().optional(), count: z.number().int().min(1).max(90) })).min(1),
 });
 
+export const CreateMyExamInput = z
+  .object({
+    area: z.enum(AREAS).optional(),
+    discipline: z.string().min(1).max(60).optional(),
+    topic: z.string().min(1).max(160).optional(),
+    questions: z.number().int().min(5).max(90),
+  })
+  .refine((input) => !input.topic || input.discipline, { message: "Escolha a disciplina do assunto." });
+
 export interface ExamSummary {
   id: string;
   title: string;
   questions: number;
   durationMinutes: number;
+  /** Montado pelo próprio aluno, e não publicado para a turma. */
+  mine: boolean;
   sitting: { id: string; finished: boolean } | null;
+}
+
+/** Questão com a resposta do aluno, usada na correção da prova e no caderno de erros. */
+export interface ReviewedQuestion {
+  discipline: string;
+  topic: string;
+  contextHtml: string;
+  stemHtml: string;
+  alternatives: { letter: Letter; html: string; trap?: string }[];
+  answer: Letter;
+  choice: Letter | null;
+  solutionHtml: string;
+}
+
+export interface MistakeBook {
+  total: number;
+  topics: { discipline: string; topic: string; count: number }[];
+  questions: (ReviewedQuestion & { itemId: string; times: number; lastWrongAt: number })[];
+}
+
+export interface StudyPlan {
+  enem: { year: number; nextDay: string; daysLeft: number; days: readonly string[] } | null;
+  days: { date: string; kind: "focus" | "simulado" | "light" | "exam"; discipline?: string; topic?: string }[];
 }
 
 export interface ExamSittingView {
@@ -174,6 +211,9 @@ export interface ExamResultView {
   fatigue: { label: string; accuracy: number | null }[];
   whatIf: { gain: number; title: string; detail: string }[];
   incoherent: { number: number; difficulty: string; hit: boolean; time: string; note: string }[];
+  correct: number;
+  byTopic: { discipline: string; topic: string; correct: number; total: number; avgSeconds: number }[];
+  review: (ReviewedQuestion & { number: number; seconds: number })[];
 }
 
 export const DiagnosticAnswer = z.object({ itemId: z.string().uuid(), choice: z.enum(LETTERS), totalMs: z.number().int().min(0).max(3_600_000) });

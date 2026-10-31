@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   accommodationFactor, assembleExam, attemptFlags, calibrateItem, diagnoseTime, estimateTheta, evaluateReading, fatigueCurve,
-  guessStreakPositions, incoherences, information, masteryOf, nextAdaptiveItem, paceBalance, planSession, probability, ritmoSummary,
+  guessStreakPositions, incoherences, information, masteryOf, nextAdaptiveItem, nextEnem, paceBalance, planSession, planUntilEnem, probability, ritmoSummary, spreadAcrossAreas,
   SeededRng, simulateCorrect, stageOf, targetSeconds, toScore, trainingStreak, whatIfScenarios,
   type AttemptFact, type Candidate, type ExamResponse, type IrtParams,
 } from "../src/index.ts";
@@ -132,6 +132,39 @@ describe("índice e progresso", () => {
 
 const candidate = (id: string, topic: string, wordCount: number, topicWeight: number): Candidate => ({
   id, topic, area: "CN", discipline: "Física", wordCount, topicWeight, irt: { a: 1.5, b: 0, c: 0.2 }, medianCorrectMs: null, correctSamples: 0,
+});
+
+describe("plano até o ENEM", () => {
+  const at = (date: string) => Date.parse(`${date}T15:00:00Z`);
+  const priorities = [
+    { discipline: "Física", topic: "Óptica", weight: 0.3, mastery: 0.2 },
+    { discipline: "Física", topic: "Mecânica", weight: 0.3, mastery: 0.3 },
+    { discipline: "Química", topic: "Soluções", weight: 0.2, mastery: null },
+  ];
+
+  it("conta para a próxima prova e encerra depois da última", () => {
+    expect(nextEnem(at("2026-10-31"))).toMatchObject({ nextDay: "2026-11-08", daysLeft: 8 });
+    expect(nextEnem(at("2026-11-09"))).toMatchObject({ nextDay: "2026-11-15", daysLeft: 6 });
+    expect(nextEnem(at("2026-11-16"))).toBeNull();
+    expect(planUntilEnem(at("2026-11-16"), priorities)).toEqual([]);
+  });
+
+  it("alterna disciplinas, intercala simulado e deixa a véspera leve", () => {
+    const days = planUntilEnem(at("2026-10-31"), priorities);
+    expect(days.slice(0, 3).map((d) => d.topic)).toEqual(["Óptica", "Soluções", "Mecânica"]);
+    expect(days.find((d) => d.date === "2026-11-05")!.kind).toBe("simulado");
+    expect(days.find((d) => d.date === "2026-11-07")!.kind).toBe("light");
+    expect(days.find((d) => d.date === "2026-11-08")!.kind).toBe("exam");
+    expect(days.at(-1)).toMatchObject({ date: "2026-11-15", kind: "exam" });
+  });
+});
+
+describe("simulado montado pelo aluno", () => {
+  it("divide entre as áreas e compensa a que tem poucas questões", () => {
+    const items = [...Array(30).fill({ area: "CN" }), ...Array(30).fill({ area: "MT" }), { area: "LC" }];
+    expect(spreadAcrossAreas(items, 21)).toEqual([{ area: "CN", count: 10 }, { area: "LC", count: 1 }, { area: "MT", count: 10 }]);
+    expect(spreadAcrossAreas(items.slice(0, 3), 10)).toEqual([{ area: "CN", count: 3 }]);
+  });
 });
 
 describe("seleção", () => {

@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AREA_NAMES, type StudentDashboard } from "@ritmo/contracts";
 import { STAGES } from "@ritmo/engine";
 import { api } from "../lib/api.ts";
+import { trainingLink } from "./focus-picker.tsx";
 import { Async, Bar, clock, clockOrDash, LineChart, Metric, Metrics, PageHead, ScoreMetric, points, TimeStrip } from "../ui/kit.tsx";
 
 function Dashboard({ d }: { d: StudentDashboard }) {
@@ -23,6 +24,7 @@ function Dashboard({ d }: { d: StudentDashboard }) {
         title={`Olá, ${first}. ${time.bottleneck ? `Hoje o foco é ${time.bottleneck.toLowerCase()}.` : "Vamos ao treino de hoje."}`}
         actions={<><Link className="btn" to="/treino">Começar treino do dia{planMinutes ? ` · ${planMinutes} min` : ""}</Link><Link className="btn soft" to="/treino">Escolher disciplina e assunto</Link></>}
       />
+      {d.enem ? <div className="notice">{d.enem.daysLeft === 0 ? `Hoje é dia de ENEM ${d.enem.year}.` : `${d.enem.daysLeft === 1 ? "Falta 1 dia" : `Faltam ${d.enem.daysLeft} dias`} para a próxima prova do ENEM ${d.enem.year}.`}{" "}<Link to="/plano">Ver seu plano</Link></div> : null}
       {d.diagnosticPending.length > 0 ? (
         <div className="notice">
           Faça o diagnóstico de {d.diagnosticPending.map((a) => AREA_NAMES[a]).join(", ")} para posicionar sua nota.{" "}
@@ -89,6 +91,7 @@ function Dashboard({ d }: { d: StudentDashboard }) {
                 <div className="skill-name">{s.topic}<small>{s.discipline} · {s.mastery}% de domínio · {s.attempts} {s.attempts === 1 ? "questão" : "questões"}</small></div>
                 <div className="dots" role="img" aria-label={`Etapa ${s.stage} de 5`}>{[1, 2, 3, 4, 5].map((n) => <i key={n} className={n <= s.stage ? "on" : ""} />)}</div>
                 <div className="skill-stage">{s.stage} · {s.stageName}</div>
+                {s.discipline ? <Link className="btn soft slim skill-train" to={trainingLink(s)} aria-label={`Treinar ${s.topic}`}>Treinar</Link> : null}
               </div>
             ))}
           </div>

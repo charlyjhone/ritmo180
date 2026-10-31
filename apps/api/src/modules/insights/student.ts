@@ -1,7 +1,7 @@
 // Painel do aluno e resumo da família. Tudo vem das tentativas, sem número fixo.
 import { AREAS, type FamilyChild, type StudentDashboard } from "@ritmo/contracts";
 import {
-  bestStreak, DEFAULT_SECONDS_PER_QUESTION, diagnoseTime, PHASE_LABEL, ritmoSummary, STAGES, trainingStreak, weeklyRitmo,
+  bestStreak, DEFAULT_SECONDS_PER_QUESTION, diagnoseTime, nextEnem, PHASE_LABEL, ritmoSummary, STAGES, trainingStreak, weeklyRitmo,
   type Phase,
 } from "@ritmo/engine";
 import type { Tx } from "../../platform/db.ts";
@@ -65,6 +65,7 @@ export async function studentDashboard(tx: Tx, student: { id: string; name: stri
     plan: await previewPlan(tx, student.id, now),
     diagnosticPending: (await pendingDiagnostics(tx, student)).filter((area) => !measured.has(area)),
     syncedAttempts: attempts.length,
+    enem: nextEnem(now),
   };
 }
 

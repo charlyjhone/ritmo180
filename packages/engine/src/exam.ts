@@ -17,6 +17,22 @@ export interface Rng {
   next(): number;
 }
 
+/** Divide a prova entre as áreas o mais igual possível, respeitando o que existe em cada uma. */
+export function spreadAcrossAreas(items: readonly Pick<ItemFacts, "area">[], total: number): BlueprintPart[] {
+  const available = new Map<Area, number>();
+  for (const { area } of items) available.set(area, (available.get(area) ?? 0) + 1);
+  const parts = new Map([...available.keys()].sort().map((area) => [area, 0]));
+  for (let left = Math.min(total, items.length); left > 0; ) {
+    for (const [area, count] of parts) {
+      if (left > 0 && count < available.get(area)!) {
+        parts.set(area, count + 1);
+        left--;
+      }
+    }
+  }
+  return [...parts].map(([area, count]) => ({ area, count }));
+}
+
 /** Sorteia os itens e reporta o que faltou, em vez de entregar uma prova incompleta sem avisar. */
 export function assembleExam(blueprint: readonly BlueprintPart[], items: readonly ItemFacts[], rng: Rng): AssembledExam {
   const used = new Set<string>();

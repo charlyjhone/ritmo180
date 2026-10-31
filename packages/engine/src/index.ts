@@ -9,5 +9,6 @@ export * from "./diagnosis.ts";
 export * from "./selection.ts";
 export * from "./cat.ts";
 export * from "./exam.ts";
+export * from "./plan.ts";
 export * from "./calibration.ts";
 export * from "./simulation.ts";

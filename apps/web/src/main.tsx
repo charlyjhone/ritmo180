@@ -18,6 +18,8 @@ import { ExamList, ResultPage, SittingPage } from "./features/exam.tsx";
 import { FamilyHome } from "./features/family.tsx";
 import { NetworkHome } from "./features/network.tsx";
 import { OnboardingPage } from "./features/onboarding.tsx";
+import { MistakesPage } from "./features/mistakes.tsx";
+import { PlanPage } from "./features/plan.tsx";
 import { PracticePage } from "./features/practice.tsx";
 import { ReadingPage } from "./features/reading.tsx";
 import { SchoolHome } from "./features/school.tsx";
@@ -102,6 +104,8 @@ function Router() {
         {role === "student" ? (
           <>
             <Route path="treino" element={<PracticePage />} />
+            <Route path="plano" element={<PlanPage />} />
+            <Route path="erros" element={<MistakesPage />} />
             <Route path="leitura" element={<ReadingPage />} />
             <Route path="simulado" element={<ExamList />} />
             <Route path="simulado/:id" element={<SittingPage />} />

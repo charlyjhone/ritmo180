@@ -7,6 +7,8 @@ import { paceBalance } from "@ritmo/engine";
 import { api, ApiError } from "../lib/api.ts";
 import { Async, Bar, clock, Html, Metric, Metrics, PageHead, Pill, ScoreMetric, signed, useInterval } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
+import { FocusPicker, parseScope, trainingLink } from "./focus-picker.tsx";
+import { QuestionReview } from "./question-review.tsx";
 
 type Triage = "answered" | "later" | "skipped";
 interface Mark {
@@ -22,6 +24,42 @@ const hhmmss = (s: number) => {
 const CELL_CLASS: Record<Triage, string> = { answered: "done", later: "later", skipped: "skip" };
 const CELL_LABEL: Record<Triage, string> = { answered: "respondida", later: "adiada", skipped: "pulada" };
 
+const EXAM_SIZES = [10, 20, 45, 90];
+const MINUTES_PER_QUESTION = 3;
+
+function NewExam() {
+  const navigate = useNavigate();
+  const toast = useToast();
+  const [scope, setScope] = useState("");
+  const [topic, setTopic] = useState("");
+  const [questions, setQuestions] = useState(20);
+  const [busy, setBusy] = useState(false);
+  async function create() {
+    setBusy(true);
+    try {
+      const made = await api.post<{ sittingId: string; questions: number }>("/api/exams/mine", { ...parseScope(scope), topic: topic || undefined, questions });
+      if (made.questions < questions) toast(`Só há ${made.questions} questões para essa escolha. A prova saiu com esse tamanho.`);
+      navigate(`/simulado/${made.sittingId}`);
+    } catch (error) {
+      setBusy(false);
+      toast(error instanceof ApiError ? error.message : "O simulado precisa de internet.");
+    }
+  }
+  return (
+    <section className="card" aria-labelledby="novo-title">
+      <h2 id="novo-title">Monte seu simulado</h2>
+      <p className="sub">O relógio começa assim que você criar a prova, com {MINUTES_PER_QUESTION} minutos por questão.</p>
+      <FocusPicker title="O QUE VAI CAIR" anyLabel="Geral, com todas as áreas" allowArea scope={scope} topic={topic} onScope={(value) => { setScope(value); setTopic(""); }} onTopic={setTopic} />
+      <label className="field" style={{ marginTop: 12 }}>Tamanho
+        <select className="input" value={questions} onChange={(e) => setQuestions(Number(e.target.value))}>
+          {EXAM_SIZES.map((size) => <option key={size} value={size}>{size} questões · {size * MINUTES_PER_QUESTION} minutos</option>)}
+        </select>
+      </label>
+      <div className="btn-row"><button className="btn" type="button" disabled={busy} onClick={() => void create()}>{busy ? "Montando prova…" : "Criar e começar"}</button></div>
+    </section>
+  );
+}
+
 export function ExamList() {
   const navigate = useNavigate();
   const toast = useToast();
@@ -36,14 +74,15 @@ export function ExamList() {
   }
   return (
     <div className="page">
-      <PageHead kicker="Simulado" title="Provas disponíveis para a sua turma" />
+      <PageHead kicker="Simulado" title="Monte uma prova ou faça a da sua turma" />
       <div className="notice">O simulado precisa de internet. O gabarito só aparece depois da entrega e a prova conta para a sua nota.</div>
+      <NewExam />
       <Async query={query}>
-        {(exams) => exams.length === 0 ? <div className="state">Nenhuma prova foi publicada para a sua turma.</div> : (
+        {(exams) => exams.length === 0 ? <div className="state">Você ainda não tem provas. Monte a primeira acima.</div> : (
           <div className="stack">
             {exams.map((e) => (
               <div className="row-box" key={e.id}>
-                <div className="grow"><div className="row-title">{e.title}</div><div className="row-sub">{e.questions} questões · {e.durationMinutes} minutos</div></div>
+                <div className="grow"><div className="row-title">{e.title}</div><div className="row-sub">{e.questions} questões · {e.durationMinutes} minutos{e.mine ? " · criado por você" : " · da sua turma"}</div></div>
                 {e.sitting?.finished ? <Link className="btn outline" to={`/simulado/${e.sitting.id}/resultado`}>Ver resultado</Link>
                   : <button className="btn" type="button" onClick={() => void start(e.id)}>{e.sitting ? "Continuar" : "Começar"}</button>}
               </div>
@@ -181,6 +220,27 @@ export function SittingPage() {
   return <Async query={query}>{(view) => <Sitting view={view} />}</Async>;
 }
 
+function Correction({ review }: { review: ExamResultView["review"] }) {
+  const wrong = review.filter((q) => q.choice !== q.answer);
+  const [onlyWrong, setOnlyWrong] = useState(wrong.length > 0);
+  const shown = onlyWrong ? wrong : review;
+  return (
+    <section className="card" aria-labelledby="correcao-title">
+      <div className="card-head">
+        <h2 id="correcao-title">Correção da prova</h2>
+        <div className="btn-row" style={{ marginTop: 0 }}>
+          <button className={`btn slim ${onlyWrong ? "" : "soft"}`} type="button" aria-pressed={onlyWrong} onClick={() => setOnlyWrong(true)}>Só os erros ({wrong.length})</button>
+          <button className={`btn slim ${onlyWrong ? "soft" : ""}`} type="button" aria-pressed={!onlyWrong} onClick={() => setOnlyWrong(false)}>Todas ({review.length})</button>
+        </div>
+      </div>
+      <div className="stack">
+        {shown.length === 0 ? <p className="sub">Você acertou todas as questões.</p> : null}
+        {shown.map((q) => <QuestionReview key={q.number} q={q} heading={`Questão ${q.number} · ${q.topic} · ${clock(q.seconds)}`} status={q.choice === q.answer ? "Acertou" : q.choice ? `Errou: marcou ${q.choice}` : "Em branco"} />)}
+      </div>
+    </section>
+  );
+}
+
 function Result({ r }: { r: ExamResultView }) {
   const gain = r.whatIf.reduce((s, w) => Math.max(s, w.gain), 0);
   const fall = r.fatigue[0]?.accuracy != null && r.fatigue[2]?.accuracy != null ? r.fatigue[0].accuracy - r.fatigue[2].accuracy : null;
@@ -190,8 +250,22 @@ function Result({ r }: { r: ExamResultView }) {
       <Metrics label="Notas estimadas">
         {r.scores.map((s) => <ScoreMetric key={s.area} score={s} />)}
         <Metric label="Tempo médio por questão" value={clock(r.avgSeconds)} note={r.avgSeconds <= r.secondsPerQuestion ? "Dentro do ritmo da prova" : `Acima de ${clock(r.secondsPerQuestion)}`} tone={r.avgSeconds <= r.secondsPerQuestion ? "up" : "down"} />
-        <Metric label="Respondidas" value={`${r.answered} / ${r.total}`} />
+        <Metric label="Acertos" value={`${r.correct} / ${r.total}`} note={`${r.answered} respondidas`} />
       </Metrics>
+      <section className="card" aria-labelledby="assuntos-title">
+        <h2 id="assuntos-title">Resultado por assunto</h2>
+        <div className="stack" style={{ gap: 16, marginTop: 20 }}>
+          {r.byTopic.map((t) => (
+            <div className="topic-result" key={`${t.discipline}${t.topic}`}>
+              <div className="grow">
+                <div className="row-head" style={{ marginBottom: 6 }}><span>{t.topic} <small className="note">{t.discipline}</small></span><span className="mono">{t.correct} de {t.total} · {clock(t.avgSeconds)}</span></div>
+                <Bar pct={(t.correct / t.total) * 100} tone={t.correct / t.total < 0.65 ? "amber" : ""} size="h12" />
+              </div>
+              {t.correct < t.total ? <Link className="btn soft slim" to={trainingLink(t)} aria-label={`Treinar ${t.topic}`}>Treinar</Link> : null}
+            </div>
+          ))}
+        </div>
+      </section>
       <div className="grid-2">
         <section className="card" aria-labelledby="fadiga-title">
           <h2 id="fadiga-title">{fall !== null && fall > 0 ? `Curva de fadiga: o acerto cai ${fall} pontos no último terço` : "Curva de fadiga"}</h2>
@@ -230,6 +304,7 @@ function Result({ r }: { r: ExamResultView }) {
           </div>
         )}
       </section>
+      <Correction review={r.review} />
       <div><Pill tone="warn">Nota estimada pelo Ritmo 180. Não é a nota oficial do ENEM.</Pill></div>
     </div>
   );

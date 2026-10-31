@@ -4,6 +4,8 @@ import { requireActor, tenantOf, type Actor } from "../identity/index.ts";
 import { loadItems, loadTrainingCatalog } from "../catalog/index.ts";
 import { recordAttempts } from "./attempts.ts";
 import { answerDiagnostic, startDiagnostic } from "./diagnostic.ts";
+import { mistakeBook } from "./mistakes.ts";
+import { studyPlan } from "./plan.ts";
 import { createPracticeSession } from "./planner.ts";
 
 const student = (actor: Actor) => ({ id: actor.id, schoolId: actor.schoolId! });
@@ -17,6 +19,17 @@ export const practiceRoutes: ModuleRoutes = (app, { db, llm, now }) => {
   app.get("/api/practice/catalog", async (request) => {
     const actor = requireActor(request, "student");
     return db.tenant(tenantOf(actor), (tx) => loadTrainingCatalog(tx));
+  });
+
+  app.get<{ Querystring: { disciplina?: string; assunto?: string } }>("/api/practice/mistakes", async (request) => {
+    const actor = requireActor(request, "student");
+    const { disciplina: discipline, assunto: topic } = request.query;
+    return db.tenant(tenantOf(actor), (tx) => mistakeBook(tx, actor.id, { discipline, topic }));
+  });
+
+  app.get("/api/practice/plan", async (request) => {
+    const actor = requireActor(request, "student");
+    return db.tenant(tenantOf(actor), (tx) => studyPlan(tx, actor.id, now()));
   });
 
   app.post("/api/practice/sessions", async (request) => {

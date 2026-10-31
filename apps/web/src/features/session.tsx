@@ -111,7 +111,7 @@ export function SessionGate({ children }: { children: ReactNode }) {
 }
 
 export const NAV: Record<Role, { to: string; label: string }[]> = {
-  student: [{ to: "/", label: "Painel" }, { to: "/treino", label: "Treino" }, { to: "/leitura", label: "Leitura" }, { to: "/simulado", label: "Simulado" }],
+  student: [{ to: "/", label: "Painel" }, { to: "/plano", label: "Plano" }, { to: "/treino", label: "Treino" }, { to: "/erros", label: "Erros" }, { to: "/leitura", label: "Leitura" }, { to: "/simulado", label: "Simulado" }],
   teacher: [{ to: "/", label: "Professor" }],
   coordinator: [{ to: "/", label: "Direção" }, { to: "/professor", label: "Professor" }, { to: "/implantacao", label: "Implantação" }],
   guardian: [{ to: "/", label: "Família" }],

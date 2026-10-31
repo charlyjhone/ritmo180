@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { LightMyRequestResponse } from "fastify";
-import type { PracticeSessionPack, StudentDashboard, SyncResult, TrainingCatalog } from "@ritmo/contracts";
+import type { ExamResultView, ExamSittingView, ExamSummary, MistakeBook, PracticeSessionPack, StudentDashboard, StudyPlan, SyncResult, TrainingCatalog } from "@ritmo/contracts";
 import { normalizeItems, parseCanonicalJson } from "@ritmo/ingest";
 import { buildApp } from "../src/app.ts";
 import { openPglite } from "../src/platform/db-pglite.ts";
@@ -64,6 +64,69 @@ describe("acesso", () => {
     const coordinator = as(await login(a.coordinator));
     expect((await coordinator.get(`/api/onboarding/${a.schoolId}`)).statusCode).toBe(200);
     expect((await coordinator.get(`/api/onboarding/${a.pendingSchoolId}`)).statusCode).toBe(403);
+  });
+});
+
+const classmate = () => a.students.find((email) => email !== a.student)!;
+
+describe("simulado do aluno", () => {
+  it("monta a prova, impede outra em aberto e devolve a correção completa", async () => {
+    const student = as(await login(classmate()));
+    const made = json<{ sittingId: string; questions: number }>(await student.post("/api/exams/mine", { discipline: "Física", questions: 5 }));
+    expect(made.questions).toBe(5);
+    expect((await student.post("/api/exams/mine", { questions: 5 })).statusCode).toBe(409);
+
+    const listed = json<ExamSummary[]>(await student.get("/api/exams")).find((e) => e.sitting?.id === made.sittingId)!;
+    expect(listed).toMatchObject({ title: "Simulado de Física", mine: true });
+    expect((await as(await login(a.student)).get(`/api/sittings/${made.sittingId}`)).statusCode).toBe(404);
+
+    const view = json<ExamSittingView>(await student.get(`/api/sittings/${made.sittingId}`));
+    expect(JSON.stringify(view)).not.toContain("solutionHtml");
+    await student.put(`/api/sittings/${made.sittingId}/responses`, { position: 0, choice: "A", triage: "answered", timeMs: 40_000 });
+    const result = json<ExamResultView>(await student.post(`/api/sittings/${made.sittingId}/finish`));
+    expect(result.review).toHaveLength(5);
+    expect(result.review[0]!.choice).toBe("A");
+    expect(result.review[1]!.choice).toBeNull();
+    expect(result.correct).toBe(result.review.filter((q) => q.choice === q.answer).length);
+    expect(result.byTopic.reduce((sum, t) => sum + t.total, 0)).toBe(5);
+    expect((await student.post("/api/exams/mine", { topic: "Óptica", questions: 5 })).statusCode).toBe(400);
+    expect((await student.post("/api/exams/mine", { discipline: "Física", topic: "Assunto que não existe", questions: 5 })).statusCode).toBe(422);
+  });
+});
+
+describe("caderno de erros e plano", () => {
+  it("guarda o erro, deixa refazer e tira a questão ao acertar", async () => {
+    const student = as(await login(classmate()));
+    const pack = json<PracticeSessionPack>(await student.post("/api/practice/sessions", { minutes: 15 }));
+    const item = pack.items[0]!;
+    const attempt = (choice: string, sessionId: string, answeredAt: number) => ({
+      id: randomUUID(), sessionId, itemId: item.id, mode: "guided", choice, totalMs: 100_000,
+      phases: { readMs: 40_000, pathMs: 20_000, calcMs: 30_000, checkMs: 10_000 }, usedHint: false, hiddenMs: 0, position: 0, answeredAt,
+    });
+    const wrong = item.alternatives.find((x) => x.letter !== item.key.answer)!.letter;
+    await student.post("/api/practice/sync", { attempts: [attempt(wrong, pack.sessionId, NOW - 60_000)] });
+
+    const book = json<MistakeBook>(await student.get("/api/practice/mistakes"));
+    const entry = book.questions.find((q) => q.itemId === item.id)!;
+    expect(entry).toMatchObject({ choice: wrong, answer: item.key.answer });
+    const filtered = json<MistakeBook>(await student.get(`/api/practice/mistakes?${new URLSearchParams({ disciplina: item.discipline, assunto: item.topic })}`));
+    expect(filtered.questions.every((q) => q.topic === item.topic)).toBe(true);
+
+    const redo = json<PracticeSessionPack>(await student.post("/api/practice/sessions", { minutes: 90, mistakes: true }));
+    expect(redo.items.map((i) => i.id)).toContain(item.id);
+    expect(redo.items.every((i) => book.questions.some((q) => q.itemId === i.id) || book.total > book.questions.length)).toBe(true);
+    await student.post("/api/practice/sync", { attempts: [attempt(item.key.answer, redo.sessionId, NOW)] });
+    expect(json<MistakeBook>(await student.get("/api/practice/mistakes")).questions.map((q) => q.itemId)).not.toContain(item.id);
+  });
+
+  it("mostra a contagem e o foco de cada dia até o ENEM", async () => {
+    const student = as(await login(a.student));
+    const plan = json<StudyPlan>(await student.get("/api/practice/plan"));
+    expect(plan.enem).toMatchObject({ year: 2026, nextDay: "2026-11-08", daysLeft: 19 });
+    expect(plan.days[0]!.date).toBe("2026-10-20");
+    expect(plan.days.filter((d) => d.kind === "exam").map((d) => d.date)).toEqual(["2026-11-08"]);
+    expect(plan.days.find((d) => d.date === "2026-11-07")!.kind).toBe("light");
+    expect(json<StudentDashboard>(await student.get("/api/insights/student")).enem?.daysLeft).toBe(19);
   });
 });
 

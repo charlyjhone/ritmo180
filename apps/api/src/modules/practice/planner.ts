@@ -4,6 +4,7 @@ import { diagnoseTime, estimateTheta, planSession, sumPhases, type LearnerSnapsh
 import type { Tx } from "../../platform/db.ts";
 import { loadCandidates, loadItems, toAnswerKey, toPracticeItem } from "../catalog/index.ts";
 import { createSessionRow } from "./attempts.ts";
+import { pendingMistakeIds } from "./mistakes.ts";
 import { computeSnapshot, extraMinutesOf, irtFor, loadAttempts, scoreResponses } from "./progress.ts";
 
 const DAY_MS = 86_400_000;
@@ -23,10 +24,12 @@ async function assignedTopics(tx: Tx, studentId: string, now: number): Promise<S
 interface Focus {
   discipline?: string;
   topic?: string;
+  mistakes?: boolean;
 }
 
 async function buildPlan(tx: Tx, studentId: string, minutes: number, now: number, focus: Focus = {}): Promise<PlannedBlock[]> {
-  const items = await loadCandidates(tx, focus);
+  const mistakes = focus.mistakes ? await pendingMistakeIds(tx, studentId) : null;
+  const items = (await loadCandidates(tx, focus)).filter((item) => !mistakes || mistakes.has(item.id));
   const attempts = await loadAttempts(tx, studentId);
   const irt = await irtFor(tx, attempts);
   const snapshot = computeSnapshot(studentId, attempts, irt, now);
@@ -37,7 +40,8 @@ async function buildPlan(tx: Tx, studentId: string, minutes: number, now: number
     theta: main.length ? estimateTheta(main).theta : null,
     mastery: new Map(Object.entries(snapshot.mastery).map(([topic, m]) => [topic, m.mastery])),
     bottleneck: snapshot.phases && sumPhases(snapshot.phases) ? diagnoseTime(snapshot.phases, targetMs).bottleneck : null,
-    attempts,
+    // No caderno de erros o aluno pede para refazer: o intervalo sem repetir não vale.
+    attempts: mistakes ? attempts.filter((a) => !mistakes.has(a.itemId)) : attempts,
     now,
     seed: `${studentId}:${Math.floor(now / DAY_MS)}`,
   };
@@ -57,7 +61,7 @@ export async function createPracticeSession(
   input: { mode: "guided" | "exam"; minutes: number } & Focus,
   now: number,
 ): Promise<PracticeSessionPack> {
-  const blocks = await buildPlan(tx, student.id, input.minutes, now, { discipline: input.discipline, topic: input.topic });
+  const blocks = await buildPlan(tx, student.id, input.minutes, now, input);
   const views = blocks.map(blockView);
   const sessionId = await createSessionRow(tx, student, input.mode, views);
   const extra = await extraMinutesOf(tx, student.id);
@@ -65,11 +69,12 @@ export async function createPracticeSession(
   const items = await loadItems(tx, planned.map((p) => p.itemId));
   const chosen = planned.map((entry) => {
     const item = items.get(entry.itemId)!;
-    return { ...toPracticeItem(item, extra), key: toAnswerKey(item), reason: entry.reason };
+    return { ...toPracticeItem(item, extra), key: toAnswerKey(item), reason: input.mistakes ? "Questão do seu caderno de erros" : entry.reason };
   });
   const wanted = Math.floor(input.minutes / 3);
   let notice: string | null = null;
-  if (chosen.length === 0) notice = input.discipline ? "Você já praticou todas as questões desta escolha nas últimas semanas. Escolha outro assunto ou volte em alguns dias." : "Você já praticou todas as questões disponíveis nas últimas semanas. Novas questões aparecem aqui assim que entrarem no banco.";
+  if (chosen.length === 0 && input.mistakes) notice = "Não há questões para refazer nesta escolha. Seu caderno de erros está em dia.";
+  else if (chosen.length === 0) notice = input.discipline ? "Você já praticou todas as questões desta escolha nas últimas semanas. Escolha outro assunto ou volte em alguns dias." : "Você já praticou todas as questões disponíveis nas últimas semanas. Novas questões aparecem aqui assim que entrarem no banco.";
   else if (chosen.length < wanted) notice = `Só há ${chosen.length} ${chosen.length === 1 ? "questão inédita" : "questões inéditas"} para você agora; o restante do tempo fica para quando o banco crescer.`;
   return { sessionId, mode: input.mode, blocks: views, items: chosen, notice };
 }

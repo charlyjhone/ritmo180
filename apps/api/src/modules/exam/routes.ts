@@ -1,7 +1,7 @@
-import { CreateExamInput, ExamResponseInput } from "@ritmo/contracts";
+import { CreateExamInput, CreateMyExamInput, ExamResponseInput } from "@ritmo/contracts";
 import type { ModuleRoutes } from "../../platform/http.ts";
 import { requireActor, tenantOf, type Actor } from "../identity/index.ts";
-import { createExam, examResult, finishSitting, listExams, saveResponse, sittingView, startSitting } from "./service.ts";
+import { createExam, createOwnExam, examResult, finishSitting, listExams, saveResponse, sittingView, startSitting } from "./service.ts";
 
 const student = (actor: Actor) => ({ id: actor.id, schoolId: actor.schoolId! });
 
@@ -10,6 +10,12 @@ export const examRoutes: ModuleRoutes = (app, { db, now }) => {
     const actor = requireActor(request, "teacher", "coordinator");
     const input = CreateExamInput.parse(request.body);
     return db.tenant(tenantOf(actor), (tx) => createExam(tx, { ...input, schoolId: actor.schoolId!, teacherId: actor.id }, now()));
+  });
+
+  app.post("/api/exams/mine", async (request) => {
+    const actor = requireActor(request, "student");
+    const input = CreateMyExamInput.parse(request.body);
+    return db.tenant(tenantOf(actor), (tx) => createOwnExam(tx, student(actor), input, now()));
   });
 
   app.get("/api/exams", async (request) => {
