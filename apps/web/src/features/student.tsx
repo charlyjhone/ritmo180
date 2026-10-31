@@ -21,7 +21,7 @@ function Dashboard({ d }: { d: StudentDashboard }) {
         size="t34"
         kicker={kicker}
         title={`Olá, ${first}. ${time.bottleneck ? `Hoje o foco é ${time.bottleneck.toLowerCase()}.` : "Vamos ao treino de hoje."}`}
-        actions={<Link className="btn" to="/treino">Começar treino do dia{planMinutes ? ` · ${planMinutes} min` : ""}</Link>}
+        actions={<><Link className="btn" to="/treino">Começar treino do dia{planMinutes ? ` · ${planMinutes} min` : ""}</Link><Link className="btn soft" to="/treino">Escolher disciplina e assunto</Link></>}
       />
       {d.diagnosticPending.length > 0 ? (
         <div className="notice">

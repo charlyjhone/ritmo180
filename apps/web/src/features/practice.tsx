@@ -1,8 +1,8 @@
 // Treino: guiado mede cada fase; modo prova mostra tudo de uma vez, como no ENEM. Funciona sem internet.
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
-import type { HintResponse, Letter, PhaseTimes, PracticeSessionPack } from "@ritmo/contracts";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { AREA_NAMES, AREAS, type HintResponse, type Letter, type PhaseTimes, type PracticeSessionPack, type TrainingCatalog } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
 import { clearPack, flushQueue, loadPack, queueAttempt, savePack } from "../lib/offline.ts";
 import { Bar, clock, Html, Pill, useInterval } from "../ui/kit.tsx";
@@ -172,12 +172,41 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext }
   );
 }
 
+function FocusPicker({ discipline, topic, onDiscipline, onTopic }: { discipline: string; topic: string; onDiscipline: (value: string) => void; onTopic: (value: string) => void }) {
+  const query = useQuery({ queryKey: ["practice-catalog"], queryFn: () => api.get<TrainingCatalog>("/api/practice/catalog") });
+  const disciplines = query.data?.disciplines ?? [];
+  const chosen = disciplines.find((d) => d.discipline === discipline);
+  return (
+    <fieldset style={{ border: 0, padding: 0, margin: "20px 0 0", display: "grid", gap: 12 }}>
+      <legend style={{ padding: 0 }}>O QUE TREINAR</legend>
+      <label className="field">Disciplina
+        <select className="input" value={discipline} onChange={(e) => onDiscipline(e.target.value)}>
+          <option value="">Deixar o Ritmo 180 escolher pelas suas lacunas</option>
+          {AREAS.filter((area) => disciplines.some((d) => d.area === area)).map((area) => (
+            <optgroup key={area} label={AREA_NAMES[area]}>
+              {disciplines.filter((d) => d.area === area).map((d) => <option key={d.discipline} value={d.discipline}>{d.discipline} ({d.questions})</option>)}
+            </optgroup>
+          ))}
+        </select>
+      </label>
+      <label className="field">Assunto
+        <select className="input" value={topic} disabled={!chosen} onChange={(e) => onTopic(e.target.value)}>
+          <option value="">{chosen ? "Todos os assuntos" : "Escolha uma disciplina primeiro"}</option>
+          {chosen?.topics.map((t) => <option key={t.topic} value={t.topic}>{t.topic} ({t.questions})</option>)}
+        </select>
+      </label>
+    </fieldset>
+  );
+}
+
 export function PracticePage() {
   const client = useQueryClient();
   const [pack, setPack] = useState<PracticeSessionPack | null>(null);
   const [index, setIndex] = useState(0);
   const [resume, setResume] = useState<{ pack: PracticeSessionPack; done: number } | null>(null);
   const [mode, setMode] = useState<"guided" | "exam">("guided");
+  const [discipline, setDiscipline] = useState("");
+  const [topic, setTopic] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -191,7 +220,7 @@ export function PracticePage() {
     setBusy(true);
     setMessage(null);
     try {
-      const next = await api.post<PracticeSessionPack>("/api/practice/sessions", { mode, minutes: 25 });
+      const next = await api.post<PracticeSessionPack>("/api/practice/sessions", { mode, minutes: 25, discipline: discipline || undefined, topic: topic || undefined });
       if (next.items.length === 0) {
         setMessage(next.notice);
         return;
@@ -250,6 +279,7 @@ export function PracticePage() {
             <button className={`opt`} type="button" aria-pressed={mode === "guided"} onClick={() => setMode("guided")}><strong>Guiado.</strong> A questão aparece em partes e o Raio-X mede cada fase.</button>
             <button className={`opt`} type="button" aria-pressed={mode === "exam"} onClick={() => setMode("exam")}><strong>Prova.</strong> Tudo de uma vez, como no ENEM. Conta para a sua nota.</button>
           </fieldset>
+          <FocusPicker discipline={discipline} topic={topic} onDiscipline={(value) => { setDiscipline(value); setTopic(""); }} onTopic={setTopic} />
           <div className="btn-row"><button className="btn" type="button" disabled={busy} onClick={() => void start()}>{busy ? "Montando treino…" : "Começar treino"}</button><Link className="btn soft" to="/">Voltar ao painel</Link></div>
         </section>
         <section className="card">

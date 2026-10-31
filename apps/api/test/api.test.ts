@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { LightMyRequestResponse } from "fastify";
-import type { PracticeSessionPack, StudentDashboard, SyncResult } from "@ritmo/contracts";
+import type { PracticeSessionPack, StudentDashboard, SyncResult, TrainingCatalog } from "@ritmo/contracts";
 import { normalizeItems, parseCanonicalJson } from "@ritmo/ingest";
 import { buildApp } from "../src/app.ts";
 import { openPglite } from "../src/platform/db-pglite.ts";
@@ -68,6 +68,27 @@ describe("acesso", () => {
 });
 
 describe("treino", () => {
+  it("deixa o aluno treinar a disciplina e o assunto que escolher", async () => {
+    const student = as(await login(a.student));
+    const { disciplines } = json<TrainingCatalog>(await student.get("/api/practice/catalog"));
+    const fisica = disciplines.find((d) => d.discipline === "Física")!;
+    expect(fisica.area).toBe("CN");
+    expect(fisica.topics.reduce((sum, t) => sum + t.questions, 0)).toBe(fisica.questions);
+
+    const byDiscipline = json<PracticeSessionPack>(await student.post("/api/practice/sessions", { minutes: 15, discipline: "Física" }));
+    expect(byDiscipline.items.length).toBeGreaterThan(0);
+    expect(new Set(byDiscipline.items.map((i) => i.discipline))).toEqual(new Set(["Física"]));
+
+    const topic = fisica.topics[0]!.topic;
+    const byTopic = json<PracticeSessionPack>(await student.post("/api/practice/sessions", { minutes: 15, discipline: "Física", topic }));
+    expect(new Set(byTopic.items.map((i) => i.topic))).toEqual(new Set([topic]));
+
+    expect((await student.post("/api/practice/sessions", { topic })).statusCode).toBe(400);
+    const empty = json<PracticeSessionPack>(await student.post("/api/practice/sessions", { discipline: "Física", topic: "Assunto que não existe" }));
+    expect(empty.items).toEqual([]);
+    expect(empty.notice).toContain("desta escolha");
+  });
+
   it("corrige no servidor, ignora reenvio e atualiza o painel", async () => {
     const student = as(await login(a.student));
     const before = json<StudentDashboard>(await student.get("/api/insights/student"));

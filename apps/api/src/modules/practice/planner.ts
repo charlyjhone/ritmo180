@@ -20,8 +20,13 @@ async function assignedTopics(tx: Tx, studentId: string, now: number): Promise<S
   return new Set(rows.map((r) => r.topic));
 }
 
-async function buildPlan(tx: Tx, studentId: string, minutes: number, now: number): Promise<PlannedBlock[]> {
-  const items = await loadCandidates(tx);
+interface Focus {
+  discipline?: string;
+  topic?: string;
+}
+
+async function buildPlan(tx: Tx, studentId: string, minutes: number, now: number, focus: Focus = {}): Promise<PlannedBlock[]> {
+  const items = await loadCandidates(tx, focus);
   const attempts = await loadAttempts(tx, studentId);
   const irt = await irtFor(tx, attempts);
   const snapshot = computeSnapshot(studentId, attempts, irt, now);
@@ -49,10 +54,10 @@ export async function previewPlan(tx: Tx, studentId: string, now: number): Promi
 export async function createPracticeSession(
   tx: Tx,
   student: { id: string; schoolId: string },
-  input: { mode: "guided" | "exam"; minutes: number },
+  input: { mode: "guided" | "exam"; minutes: number } & Focus,
   now: number,
 ): Promise<PracticeSessionPack> {
-  const blocks = await buildPlan(tx, student.id, input.minutes, now);
+  const blocks = await buildPlan(tx, student.id, input.minutes, now, { discipline: input.discipline, topic: input.topic });
   const views = blocks.map(blockView);
   const sessionId = await createSessionRow(tx, student, input.mode, views);
   const extra = await extraMinutesOf(tx, student.id);
@@ -64,7 +69,7 @@ export async function createPracticeSession(
   });
   const wanted = Math.floor(input.minutes / 3);
   let notice: string | null = null;
-  if (chosen.length === 0) notice = "Você já praticou todas as questões disponíveis nas últimas semanas. Novas questões aparecem aqui assim que entrarem no banco.";
+  if (chosen.length === 0) notice = input.discipline ? "Você já praticou todas as questões desta escolha nas últimas semanas. Escolha outro assunto ou volte em alguns dias." : "Você já praticou todas as questões disponíveis nas últimas semanas. Novas questões aparecem aqui assim que entrarem no banco.";
   else if (chosen.length < wanted) notice = `Só há ${chosen.length} ${chosen.length === 1 ? "questão inédita" : "questões inéditas"} para você agora; o restante do tempo fica para quando o banco crescer.`;
   return { sessionId, mode: input.mode, blocks: views, items: chosen, notice };
 }

@@ -164,6 +164,11 @@ describe("seleção", () => {
     expect(plan("aluno-1", pool.filter((c) => c.discipline === "Física"))).toHaveLength(8);
   });
 
+  it("completa a sessão quando o aluno escolhe um assunto só", () => {
+    const pool = Array.from({ length: 12 }, (_, i) => candidate(`q${i}`, "Óptica", 60, 0.2));
+    expect(planSession(pool, base, 24).flatMap((b) => b.items)).toHaveLength(8);
+  });
+
   it("não repete questão recente e traz erro antigo para revisão", () => {
     const pool = [candidate("seen", "Energia", 60, 0.2), candidate("wrong", "Energia", 60, 0.2), candidate("new", "Energia", 60, 0.2)];
     const attempts = [

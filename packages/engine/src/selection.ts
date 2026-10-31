@@ -97,7 +97,7 @@ export function rankCandidates(candidates: readonly Candidate[], learner: Learne
 
 /**
  * Evita que um assunto ou uma disciplina ocupe a sessão inteira, sem deixar de priorizar os mais pesados.
- * Se faltar variedade no banco, completa a sessão acima do limite de disciplina.
+ * Se faltar variedade, como num treino de um assunto só, completa a sessão acima dos limites.
  */
 function pickVaried(
   ranked: readonly PlannedItem[],
@@ -109,14 +109,14 @@ function pickVaried(
   const maxPerTopic = Math.max(2, Math.ceil(count / 2));
   const picked = new Map<string, PlannedItem>();
   const perTopic = new Map<string, number>();
-  for (const limitDiscipline of [true, false]) {
+  for (const limited of [true, false]) {
     for (const entry of ranked) {
       if (picked.size === count) break;
       if (picked.has(entry.itemId)) continue;
       const { topic, discipline } = factsOf(entry.itemId);
       const inTopic = perTopic.get(topic) ?? 0;
       const inDiscipline = perDiscipline.get(discipline) ?? 0;
-      if (inTopic >= maxPerTopic || (limitDiscipline && inDiscipline >= maxPerDiscipline)) continue;
+      if (limited && (inTopic >= maxPerTopic || inDiscipline >= maxPerDiscipline)) continue;
       perTopic.set(topic, inTopic + 1);
       perDiscipline.set(discipline, inDiscipline + 1);
       picked.set(entry.itemId, entry);

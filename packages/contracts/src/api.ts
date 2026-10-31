@@ -45,7 +45,18 @@ export const AttemptInput = z.object({
 export type AttemptInput = z.infer<typeof AttemptInput>;
 
 export const SyncInput = z.object({ attempts: z.array(AttemptInput).min(1).max(500) });
-export const NextSessionInput = z.object({ mode: z.enum(["guided", "exam"]).default("guided"), minutes: z.number().int().min(5).max(90).default(25) });
+export const NextSessionInput = z
+  .object({
+    mode: z.enum(["guided", "exam"]).default("guided"),
+    minutes: z.number().int().min(5).max(90).default(25),
+    discipline: z.string().min(1).max(60).optional(),
+    topic: z.string().min(1).max(160).optional(),
+  })
+  .refine((input) => !input.topic || input.discipline, { message: "Escolha a disciplina do assunto." });
+
+export interface TrainingCatalog {
+  disciplines: { area: Area; discipline: string; questions: number; topics: { topic: string; questions: number }[] }[];
+}
 
 export interface PlannedBlockView {
   kind: string;

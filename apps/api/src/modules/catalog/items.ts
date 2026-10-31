@@ -1,5 +1,5 @@
 // Leitura do banco de questões. Cada módulo que precisa de questão passa por aqui.
-import type { Area, CanonicalItem, Letter, PracticeAnswerKey, PracticeItem } from "@ritmo/contracts";
+import { AREAS, type Area, type CanonicalItem, type Letter, type PracticeAnswerKey, type PracticeItem, type TrainingCatalog } from "@ritmo/contracts";
 import { targetSeconds, type Candidate, type IrtParams } from "@ritmo/engine";
 import type { Tx } from "../../platform/db.ts";
 import { createHash } from "node:crypto";
@@ -66,12 +66,13 @@ export async function loadServable(tx: Tx, filter: { area?: Area; discipline?: s
 }
 
 /** Só o que o motor precisa para escolher. Enunciados e figuras ficam de fora: o banco inteiro passa de 30 MB. */
-export async function loadCandidates(tx: Tx, filter: { area?: Area } = {}): Promise<Candidate[]> {
+export async function loadCandidates(tx: Tx, filter: { area?: Area; discipline?: string; topic?: string } = {}): Promise<Candidate[]> {
   const rows = await tx.query(
     `SELECT i.id, i.area, i.discipline, i.topic, i.word_count, i.calibration, i.irt_a, i.irt_b, i.irt_c,
        st.median_correct_ms, coalesce(st.correct_samples, 0) AS correct_samples, coalesce(t.weight, 0) AS weight
-     ${FROM} WHERE i.status = 'published' AND ($1::text IS NULL OR i.area = $1)`,
-    [filter.area ?? null],
+     ${FROM} WHERE i.status = 'published' AND ($1::text IS NULL OR i.area = $1)
+       AND ($2::text IS NULL OR i.discipline = $2) AND ($3::text IS NULL OR i.topic = $3)`,
+    [filter.area ?? null, filter.discipline ?? null, filter.topic ?? null],
   );
   return rows.map((r) => ({
     id: r.id,
@@ -84,6 +85,23 @@ export async function loadCandidates(tx: Tx, filter: { area?: Area } = {}): Prom
     correctSamples: r.correct_samples,
     topicWeight: r.weight,
   }));
+}
+
+/** O que o aluno pode escolher treinar: só disciplinas e assuntos com questão publicada. */
+export async function loadTrainingCatalog(tx: Tx): Promise<TrainingCatalog> {
+  const rows = await tx.query(`SELECT area, discipline, topic, count(*)::int AS questions FROM items WHERE status = 'published' GROUP BY area, discipline, topic`);
+  type Group = TrainingCatalog["disciplines"][number];
+  const disciplines = new Map<string, Group>();
+  for (const r of rows) {
+    const group: Group = disciplines.get(r.discipline) ?? { area: r.area, discipline: r.discipline, questions: 0, topics: [] };
+    group.questions += r.questions;
+    group.topics.push({ topic: r.topic, questions: r.questions });
+    disciplines.set(r.discipline, group);
+  }
+  const byName = (x: string, y: string) => x.localeCompare(y, "pt-BR");
+  const list = [...disciplines.values()].sort((x, y) => AREAS.indexOf(x.area) - AREAS.indexOf(y.area) || byName(x.discipline, y.discipline));
+  for (const group of list) group.topics.sort((x, y) => byName(x.topic, y.topic));
+  return { disciplines: list };
 }
 
 /** Inclui itens aposentados: uma tentativa antiga continua sendo corrigível. */
