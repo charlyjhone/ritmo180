@@ -1,0 +1,7 @@
+{ "name": "@ritmo/web", "version": "0.2.0", "private": true, "type": "module",
+  "scripts": { "dev": "vite", "build": "vite build" },
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.3.0", "@fontsource/manrope": "^5.3.0", "@fontsource/source-serif-4": "^5.3.1",
+    "@ritmo/contracts": "*", "@tanstack/react-query": "^5.105.0", "react": "^19.3.1", "react-dom": "^19.3.1", "react-router-dom": "^7.18.5"
+  },
+  "devDependencies": { "@types/react": "^19.0.0", "@types/react-dom": "^19.0.0", "@vitejs/plugin-react": "^6.1.2", "vite": "^8.3.5" } }

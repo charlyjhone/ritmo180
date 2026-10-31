@@ -1,13 +1,26 @@
 {
   "name": "ritmo180",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "Protótipo navegável do Ritmo 180: treino de tempo e leitura para o ENEM, com painéis para aluno, professor, direção, família e rede.",
+  "description": "Plataforma de treino de tempo e leitura para o ENEM, multiescola, com motor TRI próprio.",
   "type": "module",
+  "workspaces": ["packages/*", "apps/*"],
+  "engines": { "node": ">=24" },
   "scripts": {
-    "start": "node server.js"
+    "dev:api": "node --watch apps/api/src/main.ts",
+    "dev:web": "npm run dev -w @ritmo/web",
+    "build": "npm run build -w @ritmo/web",
+    "start": "node apps/api/src/main.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "check": "npm run typecheck && npm test",
+    "db:seed": "node apps/api/src/cli/seed.ts",
+    "db:calibrate": "node apps/api/src/cli/calibrate.ts",
+    "ingest": "node packages/ingest/src/cli.ts"
   },
-  "engines": {
-    "node": ">=20"
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
   }
 }
