@@ -11,6 +11,7 @@ import { computeSnapshot, extraMinutesOf, irtFor, loadAttempts, pendingDiagnosti
 import { readingHistory } from "../reading/index.ts";
 
 const WEEKS = 6;
+const DEFAULT_WEEKLY_QUESTIONS = 35;
 const RECENT_FOR_GAPS = 200;
 
 async function gapsOf(tx: Tx, attempts: readonly StoredAttempt[]) {
@@ -66,6 +67,20 @@ export async function studentDashboard(tx: Tx, student: { id: string; name: stri
     diagnosticPending: (await pendingDiagnostics(tx, student)).filter((area) => !measured.has(area)),
     syncedAttempts: attempts.length,
     enem: nextEnem(now),
+    goal: await weeklyGoal(tx, student.id, timestamps, now),
+  };
+}
+
+/** A semana começa na segunda-feira, no horário de Brasília. */
+async function weeklyGoal(tx: Tx, studentId: string, timestamps: readonly number[], now: number): Promise<StudentDashboard["goal"]> {
+  const local = new Date(now - TIME_ZONE_MS);
+  const today = Date.UTC(local.getUTCFullYear(), local.getUTCMonth(), local.getUTCDate()) + TIME_ZONE_MS;
+  const monday = today - ((local.getUTCDay() + 6) % 7) * DAY_MS;
+  const row = (await tx.query(`SELECT questions_per_week FROM student_goals WHERE student_id = $1`, [studentId]))[0];
+  return {
+    target: row?.questions_per_week ?? DEFAULT_WEEKLY_QUESTIONS,
+    done: timestamps.filter((t) => t >= monday).length,
+    trainedToday: timestamps.some((t) => t >= today),
   };
 }
 

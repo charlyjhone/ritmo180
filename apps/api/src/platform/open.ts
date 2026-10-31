@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Database } from "./db.ts";
 import { openPglite } from "./db-pglite.ts";
-import { migrate } from "./migrate.ts";
+import { databaseRoleProblem, migrate } from "./migrate.ts";
 import { openPostgres } from "./db-postgres.ts";
 
 export const DATA_DIR = fileURLToPath(new URL("../../../../data", import.meta.url));
@@ -39,5 +39,9 @@ export async function openDatabase(): Promise<Database> {
     db = await openPglite(`${DATA_DIR}/pg`);
   }
   await migrate(db);
+  if (url) {
+    const problem = await db.system(databaseRoleProblem);
+    if (problem) throw new Error(problem);
+  }
   return db;
 }

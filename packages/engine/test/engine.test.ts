@@ -145,8 +145,9 @@ describe("plano até o ENEM", () => {
   it("conta para a próxima prova e encerra depois da última", () => {
     expect(nextEnem(at("2026-10-31"))).toMatchObject({ nextDay: "2026-11-08", daysLeft: 8 });
     expect(nextEnem(at("2026-11-09"))).toMatchObject({ nextDay: "2026-11-15", daysLeft: 6 });
-    expect(nextEnem(at("2026-11-16"))).toBeNull();
-    expect(planUntilEnem(at("2026-11-16"), priorities)).toEqual([]);
+    expect(nextEnem(at("2026-11-16"))).toMatchObject({ year: 2027, nextDay: "2027-11-07", estimated: true });
+    expect(nextEnem(at("2027-11-15"))).toBeNull();
+    expect(planUntilEnem(at("2027-11-15"), priorities)).toEqual([]);
   });
 
   it("alterna disciplinas, intercala simulado e deixa a véspera leve", () => {
@@ -155,7 +156,7 @@ describe("plano até o ENEM", () => {
     expect(days.find((d) => d.date === "2026-11-05")!.kind).toBe("simulado");
     expect(days.find((d) => d.date === "2026-11-07")!.kind).toBe("light");
     expect(days.find((d) => d.date === "2026-11-08")!.kind).toBe("exam");
-    expect(days.at(-1)).toMatchObject({ date: "2026-11-15", kind: "exam" });
+    expect(days.at(-1)).toMatchObject({ date: "2026-11-15", kind: "exam", areas: ["CN", "MT"] });
   });
 });
 

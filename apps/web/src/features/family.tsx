@@ -1,5 +1,6 @@
 // Portal da família: tela de celular com um resumo por filho.
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import type { FamilyChild } from "@ritmo/contracts";
 import { api } from "../lib/api.ts";
@@ -108,7 +109,7 @@ function Portal({ kids }: { kids: FamilyChild[] }) {
             <div className="fam-logo">180</div>
             <div><div className="fam-name">{me.school?.name}</div><div className="fam-sub">Portal da família</div></div>
           </div>
-          <button className="fam-bell" type="button" aria-label="Sair" onClick={() => void logout()}>Sair</button>
+          <div className="btn-row" style={{ margin: 0 }}><Link className="fam-bell" to="/conta">Conta</Link><button className="fam-bell" type="button" onClick={() => void logout()}>Sair</button></div>
         </div>
         {kids.length > 0 ? <Tabs className="fam-tabs" label="Filhos" active={active} onChange={setActive} items={kids.map((c) => ({ id: c.id, label: `${c.name}${c.grade ? ` · ${c.grade}` : ""}` }))} /> : null}
       </div>

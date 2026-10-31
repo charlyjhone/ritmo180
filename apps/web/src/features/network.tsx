@@ -2,7 +2,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { NetworkDashboard } from "@ritmo/contracts";
+import type { ItemSuggestionView, NetworkDashboard } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
 import { Async, Html, Metric, Metrics, number, PageHead, Pill } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
@@ -74,6 +74,40 @@ function ReviewQueue() {
   );
 }
 
+function SuggestionQueue() {
+  const client = useQueryClient();
+  const query = useQuery({ queryKey: ["suggestions"], queryFn: () => api.get<ItemSuggestionView[]>("/api/content/suggestions") });
+  async function decide(id: string, approved: boolean) {
+    await api.post(`/api/content/suggestions/${id}`, { approved });
+    await client.invalidateQueries({ queryKey: ["suggestions"] });
+  }
+  return (
+    <section className="card" aria-labelledby="sug-title">
+      <h2 id="sug-title">Resoluções de IA aguardando revisão</h2>
+      <Async query={query}>
+        {(items) => items.length === 0 ? <p className="sub">Nada na fila.</p> : (
+          <div className="stack">
+            {items.map((item) => (
+              <div className="flag" key={item.itemId}>
+                <div className="flag-head">{item.discipline}<span>{item.topic} · gabarito {item.answer}</span></div>
+                <Html html={item.questionHtml} />
+                <p className="sub"><b>Resolução proposta</b></p>
+                <Html html={item.solutionHtml} />
+                <p className="sub"><b>Dica:</b> {item.hint}</p>
+                {Object.entries(item.traps).map(([letter, trap]) => <p className="sub" key={letter}><b>{letter}:</b> {String(trap)}</p>)}
+                <div className="btn-row">
+                  <button className="btn slim" type="button" onClick={() => void decide(item.itemId, true)}>Aprovar</button>
+                  <button className="btn outline slim" type="button" onClick={() => void decide(item.itemId, false)}>Recusar</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </Async>
+    </section>
+  );
+}
+
 function Board({ d }: { d: NetworkDashboard }) {
   const m = d.metrics;
   const maxFunnel = Math.max(1, ...d.funnel.map((f) => f.count));
@@ -108,6 +142,7 @@ function Board({ d }: { d: NetworkDashboard }) {
         )}
       </section>
       <ReviewQueue />
+      <SuggestionQueue />
       <section className="card" aria-labelledby="esc-title">
         <h2 id="esc-title">Escolas</h2>
         <div className="table-wrap">

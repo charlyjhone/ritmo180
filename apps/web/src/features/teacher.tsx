@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ClassRef, TeacherDashboard } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
+import { ClassExams } from "./class-exams.tsx";
 import { Async, Bar, clock, clockOrDash, Metric, Metrics, PageHead, Pill, saveFile, points, TimeStrip } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
 
@@ -37,8 +38,6 @@ function Board({ d, refresh }: { d: TeacherDashboard; refresh: () => void }) {
     return weakest ? sendTrail(weakest, a.studentId, a.name) : undefined;
   }
 
-  const createExam = () => run(() => api.post("/api/exams", { title: `Simulado de ${d.class.name}`, classId: d.class.id, parts: [{ area: "CN", count: 20 }] }), "Simulado publicado para a turma.");
-
   return (
     <>
       <PageHead
@@ -46,8 +45,9 @@ function Board({ d, refresh }: { d: TeacherDashboard; refresh: () => void }) {
         title={d.headline}
         actions={
           <div className="page-actions">
-            <button className="btn outline" type="button" onClick={exportCsv}>Exportar relatório</button>
-            <button className="btn outline" type="button" onClick={() => void createExam()}>Publicar simulado</button>
+            <button className="btn outline" type="button" onClick={exportCsv}>Exportar planilha</button>
+            <button className="btn outline" type="button" onClick={() => window.print()}>Imprimir ou salvar PDF</button>
+            <a className="btn outline" href="#simulados">Simulados</a>
             {weakest ? <button className="btn" type="button" onClick={() => void sendTrail(weakest)}>Enviar trilha de {weakest} à turma</button> : null}
           </div>
         }
@@ -129,6 +129,7 @@ function Board({ d, refresh }: { d: TeacherDashboard; refresh: () => void }) {
           </div>
         </section>
       </div>
+      <ClassExams classId={d.class.id} className={d.class.name} />
     </>
   );
 }

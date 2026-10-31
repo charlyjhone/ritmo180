@@ -13,8 +13,41 @@ export interface Me {
   grade: string | null;
   className: string | null;
   /** Motivo pelo qual o aluno ainda não pode usar a plataforma. */
-  blocked: "school_not_released" | "consent_required" | null;
+  blocked: "school_not_released" | "consent_required" | "password_change" | null;
 }
+
+export const ChangePasswordInput = z.object({ current: z.string().min(1).max(200), next: z.string().min(8, "Use pelo menos 8 caracteres.").max(200) });
+
+export interface Person {
+  id: string;
+  name: string;
+  email: string | null;
+  role: Role;
+  className: string | null;
+}
+
+export const DeletionRequestInput = z.object({ studentId: z.string().uuid().optional() });
+export const ResolveDeletionInput = z.object({ approved: z.boolean() });
+
+export interface DeletionRequestView {
+  id: string;
+  student: string;
+  requester: string;
+  createdAt: number;
+}
+
+export interface ItemSuggestionView {
+  itemId: string;
+  discipline: string;
+  topic: string;
+  answer: Letter;
+  questionHtml: string;
+  solutionHtml: string;
+  traps: Partial<Record<Letter, string>>;
+  hint: string;
+}
+
+export const GoalInput = z.object({ questions: z.number().int().min(5).max(500) });
 
 export const PhaseTimesSchema = z.object({
   readMs: z.number().int().min(0).max(7_200_000),
@@ -113,6 +146,7 @@ export interface StudentDashboard {
   diagnosticPending: Area[];
   syncedAttempts: number;
   enem: StudyPlan["enem"];
+  goal: { target: number; done: number; trainedToday: boolean };
 }
 
 export const ReadingSubmit = z.object({
@@ -145,8 +179,23 @@ export const ExamResponseInput = z.object({
 export const CreateExamInput = z.object({
   title: z.string().min(3).max(120),
   classId: z.string().uuid(),
-  parts: z.array(z.object({ area: z.enum(AREAS), discipline: z.string().optional(), count: z.number().int().min(1).max(90) })).min(1),
-});
+  /** Prova por blocos de área. Sem ela, valem o foco e `questions`, distribuídas entre as áreas disponíveis. */
+  parts: z.array(z.object({ area: z.enum(AREAS), discipline: z.string().optional(), count: z.number().int().min(1).max(90) })).min(1).optional(),
+  area: z.enum(AREAS).optional(),
+  discipline: z.string().min(1).max(80).optional(),
+  topic: z.string().min(1).max(160).optional(),
+  questions: z.number().int().min(1).max(90).optional(),
+}).refine((input) => input.parts || input.questions, { message: "Informe quantas questões a prova deve ter." });
+
+export interface ClassExamReport {
+  id: string;
+  title: string;
+  questions: number;
+  createdAt: number;
+  /** Do pior para o melhor: é por onde a aula de revisão começa. */
+  weakestTopics: { topic: string; correctPct: number }[];
+  students: { id: string; name: string; status: "pending" | "started" | "finished"; answered: number; correct: number }[];
+}
 
 export const CreateMyExamInput = z
   .object({
@@ -186,8 +235,9 @@ export interface MistakeBook {
 }
 
 export interface StudyPlan {
-  enem: { year: number; nextDay: string; daysLeft: number; days: readonly string[] } | null;
-  days: { date: string; kind: "focus" | "simulado" | "light" | "exam"; discipline?: string; topic?: string }[];
+  /** `estimated` indica que o edital ainda não saiu. */
+  enem: { year: number; nextDay: string; daysLeft: number; days: readonly string[]; estimated: boolean } | null;
+  days: { date: string; kind: "focus" | "simulado" | "light" | "exam"; discipline?: string; topic?: string; areas?: readonly Area[]; done?: boolean }[];
 }
 
 export interface ExamSittingView {

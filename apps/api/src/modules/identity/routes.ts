@@ -1,17 +1,17 @@
 import { createHash, randomBytes } from "node:crypto";
 import rateLimit from "@fastify/rate-limit";
-import { LoginInput, type Me } from "@ritmo/contracts";
+import { ChangePasswordInput, LoginInput, type Me } from "@ritmo/contracts";
 import { HttpError, type ModuleRoutes } from "../../platform/http.ts";
 import type { Tx } from "../../platform/db.ts";
 import { requireActor, type Actor } from "./actor.ts";
-import { verifyPassword } from "./passwords.ts";
+import { hashPassword, verifyPassword } from "./passwords.ts";
 
 const COOKIE = "ritmo_session";
 const SESSION_DAYS = 14;
 const sha256 = (value: string) => createHash("sha256").update(value).digest("hex");
 
 const ACTOR_SQL = `
-  SELECT u.id, u.name, u.role, u.school_id, u.grade, s.released_at, gc.consent_at
+  SELECT u.id, u.name, u.role, u.school_id, u.grade, u.must_change_password, s.released_at, gc.consent_at
   FROM sessions se
   JOIN users u ON u.id = se.user_id AND u.deactivated_at IS NULL
   LEFT JOIN schools s ON s.id = u.school_id
@@ -22,7 +22,8 @@ async function loadActor(tx: Tx, token: string, now: number): Promise<Actor | nu
   const row = (await tx.query(ACTOR_SQL, [sha256(token), new Date(now)]))[0];
   if (!row) return null;
   let blocked: Actor["blocked"] = null;
-  if (row.role === "student") {
+  if (row.must_change_password) blocked = "password_change";
+  else if (row.role === "student") {
     if (!row.released_at) blocked = "school_not_released";
     else if (!row.consent_at) blocked = "consent_required";
   }
@@ -49,6 +50,22 @@ export const identityRoutes: ModuleRoutes = (app, { db, now, secureCookies, logi
       reply.setCookie(COOKIE, token, { httpOnly: true, sameSite: "lax", secure: secureCookies, path: "/", expires });
       return { ok: true };
     });
+  });
+
+  // Não passa por requireActor: é justamente o que libera quem está bloqueado com senha provisória.
+  app.post("/api/auth/password", async (request) => {
+    const actor = request.actor;
+    if (!actor) throw new HttpError(401, "unauthenticated", "Faça login para continuar.");
+    const { current, next } = ChangePasswordInput.parse(request.body);
+    const user = await db.system(async (tx) => (await tx.query(`SELECT pass_hash, pass_salt FROM users WHERE id = $1`, [actor.id]))[0]!);
+    if (!(await verifyPassword(current, user.pass_salt, user.pass_hash))) throw new HttpError(422, "bad_password", "A senha atual não confere.");
+    if (current === next) throw new HttpError(422, "same_password", "Escolha uma senha diferente da atual.");
+    const { hash, salt } = await hashPassword(next);
+    await db.system(async (tx) => {
+      await tx.query(`UPDATE users SET pass_hash = $2, pass_salt = $3, must_change_password = false WHERE id = $1`, [actor.id, hash, salt]);
+      await tx.query(`DELETE FROM sessions WHERE user_id = $1 AND token_hash <> $2`, [actor.id, sha256(request.cookies[COOKIE]!)]);
+    });
+    return { ok: true };
   });
 
   app.post("/api/auth/logout", async (request, reply) => {

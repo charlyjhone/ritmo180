@@ -13,14 +13,17 @@ import "@fontsource/source-serif-4/400.css";
 import "@fontsource/source-serif-4/600.css";
 import "./styles.css";
 import { onQueueChange, pendingCount, startSync } from "./lib/offline.ts";
+import { AccountPage } from "./features/account.tsx";
 import { DiagnosticPage } from "./features/diagnostic.tsx";
 import { ExamList, ResultPage, SittingPage } from "./features/exam.tsx";
 import { FamilyHome } from "./features/family.tsx";
 import { NetworkHome } from "./features/network.tsx";
 import { OnboardingPage } from "./features/onboarding.tsx";
 import { MistakesPage } from "./features/mistakes.tsx";
+import { PeoplePage } from "./features/people.tsx";
 import { PlanPage } from "./features/plan.tsx";
 import { PracticePage } from "./features/practice.tsx";
+import { PrivacyPolicy } from "./features/privacy-policy.tsx";
 import { ReadingPage } from "./features/reading.tsx";
 import { SchoolHome } from "./features/school.tsx";
 import { logout, NAV, SessionGate, useMe } from "./features/session.tsx";
@@ -56,8 +59,9 @@ function Shell() {
   const location = useLocation();
   const main = useRef<HTMLElement>(null);
   useEffect(() => {
-    const section = NAV[me.role].filter((link) => location.pathname.startsWith(link.to)).at(-1);
-    document.title = section ? `${section.label} · Ritmo 180` : "Ritmo 180";
+    const section = NAV[me.role].find((link) => (link.to === "/" ? location.pathname === "/" : location.pathname.startsWith(link.to)));
+    const label = location.pathname === "/conta" ? "Minha conta" : section?.label;
+    document.title = label ? `${label} · Ritmo 180` : "Ritmo 180";
     main.current?.focus();
     window.scrollTo(0, 0);
   }, [location.pathname, me.role]);
@@ -77,6 +81,7 @@ function Shell() {
           <div className="topbar-end">
             <SyncStatus />
             {me.school?.isDemo ? <Pill tone="warn">Demonstração</Pill> : null}
+            <NavLink className="btn soft slim" to="/conta">Conta</NavLink>
             <button className="btn soft slim" type="button" onClick={() => void logout()}>Sair</button>
           </div>
         </div>
@@ -96,11 +101,12 @@ function Home() {
 
 function Router() {
   const { role } = useMe();
-  if (role === "guardian") return <FamilyHome />;
+  if (role === "guardian") return <Routes><Route path="conta" element={<AccountPage />} /><Route path="*" element={<FamilyHome />} /></Routes>;
   return (
     <Routes>
       <Route element={<Shell />}>
         <Route index element={<Home />} />
+        <Route path="conta" element={<AccountPage />} />
         {role === "student" ? (
           <>
             <Route path="treino" element={<PracticePage />} />
@@ -113,7 +119,12 @@ function Router() {
             <Route path="diagnostico/:area" element={<DiagnosticPage />} />
           </>
         ) : null}
-        {role === "coordinator" ? <Route path="professor" element={<TeacherHome />} /> : null}
+        {role === "coordinator" ? (
+          <>
+            <Route path="professor" element={<TeacherHome />} />
+            <Route path="pessoas" element={<PeoplePage />} />
+          </>
+        ) : null}
         {role === "coordinator" || role === "network_admin" ? (
           <>
             <Route path="implantacao" element={<OnboardingPage />} />
@@ -134,7 +145,10 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={client}>
       <ToastProvider>
         <BrowserRouter>
-          <SessionGate><Router /></SessionGate>
+          <Routes>
+            <Route path="privacidade" element={<PrivacyPolicy />} />
+            <Route path="*" element={<SessionGate><Router /></SessionGate>} />
+          </Routes>
         </BrowserRouter>
       </ToastProvider>
     </QueryClientProvider>

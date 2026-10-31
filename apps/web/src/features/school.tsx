@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { SchoolDashboard } from "@ritmo/contracts";
 import { api } from "../lib/api.ts";
-import { Async, Bar, clockOrDash, Metric, Metrics, PageHead, Pill, points } from "../ui/kit.tsx";
+import { Async, Bar, clockOrDash, Metric, Metrics, PageHead, Pill, points, saveFile } from "../ui/kit.tsx";
 
 const pct = (v: number | null) => (v === null ? "—" : `${v}%`);
 const dash = (v: number | null) => (v === null ? "—" : v);
@@ -16,12 +16,17 @@ function Board({ d }: { d: SchoolDashboard }) {
     await api.post(`/api/school/messages/${id}/read`);
     await client.invalidateQueries({ queryKey: ["school"] });
   }
+  function exportCsv() {
+    const header = ["Turma", "Alunos", "Ativos", "Índice Ritmo", "Tempo médio", "Variação na semana"];
+    const rows = d.classes.map((c) => [c.name, c.students, c.active, pct(c.ritmo), clockOrDash(c.avgSeconds), c.delta ?? ""]);
+    saveFile(`${d.school.name}.csv`, [header, ...rows].map((r) => r.join(";")).join("\n"));
+  }
   return (
     <div className="page">
       <PageHead
         kicker={`Direção e coordenação · ${d.school.name}`}
         title={d.headline}
-        actions={<div className="page-actions"><Link className="btn outline" to="/implantacao">Implantação</Link><button className="btn" type="button" onClick={() => window.print()}>Relatório para reunião</button></div>}
+        actions={<div className="page-actions"><Link className="btn outline" to="/implantacao">Implantação</Link><button className="btn outline" type="button" onClick={exportCsv}>Exportar planilha</button><button className="btn" type="button" onClick={() => window.print()}>Imprimir ou salvar PDF</button></div>}
       />
       {d.dataNotice ? <div className="notice warn">{d.dataNotice}</div> : null}
       <Metrics label="Indicadores da escola">

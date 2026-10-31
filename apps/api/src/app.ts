@@ -12,14 +12,17 @@ import { examRoutes } from "./modules/exam/index.ts";
 import { identityRoutes } from "./modules/identity/index.ts";
 import { insightsRoutes } from "./modules/insights/index.ts";
 import { onboardingRoutes } from "./modules/onboarding/index.ts";
+import { peopleRoutes } from "./modules/people/index.ts";
 import { practiceRoutes } from "./modules/practice/index.ts";
+import { privacyRoutes } from "./modules/privacy/index.ts";
 import { readingRoutes } from "./modules/reading/index.ts";
 
 const BODY_LIMIT = 8 * 1024 * 1024;
-const MODULES = [identityRoutes, practiceRoutes, readingRoutes, examRoutes, insightsRoutes, onboardingRoutes, contentRoutes];
+const MODULES = [identityRoutes, practiceRoutes, readingRoutes, examRoutes, insightsRoutes, onboardingRoutes, contentRoutes, peopleRoutes, privacyRoutes];
 
 export async function buildApp(deps: AppDeps, options: { webRoot?: string; logger?: boolean } = {}) {
-  const app = Fastify({ logger: options.logger ?? false, bodyLimit: BODY_LIMIT });
+  // Em produção o servidor fica atrás de um proxy: sem isto, o limite de login veria todos com o mesmo IP.
+  const app = Fastify({ logger: options.logger ?? false, bodyLimit: BODY_LIMIT, trustProxy: deps.secureCookies });
   await app.register(cookie);
   await app.register(helmet, {
     hsts: deps.secureCookies,
@@ -50,7 +53,10 @@ export async function buildApp(deps: AppDeps, options: { webRoot?: string; logge
   });
 
   for (const routes of MODULES) routes(app, deps);
-  app.get("/api/health", async () => ({ ok: true }));
+  app.get("/api/health", async () => {
+    await deps.db.system((tx) => tx.query(`SELECT 1`));
+    return { ok: true };
+  });
 
   const webRoot = options.webRoot;
   if (webRoot && existsSync(join(webRoot, "index.html"))) {

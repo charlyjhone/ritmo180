@@ -1,6 +1,6 @@
 // Simulado: prova sem gabarito até a entrega, com o relógio controlado pelo servidor.
 import { randomUUID } from "node:crypto";
-import { AREA_NAMES, type Area, type ExamResultView, type ExamSittingView, type ExamSummary, type Letter, type PracticeItem } from "@ritmo/contracts";
+import { AREA_NAMES, type Area, type ClassExamReport, type ExamResultView, type ExamSittingView, type ExamSummary, type Letter, type PracticeItem } from "@ritmo/contracts";
 import {
   accommodationFactor, assembleExam, DEFAULT_SECONDS_PER_QUESTION, difficultyScore, estimateTheta, fatigueCurve, formatClock,
   incoherences, SeededRng, spreadAcrossAreas, whatIfScenarios, type ExamResponse,
@@ -11,15 +11,21 @@ import { loadCandidates, loadItems, toPracticeItem } from "../catalog/index.ts";
 import { createSessionRow, extraMinutesOf, recordAttempts, scoreViewOf } from "../practice/index.ts";
 
 const GRACE_MS = 60_000;
+const REPORTED_EXAMS = 5;
+const WEAKEST_TOPICS = 3;
 
 const AVAILABLE_TO_STUDENT = `(e.owner_student_id = $1 OR e.class_id IN (SELECT class_id FROM class_students WHERE student_id = $1))`;
 
 export async function createExam(
   tx: Tx,
-  input: { schoolId: string; classId: string; teacherId: string; title: string; parts: { area: Area; discipline?: string; count: number }[] },
+  input: {
+    schoolId: string; classId: string; teacherId: string; title: string; parts?: { area: Area; discipline?: string; count: number }[];
+    area?: Area; discipline?: string; topic?: string; questions?: number;
+  },
   now: number,
 ) {
-  const assembled = assembleExam(input.parts, await loadCandidates(tx), new SeededRng(now % 2_147_483_647));
+  const pool = await loadCandidates(tx, input);
+  const assembled = assembleExam(input.parts ?? spreadAcrossAreas(pool, input.questions!), pool, new SeededRng(now % 2_147_483_647));
   if (assembled.itemIds.length === 0) throw new HttpError(422, "no_items", "Não há questões publicadas para esta prova.");
   const seconds = Math.round(DEFAULT_SECONDS_PER_QUESTION);
   const id = randomUUID();
@@ -28,6 +34,44 @@ export async function createExam(
     [id, input.schoolId, input.classId, input.title, assembled.itemIds, assembled.itemIds.length * seconds, seconds, input.teacherId],
   );
   return { id, questions: assembled.itemIds.length, shortages: assembled.shortages };
+}
+
+/** Resultado de cada simulado da turma. Só conta as provas entregues: prova em aberto ainda pode mudar. */
+export async function classExamReports(tx: Tx, classId: string): Promise<ClassExamReport[]> {
+  const exams = await tx.query(`SELECT id, title, item_ids, created_at FROM exams WHERE class_id = $1 ORDER BY created_at DESC LIMIT $2`, [classId, REPORTED_EXAMS]);
+  const students = await tx.query(`SELECT u.id, u.name FROM class_students cs JOIN users u ON u.id = cs.student_id WHERE cs.class_id = $1 ORDER BY u.name`, [classId]);
+  return Promise.all(exams.map(async (exam) => {
+    const sittings = await tx.query(
+      `SELECT s.student_id, s.finished_at, count(r.choice)::int AS answered, count(*) FILTER (WHERE r.choice = i.answer)::int AS correct
+       FROM exam_sittings s LEFT JOIN exam_responses r ON r.sitting_id = s.id LEFT JOIN items i ON i.id = r.item_id
+       WHERE s.exam_id = $1 GROUP BY s.student_id, s.finished_at`,
+      [exam.id],
+    );
+    const topics = await tx.query(
+      `SELECT i.topic, count(*)::int AS total, count(*) FILTER (WHERE r.choice = i.answer)::int AS correct
+       FROM exam_sittings s JOIN exam_responses r ON r.sitting_id = s.id JOIN items i ON i.id = r.item_id
+       WHERE s.exam_id = $1 AND s.finished_at IS NOT NULL GROUP BY i.topic`,
+      [exam.id],
+    );
+    const bySitting = new Map(sittings.map((s) => [s.student_id, s]));
+    return {
+      id: exam.id,
+      title: exam.title,
+      questions: exam.item_ids.length,
+      createdAt: new Date(exam.created_at).getTime(),
+      weakestTopics: topics
+        .map((t) => ({ topic: t.topic as string, correctPct: Math.round((t.correct / t.total) * 100) }))
+        .sort((x, y) => x.correctPct - y.correctPct).slice(0, WEAKEST_TOPICS),
+      students: students.map((student) => {
+        const sitting = bySitting.get(student.id);
+        const finished = !!sitting?.finished_at;
+        return {
+          id: student.id, name: student.name, status: finished ? "finished" as const : sitting ? "started" as const : "pending" as const,
+          answered: sitting?.answered ?? 0, correct: finished ? sitting!.correct : 0,
+        };
+      }),
+    };
+  }));
 }
 
 export async function listExams(tx: Tx, studentId: string): Promise<ExamSummary[]> {

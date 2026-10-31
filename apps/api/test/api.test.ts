@@ -2,15 +2,15 @@ import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { LightMyRequestResponse } from "fastify";
-import type { ExamResultView, ExamSittingView, ExamSummary, MistakeBook, PracticeSessionPack, StudentDashboard, StudyPlan, SyncResult, TrainingCatalog } from "@ritmo/contracts";
+import type { ClassExamReport, DeletionRequestView, ExamResultView, ExamSittingView, ExamSummary, ItemSuggestionView, MistakeBook, Person, PracticeSessionPack, StudentDashboard, StudyPlan, SyncResult, TrainingCatalog } from "@ritmo/contracts";
 import { normalizeItems, parseCanonicalJson } from "@ritmo/ingest";
 import { buildApp } from "../src/app.ts";
 import { openPglite } from "../src/platform/db-pglite.ts";
-import { migrate } from "../src/platform/migrate.ts";
+import { databaseRoleProblem, migrate } from "../src/platform/migrate.ts";
 import type { Database } from "../src/platform/db.ts";
 import { seedDemo, type DemoAccounts } from "../src/seed/demo.ts";
 import { importBatch, releaseOfficialItems } from "../src/seed/install.ts";
-import { generateItems, reviewItem, reviewQueue } from "../src/modules/content/index.ts";
+import { enrichItems, generateItems, reviewItem, reviewQueue } from "../src/modules/content/index.ts";
 import type { Llm } from "../src/platform/llm.ts";
 
 const NOW = Date.parse("2026-10-20T15:00:00Z");
@@ -323,7 +323,10 @@ X;invalido;;9;nada;`;
     const signIn = async (line: string) => {
       const [, email, password] = line.split(",");
       const r = await app.inject({ method: "POST", url: "/api/auth/login", payload: { email, password } });
-      return as(r.cookies[0]!.value);
+      const client = as(r.cookies[0]!.value);
+      expect((await client.get("/api/insights/student")).json<any>().code).toBe("password_change");
+      expect((await client.post("/api/auth/password", { current: password, next: "minha-senha-nova" })).statusCode).toBe(200);
+      return client;
     };
     const consented = await signIn(lines[1]!);
     const noConsent = await signIn(lines[2]!);
@@ -359,6 +362,64 @@ describe("conteúdo com IA", () => {
   });
 });
 
+describe("complemento com IA", () => {
+  it("sugere para questão oficial sem resolução, recusa figura e só preenche o que está vazio", async () => {
+    const [example] = parseCanonicalJson(readFileSync(new URL("../../../packages/ingest/examples/exemplo-disciplinas.json", import.meta.url), "utf8")) as Record<string, unknown>[];
+    const official = { ...example, source: "inep_official", rightsCleared: true, solutionHtml: "" };
+    const batch = normalizeItems([
+      { ...official, externalId: "ia-texto" },
+      { ...official, externalId: "ia-figura", stemHtml: `<p>Veja a figura.</p><img src="data:image/png;base64,AAAA" alt="Figura">` },
+    ]);
+    expect(batch.rejected).toEqual([]);
+    await importBatch(db, batch, "json", "teste");
+    await releaseOfficialItems(db, "Teste");
+    const idOf = (external: string) => db.system(async (tx) => (await tx.query(`SELECT id, answer, solution_html, alternatives FROM items WHERE external_id = $1`, [external]))[0]!);
+    const target = await idOf("ia-texto");
+    await db.system((tx) => tx.query(`UPDATE items SET solution_html = 'ja tem' WHERE status = 'published' AND solution_html = '' AND external_id NOT IN ('ia-texto', 'ia-figura')`));
+    const prompts: string[] = [];
+    const llm: Llm = {
+      async json<T>(request: { prompt: string }) {
+        prompts.push(request.prompt);
+        return { solutionHtml: "<p>Passo a passo.</p><script>alert(1)</script>", hint: "Comece pelo enunciado.", traps: ["A", "B", "C", "D", "E"].map((letter) => ({ letter, trap: `Erro ${letter}` })) } as T;
+      },
+    };
+    expect(await enrichItems(db, llm, 10)).toEqual({ suggested: 1, failed: 0 });
+    expect(prompts[0]).toContain(`Gabarito oficial: ${target.answer}`);
+    expect(await enrichItems(db, llm, 10)).toEqual({ suggested: 0, failed: 0 });
+
+    expect((await as(await login(a.teacher)).get("/api/content/suggestions")).statusCode).toBe(403);
+    const network = as(await login(a.network));
+    const [suggestion] = json<ItemSuggestionView[]>(await network.get("/api/content/suggestions"));
+    expect(suggestion!.itemId).toBe(target.id);
+    expect(suggestion!.solutionHtml).not.toContain("script");
+    expect(suggestion!.traps[target.answer as "A"]).toBeUndefined();
+    expect((await idOf("ia-texto")).solution_html).toBe("");
+    expect((await network.post(`/api/content/suggestions/${target.id}`, { approved: true })).statusCode).toBe(200);
+    const updated = await idOf("ia-texto");
+    expect(updated.solution_html).toContain("Passo a passo");
+    expect(updated.alternatives.find((x: { letter: string }) => x.letter !== updated.answer).trap).toBeTruthy();
+    expect(json<ItemSuggestionView[]>(await network.get("/api/content/suggestions"))).toEqual([]);
+  });
+});
+
+describe("banco de produção", () => {
+  it("recusa o papel que não enxergaria as linhas por causa do RLS", async () => {
+    await expect(db.system(databaseRoleProblem)).resolves.toBeNull();
+    const asRole = (attributes: string, member: boolean) => db.system(async (tx) => {
+      const name = `papel_${randomUUID().replaceAll("-", "")}`;
+      await tx.exec(`CREATE ROLE ${name} NOLOGIN ${attributes}`);
+      if (member) await tx.exec(`GRANT app_user TO ${name}`);
+      await tx.exec(`SET LOCAL ROLE ${name}`);
+      const problem = await databaseRoleProblem(tx);
+      await tx.exec(`RESET ROLE`);
+      return problem;
+    });
+    expect(await asRole("NOBYPASSRLS", true)).toContain("BYPASSRLS");
+    expect(await asRole("BYPASSRLS", false)).toContain("membro de app_user");
+    expect(await asRole("BYPASSRLS", true)).toBeNull();
+  });
+});
+
 describe("liberação de conteúdo", () => {
   it("só publica questão oficial depois da confirmação e registra quem confirmou", async () => {
     const [example] = parseCanonicalJson(readFileSync(new URL("../../../packages/ingest/examples/exemplo-disciplinas.json", import.meta.url), "utf8")) as Record<string, unknown>[];
@@ -372,6 +433,110 @@ describe("liberação de conteúdo", () => {
     expect(released.status).toBe("published");
     expect(released.rights_cleared).toBe(true);
     expect(released.rights_note).toContain("Direitos confirmados por Coordenação.");
+  });
+});
+
+describe("contas", () => {
+  it("troca a senha, exige a senha atual e derruba as outras sessões", async () => {
+    const email = a.students.at(-1)!;
+    const first = await login(email);
+    const second = as(await login(email));
+    const client = as(first);
+    expect((await client.post("/api/auth/password", { current: "errada-errada", next: "nova-senha-123" })).statusCode).toBe(422);
+    expect((await client.post("/api/auth/password", { current: PASSWORD, next: "curta" })).statusCode).toBe(400);
+    expect((await client.post("/api/auth/password", { current: PASSWORD, next: "nova-senha-123" })).statusCode).toBe(200);
+    expect((await second.get("/api/me")).statusCode).toBe(401);
+    expect((await client.get("/api/me")).statusCode).toBe(200);
+    expect((await client.post("/api/auth/password", { current: "nova-senha-123", next: PASSWORD })).statusCode).toBe(200);
+  });
+
+  it("a coordenação gera senha provisória e a pessoa precisa trocá-la", async () => {
+    const coordinator = as(await login(a.coordinator));
+    const people = json<Person[]>(await coordinator.get(`/api/school/people?q=${encodeURIComponent(a.teacher)}`));
+    expect(people).toHaveLength(1);
+    const old = as(await login(a.teacher));
+    const { temporaryPassword } = json<{ temporaryPassword: string }>(await coordinator.post(`/api/school/people/${people[0]!.id}/reset-password`));
+    expect((await old.get("/api/me")).statusCode).toBe(401);
+    const signedIn = await app.inject({ method: "POST", url: "/api/auth/login", payload: { email: a.teacher, password: temporaryPassword } });
+    const teacher = as(signedIn.cookies[0]!.value);
+    expect(json<any>(await teacher.get("/api/me")).blocked).toBe("password_change");
+    expect((await teacher.get("/api/teacher/classes")).statusCode).toBe(403);
+    await teacher.post("/api/auth/password", { current: temporaryPassword, next: PASSWORD });
+    expect((await teacher.get("/api/teacher/classes")).statusCode).toBe(200);
+    expect((await as(await login(a.teacher)).post(`/api/school/people/${people[0]!.id}/reset-password`)).statusCode).toBe(403);
+  });
+});
+
+describe("privacidade", () => {
+  it("entrega a cópia dos dados e só ao próprio aluno ou ao responsável dele", async () => {
+    const student = as(await login(a.student));
+    const copy = json<any>(await student.get("/api/privacy/my-data"));
+    expect(copy.pessoa.email).toBe(a.student);
+    expect(copy.respostas.length).toBeGreaterThan(0);
+    const guardian = as(await login(a.guardian));
+    const [child] = json<{ id: string }[]>(await guardian.get("/api/insights/family"));
+    expect((await guardian.get(`/api/privacy/my-data?studentId=${child!.id}`)).statusCode).toBe(200);
+    const stranger = await db.system(async (tx) => (await tx.query(`SELECT id FROM users WHERE role = 'student' AND school_id = $1 AND id <> $2 LIMIT 1`, [a.schoolId, child!.id]))[0]!);
+    expect((await guardian.get(`/api/privacy/my-data?studentId=${stranger.id}`)).statusCode).toBe(403);
+    expect((await as(await login(a.coordinator)).get("/api/privacy/my-data")).statusCode).toBe(403);
+  });
+
+  it("a exclusão aprovada apaga a identidade e mantém as respostas sem nome", async () => {
+    const email = a.students.at(-2)!;
+    const student = as(await login(email));
+    expect((await student.post("/api/privacy/deletion-requests")).statusCode).toBe(200);
+    expect((await student.post("/api/privacy/deletion-requests")).statusCode).toBe(409);
+    const coordinator = as(await login(a.coordinator));
+    const [request] = json<DeletionRequestView[]>(await coordinator.get("/api/school/deletion-requests"));
+    const id = await db.system(async (tx) => (await tx.query(`SELECT id FROM users WHERE email = $1`, [email]))[0]!.id);
+    const before = await db.system((tx) => tx.query(`SELECT count(*)::int AS n FROM attempts WHERE student_id = $1`, [id]));
+    expect((await coordinator.post(`/api/school/deletion-requests/${request!.id}`, { approved: true })).statusCode).toBe(200);
+    const user = await db.system(async (tx) => (await tx.query(`SELECT name, email, pass_hash, anonymized_at FROM users WHERE id = $1`, [id]))[0]!);
+    expect(user).toMatchObject({ name: "Aluno removido", email: null, pass_hash: null });
+    expect(user.anonymized_at).not.toBeNull();
+    expect((await student.get("/api/me")).statusCode).toBe(401);
+    expect(await db.system((tx) => tx.query(`SELECT count(*)::int AS n FROM attempts WHERE student_id = $1`, [id]))).toEqual(before);
+    expect((await app.inject({ method: "POST", url: "/api/auth/login", payload: { email, password: PASSWORD } })).statusCode).toBe(401);
+    expect(json<DeletionRequestView[]>(await coordinator.get("/api/school/deletion-requests"))).toEqual([]);
+  });
+});
+
+describe("simulado do professor", () => {
+  it("publica com foco, respeita a turma e mostra quem entregou", async () => {
+    const teacher = as(await login(a.teacher));
+    const [klass] = json<{ id: string }[]>(await teacher.get("/api/teacher/classes"));
+    const made = json<{ id: string; questions: number }>(await teacher.post("/api/exams", { title: "Prova de Física", classId: klass!.id, discipline: "Física", questions: 4 }));
+    expect(made.questions).toBe(4);
+    expect((await teacher.post("/api/exams", { title: "Sem tamanho", classId: klass!.id })).statusCode).toBe(400);
+
+    const other = await db.system(async (tx) => (await tx.query(`SELECT c.id FROM classes c WHERE c.school_id = $1 AND c.id NOT IN (SELECT class_id FROM class_teachers WHERE teacher_id = (SELECT id FROM users WHERE email = $2)) LIMIT 1`, [a.schoolId, a.teacher]))[0]);
+    if (other) expect((await teacher.get(`/api/teacher/classes/${other.id}/exams`)).statusCode).toBe(403);
+    expect((await as(await login(a.student)).get(`/api/teacher/classes/${klass!.id}/exams`)).statusCode).toBe(403);
+
+    const enrolled = await db.system(async (tx) => (await tx.query(`SELECT u.email FROM class_students cs JOIN users u ON u.id = cs.student_id WHERE cs.class_id = $1 AND u.email IS NOT NULL LIMIT 1`, [klass!.id]))[0]!.email);
+    const student = as(await login(enrolled));
+    const { sittingId } = json<{ sittingId: string }>(await student.post(`/api/exams/${made.id}/start`));
+    await student.put(`/api/sittings/${sittingId}/responses`, { position: 0, choice: "A", triage: "answered", timeMs: 30_000 });
+    await student.post(`/api/sittings/${sittingId}/finish`);
+
+    const reports = json<ClassExamReport[]>(await teacher.get(`/api/teacher/classes/${klass!.id}/exams`));
+    const report = reports.find((r) => r.id === made.id)!;
+    const row = report.students.find((s) => s.status === "finished")!;
+    expect(row.answered).toBe(1);
+    expect(report.weakestTopics.length).toBeGreaterThan(0);
+  });
+});
+
+describe("meta semanal", () => {
+  it("guarda a meta e conta as questões da semana", async () => {
+    const student = as(await login(a.student));
+    expect(json<StudentDashboard>(await student.get("/api/insights/student")).goal.target).toBe(35);
+    expect((await student.put("/api/practice/goal", { questions: 70 })).statusCode).toBe(200);
+    expect((await student.put("/api/practice/goal", { questions: 1 })).statusCode).toBe(400);
+    const { goal } = json<StudentDashboard>(await student.get("/api/insights/student"));
+    expect(goal.target).toBe(70);
+    expect(goal.done).toBeGreaterThanOrEqual(0);
+    await student.put("/api/practice/goal", { questions: 35 });
   });
 });
 

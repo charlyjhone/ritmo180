@@ -28,6 +28,10 @@ Para desenvolver a interface com recarga automática, rode `npm run dev:api` e `
 | `npm run db:seed` | Cria a escola de demonstração |
 | `npm run ingest -- <arquivo>` | Importa questões. Veja [docs/importar-questoes.md](docs/importar-questoes.md) |
 | `npm run db:calibrate` | Recalibra as questões com respostas suficientes |
+| `npm run content:liberar -- "Nome"` | Publica as questões oficiais depois de confirmar os direitos |
+| `npm run content:completar -- 20` | Pede à IA resolução, dica e erros comentados, para revisão no painel da rede |
+| `npm run conta:admin -- email "Nome"` | Cria a primeira conta da rede |
+| `npm run conta:senha -- email` | Gera senha provisória fora do painel |
 
 ## Configuração
 
@@ -40,6 +44,8 @@ Para desenvolver a interface com recarga automática, rode `npm run dev:api` e `
 
 Sem a chave da Anthropic, o tutor usa a dica escrita na questão e a geração fica indisponível.
 
+Para colocar no ar, siga [docs/publicar.md](docs/publicar.md).
+
 ## Estrutura
 
 ```text
@@ -49,7 +55,7 @@ packages/engine   Motor pedagógico e TRI, sem banco e sem rede
 packages/contracts  Tipos e validações compartilhados
 packages/ingest   Leitura e validação de questões
 content           Conteúdo autoral
-docs              Arquitetura e importação
+docs              Arquitetura, importação e publicação
 ```
 
 As regras que mantêm as partes independentes estão em [docs/arquitetura.md](docs/arquitetura.md).

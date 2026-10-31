@@ -16,5 +16,14 @@ export async function studyPlan(tx: Tx, studentId: string, now: number): Promise
     [MIN_QUESTIONS],
   );
   const priorities = topics.map((t) => ({ discipline: t.discipline, topic: t.topic, weight: t.weight, mastery: mastery[t.topic]?.mastery ?? null }));
-  return { enem: nextEnem(now), days: planUntilEnem(now, priorities) };
+  const days: StudyPlan["days"] = planUntilEnem(now, priorities);
+  const today = days[0];
+  if (!today) return { enem: nextEnem(now), days };
+  const since = new Date(`${today.date}T00:00:00-03:00`);
+  if (today.kind === "focus") today.done = attempts.some((a) => a.answeredAt >= since.getTime() && a.topic === today.topic);
+  if (today.kind === "simulado") {
+    const finished = await tx.query(`SELECT 1 FROM exam_sittings WHERE student_id = $1 AND finished_at >= $2 LIMIT 1`, [studentId, since]);
+    today.done = finished.length > 0;
+  }
+  return { enem: nextEnem(now), days };
 }

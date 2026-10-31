@@ -2,9 +2,20 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Database } from "./db.ts";
+import type { Database, Tx } from "./db.ts";
 
 const DIR = fileURLToPath(new URL("../../migrations", import.meta.url));
+
+/** Sem isto o login simplesmente não acha ninguém: as políticas de RLS escondem as linhas do dono do banco. */
+export async function databaseRoleProblem(tx: Tx): Promise<string | null> {
+  const role = (await tx.query(
+    `SELECT current_user AS name, rolsuper OR rolbypassrls AS bypasses, pg_has_role(current_user, 'app_user', 'MEMBER') AS can_switch
+     FROM pg_roles WHERE rolname = current_user`,
+  ))[0]!;
+  if (!role.bypasses) return `O papel ${role.name} precisa de BYPASSRLS. Veja docs/publicar.md.`;
+  if (!role.can_switch) return `O papel ${role.name} precisa ser membro de app_user. Veja docs/publicar.md.`;
+  return null;
+}
 
 export async function migrate(db: Database): Promise<string[]> {
   const files = (await readdir(DIR)).filter((f) => f.endsWith(".sql")).sort();

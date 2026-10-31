@@ -1,11 +1,45 @@
 // Painel do aluno.
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AREA_NAMES, type StudentDashboard } from "@ritmo/contracts";
 import { STAGES } from "@ritmo/engine";
 import { api } from "../lib/api.ts";
 import { trainingLink } from "./focus-picker.tsx";
 import { Async, Bar, clock, clockOrDash, LineChart, Metric, Metrics, PageHead, ScoreMetric, points, TimeStrip } from "../ui/kit.tsx";
+
+const GOAL_CHOICES = [20, 35, 50, 70, 100, 150];
+
+function WeeklyGoal({ goal }: { goal: StudentDashboard["goal"] }) {
+  const client = useQueryClient();
+  const [error, setError] = useState(false);
+  async function change(questions: number) {
+    setError(false);
+    try {
+      await api.put("/api/practice/goal", { questions });
+      await client.invalidateQueries({ queryKey: ["student"] });
+    } catch {
+      setError(true);
+    }
+  }
+  const left = goal.target - goal.done;
+  const choices = [...new Set([...GOAL_CHOICES, goal.target])].sort((x, y) => x - y);
+  return (
+    <section className="card goal" aria-labelledby="meta-title">
+      <div className="card-head">
+        <h2 id="meta-title">{left > 0 ? `Meta da semana: ${goal.done} de ${goal.target} questões` : `Meta da semana cumprida: ${goal.done} questões`}</h2>
+        <label className="field-sm">Meta semanal
+          <select value={goal.target} onChange={(e) => void change(Number(e.target.value))}>
+            {choices.map((n) => <option key={n} value={n}>{n} questões</option>)}
+          </select>
+        </label>
+      </div>
+      <Bar pct={Math.min(100, (goal.done / goal.target) * 100)} tone={left > 0 ? "" : "ok"} />
+      {error ? <p className="sub" role="alert">Não foi possível salvar a meta. Tente de novo.</p> : null}
+      {goal.trainedToday ? null : <p className="sub">Você ainda não treinou hoje. <Link to="/treino">Começar agora</Link></p>}
+    </section>
+  );
+}
 
 function Dashboard({ d }: { d: StudentDashboard }) {
   const first = d.student.name.split(" ")[0];
@@ -24,13 +58,14 @@ function Dashboard({ d }: { d: StudentDashboard }) {
         title={`Olá, ${first}. ${time.bottleneck ? `Hoje o foco é ${time.bottleneck.toLowerCase()}.` : "Vamos ao treino de hoje."}`}
         actions={<><Link className="btn" to="/treino">Começar treino do dia{planMinutes ? ` · ${planMinutes} min` : ""}</Link><Link className="btn soft" to="/treino">Escolher disciplina e assunto</Link></>}
       />
-      {d.enem ? <div className="notice">{d.enem.daysLeft === 0 ? `Hoje é dia de ENEM ${d.enem.year}.` : `${d.enem.daysLeft === 1 ? "Falta 1 dia" : `Faltam ${d.enem.daysLeft} dias`} para a próxima prova do ENEM ${d.enem.year}.`}{" "}<Link to="/plano">Ver seu plano</Link></div> : null}
+      {d.enem ? <div className="notice">{d.enem.daysLeft === 0 ? `Hoje é dia de ENEM ${d.enem.year}.` : `${d.enem.daysLeft === 1 ? "Falta 1 dia" : `Faltam ${d.enem.daysLeft} dias`} para a próxima prova do ENEM ${d.enem.year}${d.enem.estimated ? ", em data estimada" : ""}.`}{" "}<Link to="/plano">Ver seu plano</Link></div> : null}
       {d.diagnosticPending.length > 0 ? (
         <div className="notice">
           Faça o diagnóstico de {d.diagnosticPending.map((a) => AREA_NAMES[a]).join(", ")} para posicionar sua nota.{" "}
           <Link to={`/diagnostico/${d.diagnosticPending[0]}`}>Começar diagnóstico</Link>
         </div>
       ) : null}
+      <WeeklyGoal goal={d.goal} />
       <Metrics label="Indicadores principais">
         <Metric xl label="Índice Ritmo" value={ritmo.index === null ? "—" : `${ritmo.index}%`} note={ritmo.weekDelta === null ? `${ritmo.samples} questões válidas` : `${points(ritmo.weekDelta)} nesta semana`} tone={ritmo.weekDelta === null ? "" : ritmo.weekDelta >= 0 ? "up" : "down"} hint="Questões certas dentro do tempo-alvo" />
         <Metric xl label="Tempo médio por questão" value={clockOrDash(time.avgSeconds)} valueTone={time.avgSeconds !== null && time.avgSeconds > time.goalSeconds ? "amber" : "ok"} note={`Meta: ${clock(time.goalSeconds)}`} extra={time.avgSeconds !== null ? <div style={{ marginTop: 12 }}><Bar pct={(time.goalSeconds / time.avgSeconds) * 100} tone={time.avgSeconds > time.goalSeconds ? "amber" : ""} /></div> : null} />
@@ -54,7 +89,7 @@ function Dashboard({ d }: { d: StudentDashboard }) {
             </div>
             <div className="engine">
               <div><b>Diagnóstico do motor</b><p>{time.diagnosis}</p></div>
-              <Link className="btn amber" to="/treino">Treinar agora</Link>
+              <Link className="btn amber" to={d.skills[0] ? trainingLink(d.skills[0]) : "/treino"}>Treinar agora</Link>
             </div>
           </>
         ) : <p className="sub">Faça treinos no modo guiado para o motor separar leitura, caminho, cálculo e conferência.</p>}

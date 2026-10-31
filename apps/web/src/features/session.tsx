@@ -80,6 +80,54 @@ function Login() {
           {error ? <div className="notice bad" role="alert">{error}</div> : null}
           <button className="btn" type="submit" disabled={busy}>{busy ? "Entrando…" : "Entrar"}</button>
         </form>
+        <p className="sub" style={{ marginTop: 16 }}>Esqueceu a senha? Peça uma senha provisória à coordenação da sua escola.</p>
+        <p className="sub"><a href="/privacidade">Política de privacidade</a></p>
+      </section>
+    </main>
+  );
+}
+
+/** Usado na troca obrigatória e na página Minha conta. */
+export function PasswordForm({ onDone }: { onDone: () => Promise<void> | void }) {
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const element = event.currentTarget;
+    const form = new FormData(element);
+    if (form.get("next") !== form.get("repeat")) return setError("As duas senhas novas não são iguais.");
+    setBusy(true);
+    setError(null);
+    try {
+      await api.post("/api/auth/password", { current: form.get("current"), next: form.get("next") });
+      element.reset();
+      await onDone();
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : "Sem conexão com o servidor.");
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <form onSubmit={submit}>
+      <label className="field">Senha atual<input className="input" name="current" type="password" autoComplete="current-password" required /></label>
+      <label className="field">Nova senha<input className="input" name="next" type="password" autoComplete="new-password" minLength={8} required /></label>
+      <label className="field">Repita a nova senha<input className="input" name="repeat" type="password" autoComplete="new-password" minLength={8} required /></label>
+      {error ? <div className="notice bad" role="alert">{error}</div> : null}
+      <button className="btn" type="submit" disabled={busy}>{busy ? "Salvando…" : "Salvar nova senha"}</button>
+    </form>
+  );
+}
+
+function RequiredPasswordChange() {
+  const client = useQueryClient();
+  return (
+    <main className="login">
+      <section className="card">
+        <h1 style={{ fontSize: 24 }}>Crie a sua senha</h1>
+        <p className="sub">Você entrou com uma senha provisória. Escolha uma senha só sua para continuar.</p>
+        <PasswordForm onDone={() => client.invalidateQueries({ queryKey: ["me"] })} />
+        <div className="btn-row"><button className="btn soft" type="button" onClick={() => void logout()}>Sair</button></div>
       </section>
     </main>
   );
@@ -96,6 +144,7 @@ export function SessionGate({ children }: { children: ReactNode }) {
   if (query.isError) return <div className="state" role="alert">{query.error.message}</div>;
   const me = query.data;
   if (!me) return <Login />;
+  if (me.blocked === "password_change") return <RequiredPasswordChange />;
   if (me.blocked) {
     return (
       <main className="login">
@@ -113,7 +162,7 @@ export function SessionGate({ children }: { children: ReactNode }) {
 export const NAV: Record<Role, { to: string; label: string }[]> = {
   student: [{ to: "/", label: "Painel" }, { to: "/plano", label: "Plano" }, { to: "/treino", label: "Treino" }, { to: "/erros", label: "Erros" }, { to: "/leitura", label: "Leitura" }, { to: "/simulado", label: "Simulado" }],
   teacher: [{ to: "/", label: "Professor" }],
-  coordinator: [{ to: "/", label: "Direção" }, { to: "/professor", label: "Professor" }, { to: "/implantacao", label: "Implantação" }],
+  coordinator: [{ to: "/", label: "Direção" }, { to: "/professor", label: "Professor" }, { to: "/pessoas", label: "Pessoas" }, { to: "/implantacao", label: "Implantação" }],
   guardian: [{ to: "/", label: "Família" }],
   network_admin: [{ to: "/", label: "Rede" }],
 };

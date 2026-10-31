@@ -1,5 +1,5 @@
 // Guarda a casca do aplicativo. Dados de aluno nunca entram neste cache.
-const CACHE = "ritmo-v3";
+const CACHE = "ritmo-v4";
 const SHELL = ["/", "/icon.svg", "/manifest.webmanifest"];
 
 /** Guarda a página e os arquivos que ela usa: sem isso, o primeiro acesso não funcionaria offline. */

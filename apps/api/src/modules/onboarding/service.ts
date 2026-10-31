@@ -97,7 +97,7 @@ export async function commitRoster(tx: Tx, schoolId: string, filename: string, c
     const password = temporaryPassword();
     const { hash, salt } = await hashPassword(password);
     const id = randomUUID();
-    await tx.query(`INSERT INTO users (id, school_id, email, name, role, pass_hash, pass_salt, grade) VALUES ($1,$2,$3,$4,'student',$5,$6,$7)`, [id, schoolId, r.email, r.name, hash, salt, r.grade]);
+    await tx.query(`INSERT INTO users (id, school_id, email, name, role, pass_hash, pass_salt, grade, must_change_password) VALUES ($1,$2,$3,$4,'student',$5,$6,$7,true)`, [id, schoolId, r.email, r.name, hash, salt, r.grade]);
     await tx.query(`INSERT INTO class_students (class_id, student_id, school_id) VALUES ($1,$2,$3)`, [classId, id, schoolId]);
     await tx.query(`INSERT INTO guardian_contacts (student_id, school_id, guardian_email, consent_at) VALUES ($1,$2,$3,$4)`, [id, schoolId, r.guardian, r.consent ? new Date() : null]);
     credentials.push(`"${r.name.replace(/"/g, '""')}",${r.email},${password}`);

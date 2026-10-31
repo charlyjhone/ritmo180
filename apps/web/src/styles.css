@@ -305,6 +305,7 @@ legend { padding: 0 6px; font-size: 12px; font-weight: 800; color: var(--muted);
 .fam-name { font-weight: 800; font-size: 15px; }
 .fam-sub { font-size: 12px; color: #d9e1fb; }
 .fam-bell { width: 44px; height: 44px; border-radius: 12px; border: 0; background: rgba(255, 255, 255, 0.16); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+a.fam-bell { display: inline-flex; align-items: center; text-decoration: none; font-size: 12px; font-weight: 600; }
 .fam-tabs { display: flex; gap: 8px; margin-top: 20px; }
 .fam-tabs button { flex: 1; min-height: 44px; border-radius: 12px; border: 0; font-family: inherit; font-weight: 700; font-size: 14px; cursor: pointer; background: rgba(255, 255, 255, 0.16); color: #fff; }
 .fam-tabs button[aria-selected="true"] { background: #fff; color: var(--brand-dark); }
@@ -384,7 +385,7 @@ select.input { width: 100%; }
 .heat td.empty { background: var(--line-soft); color: var(--muted); }
 .exam-q { padding: 24px; }
 @media print {
-  #topbar, .page-actions, .skip-link, .toast { display: none !important; }
+  #topbar, .page-actions, .skip-link, .toast, .no-print { display: none !important; }
   body { background: #fff; }
   .card { break-inside: avoid; border-color: #bbb; }
 }
@@ -395,3 +396,8 @@ select.input { width: 100%; }
 .q-review-body { padding: 0 16px 16px; border-top: 1px solid var(--line); }
 .topic-result { display: flex; gap: 14px; align-items: center; }
 .skill-train { min-height: 36px; }
+.card h2 + form, .card .sub + form { margin-top: 14px; }
+.goal .card-head { align-items: center; gap: 16px; flex-wrap: wrap; }
+.goal .bar, .goal [role="progressbar"] { margin-top: 12px; }
+.legal { max-width: 720px; margin: 0 auto; padding: 32px 16px 64px; line-height: 1.6; }
+.legal h2 { margin-top: 28px; }
