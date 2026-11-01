@@ -290,7 +290,7 @@ def comentarios(caminho):
                     grupos.append(atual)
                 numero = novo
                 atual[numero] = [linha[marca.end():]]
-            elif atual is not None and numero is not None and linha.strip():
+            elif atual is not None and numero is not None and linha.strip() and not linha.strip().isdigit():
                 atual[numero].append(linha.strip())
     return [{n: " ".join(partes).strip() for n, partes in g.items()} for g in grupos]
 
@@ -434,11 +434,14 @@ def processa(livro, pasta_pdf, saida, registros, usados):
             q["discipline"] = disciplina_de(livro, topico)
             q["topic"] = titulo(topico)[:160]
             r["nomeSecao"] = tabela["nome"]
-            if resposta not in tuple("ABCDE"):
-                r["motivos"].append("sem gabarito no livro")
-            else:
+            r["tabelaInteira"] = len(grupo) == len(tabela["respostas"])
+            if resposta in tuple("ABCDE"):
                 q["answer"] = resposta
-        certas = [r for r in grupo if r.get("oficial")]
+            elif r.get("oficial"):
+                q["answer"] = r["oficial"]
+            else:
+                r["motivos"].append("sem gabarito no livro")
+        certas = [r for r in grupo if r.get("oficial") and r["num"] in tabela["respostas"]]
         iguais = sum(1 for r in certas if r["oficial"] == r["questao"]["answer"])
         for r in grupo:
             r["placar"] = (iguais, len(certas))
@@ -488,7 +491,7 @@ def main():
             aplica_inep(q, r["inep"])
         if total >= 3 and iguais / total < 0.8:
             r["motivos"].append(f"seção com gabarito desalinhado ({iguais} de {total})")
-        if total == 0:
+        if total == 0 and not r["tabelaInteira"]:
             r["motivos"].append("seção sem conferência pelo gabarito oficial")
         if cita_outra_alternativa(q["solutionHtml"], q["answer"]):
             q["solutionHtml"] = ""

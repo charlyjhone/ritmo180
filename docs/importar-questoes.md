@@ -87,3 +87,11 @@ O comando publica as questões oficiais em revisão e registra o nome em cada um
 ## Banco local
 
 O banco embutido em `data/pg` aceita um processo por vez. Importar ou publicar com o servidor ligado pode corrompê-lo, por isso esses comandos recusam rodar enquanto `data/pg.lock` aponta para um processo ativo. Desligue o servidor antes.
+
+## Completar resoluções e TRI
+
+Dois passos opcionais, que rodam sobre os JSON já montados e só acrescentam o que falta. Depois deles, reimporte e libere de novo.
+
+`scripts/completar_resolucoes.py` liga os Gabaritos Comentados de Física, Química, Biologia e Matemática às questões sem resolução. Só aceita o comentário com palavras raras em comum, a resposta numérica citada e sem outra questão disputando o mesmo comentário. Descarta o que perdeu fórmulas, que no PDF são imagens. Nunca troca uma resolução existente.
+
+`scripts/ligar_tri_inep.py` acrescenta os parâmetros oficiais. Precisa de duas coisas dos microdados do Inep: a tabela `ITENS_PROVA` de cada ano, salva como `itens_ANO.csv`, e os cadernos azuis, salvos como `ANO_apN_dN_*.pdf`. Os dois podem ser lidos do zip por HTTP Range, sem baixar o arquivo inteiro. O caminho é texto da questão → caderno → posição → item, e a ligação só vale se o gabarito oficial for igual. Os zips não trazem as provas PPL de 2011 a 2014 nem as de 2024.
