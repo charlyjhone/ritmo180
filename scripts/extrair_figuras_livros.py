@@ -24,9 +24,10 @@ RODAPE = 60
 ESCALA = 2.5
 PAD = 2
 INLINE_ALTURA = 26
-CABECALHO = re.compile(r"^\s*(\d{1,3})\s*\.\s*\(\s*(.*)$")
+CABECALHO = re.compile(r"^\s*(\d{1,3})\s*\.?\s*\(\s*(.*)$")
 ALTERNATIVA = re.compile(r"^\s*([A-E])\s*\)")
 IMAGEM = 3
+HIFEN = "\u00ad"
 
 
 def normal(texto):
@@ -40,8 +41,10 @@ def linhas_da_pagina(pagina):
     colunas = {0: [], 1: []}
     for i in range(tp.count_chars()):
         ch = tp.get_text_range(i, 1)
-        if ch in "\r\n\x02￾":
+        if ch in "\r\n￾":
             continue
+        if ch == "\x02":
+            ch = HIFEN
         raw.FPDFText_GetCharOrigin(tp, i, x, y)
         if y.value < RODAPE:
             continue
@@ -107,7 +110,7 @@ def questoes_do_livro(documento):
             if e["tipo"] == "linha":
                 cab = CABECALHO.match(e["texto"])
                 alt = ALTERNATIVA.match(e["texto"])
-                if cab and (cab[2][:4].upper() == "ENEM" or cab[2][:1].isupper()):
+                if cab and (cab[2][:4].upper() == "ENEM" or ("." in e["texto"][:cab.start(2)] and (cab[2][:1].isupper() or cab[2][:1].isdigit()))):
                     atual = {"num": int(cab[1]), "cabecalho": e["texto"], "pagina": numero, "partes": {"stem": []}, "ordem": []}
                     questoes.append(atual)
                     vaga = "stem"
@@ -116,9 +119,9 @@ def questoes_do_livro(documento):
                     atual["partes"].setdefault(vaga, [])
                     resto = e["texto"][alt.end():].strip()
                     if resto:
-                        atual["partes"][vaga].append({"tipo": "linha", "texto": resto, "pagina": numero, "col": e["col"], "topo": e["topo"], "base": e["base"]})
+                        atual["partes"][vaga].append({"tipo": "linha", "texto": resto, "pagina": numero, "col": e["col"], "topo": e["topo"], "base": e["base"], "x": e["x"], "x1": e["x1"]})
                 elif atual is not None:
-                    atual["partes"][vaga].append({"tipo": "linha", "texto": e["texto"], "pagina": numero, "col": e["col"], "topo": e["topo"], "base": e["base"]})
+                    atual["partes"][vaga].append({"tipo": "linha", "texto": e["texto"], "pagina": numero, "col": e["col"], "topo": e["topo"], "base": e["base"], "x": e["x"], "x1": e["x1"]})
             elif atual is not None:
                 destino = vaga if not e.get("letras") else e["letras"][0]
                 atual["partes"].setdefault(destino, []).append({"tipo": "imagem", "pagina": numero, "caixa": e["caixa"], "letras": e.get("letras", []), "col": e["col"]})

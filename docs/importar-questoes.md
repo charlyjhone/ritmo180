@@ -60,6 +60,22 @@ npm run ingest -- data/importacao/questoes-livros.json --relatorio data/importac
 - O que não pode ser conferido automaticamente vai para `revisar-livros.json`, com o motivo, e não entra no banco.
 - Tudo entra com `rightsCleared: false`, portanto em revisão e invisível para os alunos.
 
+## Importar Linguagens e Humanas
+
+Estes livros não têm banco de texto: enunciado, alternativas e figuras vêm do PDF, e o gabarito vem das tabelas por seção no fim de cada livro.
+
+```bash
+cd scripts
+python3 montar_livros_humanas.py "pasta dos PDFs" caminho/Banco_LC_CH_Indice_e_Radar.xlsx ../data/importacao/humanas ../data/importacao/questoes-humanas.json ../data/importacao/revisar-humanas.json
+cd ..
+npm run ingest -- data/importacao/questoes-humanas.json --relatorio data/importacao/recusadas-humanas.json
+```
+
+- A planilha do Inep traz TRI, habilidade e gabarito oficial. A ligação é feita pelo começo do texto, e o bloco de 2024 pelo número da questão.
+- O gabarito oficial escolhe a tabela de cada seção. Uma seção que não confere vai para o relatório.
+- O comentário só entra se falar do mesmo assunto da questão. Ele é texto da editora, não do Inep.
+- Questão sem ligação ao Inep, como as da aplicação PPL, entra sem TRI e é calibrada pelo uso.
+
 ## Publicar depois de confirmar os direitos
 
 ```bash
