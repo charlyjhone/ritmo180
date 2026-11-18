@@ -47,6 +47,12 @@ DATABASE_URL=... npm run ingest -- data/importacao/questoes-livros.json
 DATABASE_URL=... npm run content:liberar -- "Nome de quem confirmou os direitos"
 ```
 
+As 125 questões do Laboratório Virtual já saem publicadas, porque os direitos estão registrados em `apps/lab/src/questoes/direitos.ts`:
+
+```bash
+DATABASE_URL=... npm run ingest -- content/laboratorio.json
+```
+
 ## 5. Backup
 
 Agende uma vez por dia, em uma máquina com `pg_dump`. O script confere a cópia e mantém as 14 mais recentes.

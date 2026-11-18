@@ -14,6 +14,14 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run build
+  # A imagem de produção leva a interface e o Laboratório (apps/lab/dist): compilar aqui pega erro no Dockerfile antes da publicação.
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t ritmo180 .
+      - name: Conferir que a imagem leva a interface e o Laboratório
+        run: docker run --rm --entrypoint sh ritmo180 -c "test -f apps/web/dist/index.html && test -f apps/lab/dist/index.html && test -f content/laboratorio.json"
   postgres:
     runs-on: ubuntu-latest
     services:
