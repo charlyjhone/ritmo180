@@ -20,7 +20,7 @@ import { readingRoutes } from "./modules/reading/index.ts";
 const BODY_LIMIT = 8 * 1024 * 1024;
 const MODULES = [identityRoutes, practiceRoutes, readingRoutes, examRoutes, insightsRoutes, onboardingRoutes, contentRoutes, peopleRoutes, privacyRoutes];
 
-export async function buildApp(deps: AppDeps, options: { webRoot?: string; logger?: boolean } = {}) {
+export async function buildApp(deps: AppDeps, options: { webRoot?: string; labRoot?: string; logger?: boolean } = {}) {
   // Em produção o servidor fica atrás de um proxy: sem isto, o limite de login veria todos com o mesmo IP.
   const app = Fastify({ logger: options.logger ?? false, bodyLimit: BODY_LIMIT, trustProxy: deps.behindProxy ?? deps.secureCookies });
   await app.register(cookie);
@@ -57,6 +57,19 @@ export async function buildApp(deps: AppDeps, options: { webRoot?: string; logge
     await deps.db.system((tx) => tx.query(`SELECT 1`));
     return { ok: true };
   });
+
+  // Laboratório Virtual: site estático com rotas por #hash, servido em /laboratorio/.
+  const labRoot = options.labRoot;
+  if (labRoot && existsSync(join(labRoot, "index.html"))) {
+    app.get("/laboratorio", (_request, reply) => reply.redirect("/laboratorio/", 301));
+    await app.register(fastifyStatic, {
+      root: labRoot,
+      prefix: "/laboratorio/",
+      decorateReply: false,
+      cacheControl: false,
+      setHeaders: (response, path) => response.header("cache-control", path.includes("/assets/") ? "public, max-age=31536000, immutable" : "no-cache"),
+    });
+  }
 
   const webRoot = options.webRoot;
   if (webRoot && existsSync(join(webRoot, "index.html"))) {

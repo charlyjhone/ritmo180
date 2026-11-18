@@ -5,6 +5,8 @@ import { AREA_NAMES, type StudyPlan } from "@ritmo/contracts";
 import { api } from "../lib/api.ts";
 import { Async, Metric, Metrics, PageHead, Pill } from "../ui/kit.tsx";
 import { trainingLink } from "./focus-picker.tsx";
+import { labModule, labUrl } from "@ritmo/contracts";
+import { labIdsFor } from "./lab-links.tsx";
 
 type Day = StudyPlan["days"][number];
 
@@ -36,7 +38,17 @@ function Plan({ plan }: { plan: StudyPlan }) {
             return (
               <div className="row-box" key={day.date}>
                 <div className="tag mono">{dayLabel(day.date)}</div>
-                <div className="grow"><div className="row-title">{title}</div><div className="row-sub">{detail}</div></div>
+                <div className="grow">
+                  <div className="row-title">{title}</div>
+                  <div className="row-sub">{detail}</div>
+                  {day.kind === "focus"
+                    ? labIdsFor(day.discipline, day.topic).slice(0, 1).map((id) => (
+                        <a key={id} className="row-lab" href={labUrl(id)} target="_blank" rel="noopener">
+                          Simulador: {labModule(id)?.title ?? id}
+                        </a>
+                      ))
+                    : null}
+                </div>
                 {day.done ? <Pill tone="good">Feito</Pill> : day.date === today ? <Pill tone="brand">Hoje</Pill> : null}
                 {to ? <Link className="btn soft slim" to={to}>{action}</Link> : null}
               </div>

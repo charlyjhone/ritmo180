@@ -642,3 +642,32 @@ describe("servidor", () => {
     expect((await app.inject({ url: "/api/nao-existe" })).statusCode).toBe(404);
   });
 });
+
+describe("laboratório virtual", () => {
+  it("serve o laboratório em /laboratorio/ ao lado da interface", async () => {
+    const { mkdtempSync, writeFileSync, mkdirSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const web = mkdtempSync(join(tmpdir(), "ritmo-web-"));
+    const lab = mkdtempSync(join(tmpdir(), "ritmo-lab-"));
+    writeFileSync(join(web, "index.html"), "<p>ritmo</p>");
+    writeFileSync(join(lab, "index.html"), "<p>laboratorio</p>");
+    mkdirSync(join(lab, "assets"));
+    writeFileSync(join(lab, "assets", "app-abc.js"), "console.log(1)");
+    const site = await buildApp({ db, llm: null, now: () => NOW, secureCookies: false, loginAttemptsPerMinute: 1000 }, { webRoot: web, labRoot: lab });
+    try {
+      const sem = await site.inject({ url: "/laboratorio" });
+      expect(sem.statusCode).toBe(301);
+      expect(sem.headers.location).toBe("/laboratorio/");
+      const pagina = await site.inject({ url: "/laboratorio/" });
+      expect(pagina.statusCode).toBe(200);
+      expect(pagina.body).toContain("laboratorio");
+      const js = await site.inject({ url: "/laboratorio/assets/app-abc.js" });
+      expect(js.headers["cache-control"]).toContain("immutable");
+      expect((await site.inject({ url: "/laboratorio/nao-existe.js" })).statusCode).toBe(404);
+      expect((await site.inject({ url: "/treino" })).body).toContain("ritmo");
+    } finally {
+      await site.close();
+    }
+  });
+});

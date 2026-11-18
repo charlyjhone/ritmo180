@@ -4,6 +4,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
+COPY apps/lab/package.json apps/lab/
 COPY packages/contracts/package.json packages/contracts/
 COPY packages/engine/package.json packages/engine/
 COPY packages/ingest/package.json packages/ingest/
@@ -17,6 +18,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
+COPY apps/lab/package.json apps/lab/
 COPY packages/contracts/package.json packages/contracts/
 COPY packages/engine/package.json packages/engine/
 COPY packages/ingest/package.json packages/ingest/
@@ -25,6 +27,7 @@ COPY apps/api apps/api
 COPY packages packages
 COPY content content
 COPY --from=build /app/apps/web/dist apps/web/dist
+COPY --from=build /app/apps/lab/dist apps/lab/dist
 USER node
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD node -e "fetch('http://127.0.0.1:'+process.env.PORT+'/api/health').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"

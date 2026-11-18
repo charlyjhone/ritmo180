@@ -12,3 +12,4 @@ export * from "./exam.ts";
 export * from "./plan.ts";
 export * from "./calibration.ts";
 export * from "./simulation.ts";
+export * from "./lab.ts";

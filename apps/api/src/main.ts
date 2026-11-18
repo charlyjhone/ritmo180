@@ -15,6 +15,7 @@ const app = await buildApp(
   { db, llm: createClaudeLlm(), now: Date.now, secureCookies: isProduction, loginAttemptsPerMinute: 10, guestAccess, behindProxy },
   {
     webRoot: fileURLToPath(new URL("../../web/dist", import.meta.url)),
+    labRoot: fileURLToPath(new URL("../../lab/dist", import.meta.url)),
     logger: isProduction,
   },
 );

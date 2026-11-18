@@ -1,0 +1,27 @@
+{
+  "name": "@ritmo/lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Laboratório Virtual: simuladores de Ciências da Natureza e Matemática, servidos em /laboratorio/.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@ritmo/contracts": "*",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "tailwindcss": "^4.3.5",
+    "vite": "^8.3.5"
+  }
+}

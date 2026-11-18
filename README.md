@@ -19,6 +19,8 @@ Abra `http://localhost:5180`. Os acessos de demonstração ficam em `data/creden
 
 Para desenvolver a interface com recarga automática, rode `npm run dev:api` e `npm run dev:web` e abra `http://localhost:5181`.
 
+O Laboratório Virtual (simuladores) fica em `apps/lab` e é servido em `http://localhost:5180/laboratorio/` depois do `npm run build`. Para desenvolvê-lo, use `npm run dev:lab` (porta 5190). As 125 questões do Laboratório saem para o banco com `npm run content:laboratorio` (gera `content/laboratorio.json`); a publicação depende da confirmação registrada em `apps/lab/src/questoes/direitos.ts`. A integração está em `docs/integracao-laboratorio.md`.
+
 ## Comandos
 
 | Comando | O que faz |

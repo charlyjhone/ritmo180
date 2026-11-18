@@ -8,6 +8,7 @@ import { clearPack, flushQueue, loadPack, queueAttempt, savePack } from "../lib/
 import { Bar, clock, Html, Pill, useInterval } from "../ui/kit.tsx";
 import { FocusPicker } from "./focus-picker.tsx";
 import { useMe } from "./session.tsx";
+import { LabLinks } from "./lab-links.tsx";
 
 type Item = PracticeSessionPack["items"][number];
 // 0 texto, 1 comando, 2 alternativas, 3 conferência, 4 respondida
@@ -136,6 +137,7 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext }
               <p>{text}</p>
               {item.key.solutionHtml ? <><p className="solution"><strong>Resolução:</strong></p><Html className="solution-html" html={item.key.solutionHtml} /></> : null}
             </div>
+            <LabLinks discipline={item.discipline} topic={item.topic} text={`${item.contextHtml} ${item.stemHtml}`} solutionHtml={item.key.solutionHtml} />
             <div className="btn-row">
               <button ref={focusRef} className="btn" type="button" onClick={onNext}>{position + 1 < total ? "Próxima questão" : "Concluir treino"}</button>
             </div>
