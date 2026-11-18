@@ -1,7 +1,7 @@
 // Sessão do usuário: login, perfil em cache para abrir sem internet e menu por papel.
 import { createContext, useContext, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Me, Role } from "@ritmo/contracts";
+import { LAB_PATH, type Me, type Role } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
 import { clearPack, flushQueue } from "../lib/offline.ts";
 
@@ -223,9 +223,10 @@ export function SessionGate({ children }: { children: ReactNode }) {
   return <SessionContext.Provider value={me}>{children}</SessionContext.Provider>;
 }
 
-export const NAV: Record<Role, { to: string; label: string }[]> = {
-  student: [{ to: "/", label: "Painel" }, { to: "/plano", label: "Plano" }, { to: "/treino", label: "Treino" }, { to: "/erros", label: "Erros" }, { to: "/leitura", label: "Leitura" }, { to: "/simulado", label: "Simulado" }],
-  teacher: [{ to: "/", label: "Professor" }],
+/** `external`: página fora da interface (o Laboratório, site próprio em /laboratorio/), aberta em outra aba. */
+export const NAV: Record<Role, { to: string; label: string; external?: true }[]> = {
+  student: [{ to: "/", label: "Painel" }, { to: "/plano", label: "Plano" }, { to: "/treino", label: "Treino" }, { to: "/erros", label: "Erros" }, { to: "/leitura", label: "Leitura" }, { to: "/simulado", label: "Simulado" }, { to: LAB_PATH, label: "Laboratório", external: true }],
+  teacher: [{ to: "/", label: "Professor" }, { to: LAB_PATH, label: "Laboratório", external: true }],
   coordinator: [{ to: "/", label: "Direção" }, { to: "/professor", label: "Professor" }, { to: "/pessoas", label: "Pessoas" }, { to: "/implantacao", label: "Implantação" }],
   guardian: [{ to: "/", label: "Família" }],
   network_admin: [{ to: "/", label: "Rede" }],

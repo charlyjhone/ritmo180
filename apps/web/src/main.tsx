@@ -59,7 +59,7 @@ function Shell() {
   const location = useLocation();
   const main = useRef<HTMLElement>(null);
   useEffect(() => {
-    const section = NAV[me.role].find((link) => (link.to === "/" ? location.pathname === "/" : location.pathname.startsWith(link.to)));
+    const section = NAV[me.role].find((link) => !link.external && (link.to === "/" ? location.pathname === "/" : location.pathname.startsWith(link.to)));
     const label = location.pathname === "/conta" ? "Minha conta" : section?.label;
     document.title = label ? `${label} · Ritmo 180` : "Ritmo 180";
     main.current?.focus();
@@ -76,7 +76,9 @@ function Shell() {
             <div><div className="brand-name">{dark ? "Ritmo 180 · Rede" : "Ritmo 180"}</div><div className="brand-sub">{me.school?.name ?? "Administração de todas as escolas"}</div></div>
           </div>
           <nav aria-label="Áreas da plataforma">
-            {NAV[me.role].map((link) => <NavLink key={link.to} className="navlink" to={link.to} end={link.to === "/"}>{link.label}</NavLink>)}
+            {NAV[me.role].map((link) => link.external
+              ? <a key={link.to} className="navlink" href={link.to} target="_blank" rel="noopener" title="Abre em outra aba">{link.label}<span className="sr-only"> (abre em outra aba)</span></a>
+              : <NavLink key={link.to} className="navlink" to={link.to} end={link.to === "/"}>{link.label}</NavLink>)}
           </nav>
           <div className="topbar-end">
             <SyncStatus />

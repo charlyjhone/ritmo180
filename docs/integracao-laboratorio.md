@@ -34,6 +34,8 @@ Ritmo detecta o erro ──► "Ver no simulador" ──► aluno experimenta e 
 - O servidor entrega o Laboratório em `/laboratorio/`, com cache longo nos arquivos com hash. O `Dockerfile` copia `apps/lab/dist`. As fontes agora vêm do pacote (`@fontsource`), porque a política de segurança do Ritmo bloqueia o Google Fonts.
 - O catálogo fica em `packages/contracts/src/lab.ts`, e um teste do Laboratório confere que ids e títulos batem com o registro dele.
 - `labModulesFor` fica em `packages/engine/src/lab.ts`. Nas 2.868 questões de Natureza e Matemática dos livros, ele liga **1.071** a pelo menos um simulador.
+- Os dois simulados continuam (decidido em 18/11/2026): o do Laboratório, para praticar as questões dele com cronômetro, e o do Ritmo, que conta para a nota e o Raio-X.
+- Menu: o aluno e o professor têm o item "Laboratório" (decidido em 18/11/2026), que abre `/laboratorio/` em outra aba.
 - O botão "Ver no simulador" aparece na correção do treino, no resultado do simulado e no caderno de erros. No plano, um dia de assunto com simulador mostra o link "Simulador: …". Os links abrem em outra aba, para o aluno não perder o treino.
 - Parâmetros na rota, com o nome da variável de cada módulo: `#pendulo?L=2&g=3.7&th0=10`, `#projetil?v0=30&angleDeg=30`, `#funcoes?kind=exponencial&a=0.5&c=4`, `#estequiometria?reacao=amonia`. Os nomes aceitos são os das chamadas `param('…')`, `params({…})` e `choice('…')` em cada `*Module.tsx`; o mecanismo está em `apps/lab/src/core/params.ts`. `choice` vale para escolhas (material, modo, gás, eletrodo, genótipo) e ignora valores que não estão na lista, para um link errado não quebrar o módulo.
 
@@ -94,6 +96,4 @@ Objetivo: um produto só, com o progresso do laboratório na conta do aluno.
 
 ## Decisões que são suas
 
-- Começar a Fase 1 agora ou depois de concluir o que falta para o lançamento.
-- Nome e lugar no menu: "Laboratório", "Simuladores" ou outro.
-- Se o simulado cronometrado do Laboratório continua existindo, ou se o simulado do Ritmo passa a ser o único (recomendação: manter só o do Ritmo depois da Fase 2, para não ter dois).
+As decisões da Fase 1 e da Fase 2 já foram tomadas (ver acima). Para a Fase 3 ficam em aberto o visual do Laboratório (tema próprio ou o do Ritmo) e o que o professor vê no painel.
