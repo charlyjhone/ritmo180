@@ -22,7 +22,7 @@ const MODULES = [identityRoutes, practiceRoutes, readingRoutes, examRoutes, insi
 
 export async function buildApp(deps: AppDeps, options: { webRoot?: string; logger?: boolean } = {}) {
   // Em produção o servidor fica atrás de um proxy: sem isto, o limite de login veria todos com o mesmo IP.
-  const app = Fastify({ logger: options.logger ?? false, bodyLimit: BODY_LIMIT, trustProxy: deps.secureCookies });
+  const app = Fastify({ logger: options.logger ?? false, bodyLimit: BODY_LIMIT, trustProxy: deps.behindProxy ?? deps.secureCookies });
   await app.register(cookie);
   await app.register(helmet, {
     hsts: deps.secureCookies,

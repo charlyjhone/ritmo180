@@ -12,6 +12,8 @@ import { seedDemo, type DemoAccounts } from "../src/seed/demo.ts";
 import { importBatch, releaseOfficialItems } from "../src/seed/install.ts";
 import { enrichItems, generateItems, reviewItem, reviewQueue } from "../src/modules/content/index.ts";
 import type { Llm } from "../src/platform/llm.ts";
+import { runCalibration } from "../src/modules/calibration/index.ts";
+import { NOT_GUEST_ATTEMPT, removeExpiredGuests } from "../src/modules/identity/index.ts";
 
 const NOW = Date.parse("2026-10-20T15:00:00Z");
 const PASSWORD = "senha-de-teste-123";
@@ -464,6 +466,100 @@ describe("contas", () => {
     await teacher.post("/api/auth/password", { current: temporaryPassword, next: PASSWORD });
     expect((await teacher.get("/api/teacher/classes")).statusCode).toBe(200);
     expect((await as(await login(a.teacher)).post(`/api/school/people/${people[0]!.id}/reset-password`)).statusCode).toBe(403);
+  });
+});
+
+describe("autorização dos responsáveis", () => {
+  it("a coordenação retira e registra o termo, e o acesso do aluno acompanha", async () => {
+    const email = classmate();
+    const coordinator = as(await login(a.coordinator));
+    const [person] = json<Person[]>(await coordinator.get(`/api/school/people?q=${encodeURIComponent(email)}`));
+    expect(person!.consentAt).not.toBeNull();
+    const student = as(await login(email));
+    expect((await coordinator.post(`/api/school/people/${person!.id}/consent`, { signed: false })).statusCode).toBe(200);
+    expect(json<any>(await student.get("/api/me")).blocked).toBe("consent_required");
+    expect((await student.get("/api/insights/student")).statusCode).toBe(403);
+    expect((await as(await login(a.teacher)).post(`/api/school/people/${person!.id}/consent`, { signed: true })).statusCode).toBe(403);
+    expect((await coordinator.post(`/api/school/people/${person!.id}/consent`, { signed: true })).statusCode).toBe(200);
+    expect(json<any>(await student.get("/api/me")).blocked).toBeNull();
+    const [after] = json<Person[]>(await coordinator.get(`/api/school/people?q=${encodeURIComponent(email)}`));
+    expect(after!.consentAt).toBe(NOW);
+  });
+});
+
+describe("visitante", () => {
+  const DAY = 86_400_000;
+  let guestApp: Awaited<ReturnType<typeof buildApp>>;
+  beforeAll(async () => {
+    guestApp = await buildApp({ db, llm: null, now: () => NOW, secureCookies: false, loginAttemptsPerMinute: 1000, guestAccess: true });
+  });
+  afterAll(() => guestApp.close());
+  const enter = async () => (await guestApp.inject({ method: "POST", url: "/api/auth/visitante" })).cookies[0]!.value;
+  const guest = (cookie: string) => ({
+    get: (url: string) => guestApp.inject({ method: "GET", url, cookies: { ritmo_session: cookie } }),
+    post: (url: string, payload: object = {}) => guestApp.inject({ method: "POST", url, payload, cookies: { ritmo_session: cookie } }),
+  });
+
+  it("fica desligado quando a escola não libera", async () => {
+    expect((await app.inject({ method: "POST", url: "/api/auth/visitante" })).statusCode).toBe(404);
+    expect(json<any>(await app.inject({ url: "/api/auth/opcoes" })).visitante).toBe(false);
+    expect(json<any>(await guestApp.inject({ url: "/api/auth/opcoes" })).visitante).toBe(true);
+  });
+
+  it("entra sem dado pessoal, treina e não vê nada da escola", async () => {
+    const visitor = guest(await enter());
+    const me = json<any>(await visitor.get("/api/me"));
+    expect(me).toMatchObject({ role: "student", blocked: null, guestUntil: NOW + 7 * DAY });
+    expect(me.name).toMatch(/^Visitante \d{4}$/);
+    const stored = await db.system((tx) => tx.query(`SELECT email, pass_hash FROM users WHERE id = $1`, [me.id]));
+    expect(stored[0]).toEqual({ email: null, pass_hash: null });
+    expect((await visitor.get("/api/insights/school")).statusCode).toBe(403);
+    expect((await visitor.get(`/api/onboarding/${a.schoolId}`)).statusCode).toBe(403);
+    const pack = json<PracticeSessionPack>(await visitor.post("/api/practice/sessions", { minutes: 15 }));
+    expect(pack.items.length).toBeGreaterThan(0);
+    expect((await visitor.get("/api/insights/student")).statusCode).toBe(200);
+  });
+
+  it("não entra na estatística das questões", async () => {
+    const visitor = guest(await enter());
+    const pack = json<PracticeSessionPack>(await visitor.post("/api/practice/sessions", { minutes: 15 }));
+    const item = pack.items[0]!;
+    const attempt = {
+      id: randomUUID(), sessionId: pack.sessionId, itemId: item.id, mode: "guided", choice: item.key.answer, totalMs: 90_000,
+      phases: { readMs: 40_000, pathMs: 20_000, calcMs: 20_000, checkMs: 10_000 }, usedHint: false, hiddenMs: 0, position: 0, answeredAt: NOW,
+    };
+    expect(json<SyncResult>(await visitor.post("/api/practice/sync", { attempts: [attempt] })).accepted).toEqual([attempt.id]);
+    await runCalibration(db, NOW);
+    const [stats] = await db.system((tx) => tx.query(`SELECT responses FROM item_stats WHERE item_id = $1`, [item.id]));
+    const [real] = await db.system((tx) => tx.query(`SELECT count(*)::int AS n FROM attempts a WHERE item_id = $1 AND ${NOT_GUEST_ATTEMPT}`, [item.id]));
+    expect(stats?.responses ?? 0).toBe(real!.n);
+  });
+
+  it("deixa uma turma inteira entrar junta pela mesma rede", async () => {
+    const strict = await buildApp({ db, llm: null, now: () => NOW, secureCookies: false, loginAttemptsPerMinute: 10, guestAccess: true });
+    const entries = await Promise.all(Array.from({ length: 20 }, () => strict.inject({ method: "POST", url: "/api/auth/visitante" })));
+    expect(entries.map((r) => r.statusCode)).toEqual(Array(20).fill(200));
+    await strict.close();
+  });
+
+  it("sair apaga o visitante e o que ele fez", async () => {
+    const cookie = await enter();
+    const visitor = guest(cookie);
+    const { id } = json<any>(await visitor.get("/api/me"));
+    await visitor.post("/api/practice/sessions", { minutes: 15 });
+    expect((await visitor.post("/api/auth/logout")).statusCode).toBe(200);
+    expect(await db.system((tx) => tx.query(`SELECT 1 FROM users WHERE id = $1`, [id]))).toEqual([]);
+    expect(await db.system((tx) => tx.query(`SELECT 1 FROM practice_sessions WHERE student_id = $1`, [id]))).toEqual([]);
+  });
+
+  it("perde o acesso e é apagado quando o prazo acaba", async () => {
+    const cookie = await enter();
+    const later = await buildApp({ db, llm: null, now: () => NOW + 8 * DAY, secureCookies: false, loginAttemptsPerMinute: 1000, guestAccess: true });
+    expect((await later.inject({ url: "/api/me", cookies: { ritmo_session: cookie } })).statusCode).toBe(401);
+    await later.close();
+    expect(await removeExpiredGuests(db, NOW + 8 * DAY)).toBeGreaterThan(0);
+    expect(await db.system((tx) => tx.query(`SELECT 1 FROM users WHERE guest_expires_at IS NOT NULL`))).toEqual([]);
+    expect((await app.inject({ method: "POST", url: "/api/auth/login", payload: { email: a.student, password: PASSWORD } })).statusCode).toBe(200);
   });
 });
 

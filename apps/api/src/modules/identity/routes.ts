@@ -4,16 +4,19 @@ import { ChangePasswordInput, LoginInput, type Me } from "@ritmo/contracts";
 import { HttpError, type ModuleRoutes } from "../../platform/http.ts";
 import type { Tx } from "../../platform/db.ts";
 import { requireActor, type Actor } from "./actor.ts";
+import { createGuest, removeExpiredGuests, removeGuest } from "./guest.ts";
 import { hashPassword, verifyPassword } from "./passwords.ts";
 
 const COOKIE = "ritmo_session";
 const SESSION_DAYS = 14;
+/** Uma turma inteira pode entrar ao mesmo tempo pela mesma rede da escola. */
+const GUEST_ENTRIES_PER_MINUTE = 120;
 const sha256 = (value: string) => createHash("sha256").update(value).digest("hex");
 
 const ACTOR_SQL = `
-  SELECT u.id, u.name, u.role, u.school_id, u.grade, u.must_change_password, s.released_at, gc.consent_at
+  SELECT u.id, u.name, u.role, u.school_id, u.grade, u.must_change_password, u.guest_expires_at, s.released_at, gc.consent_at
   FROM sessions se
-  JOIN users u ON u.id = se.user_id AND u.deactivated_at IS NULL
+  JOIN users u ON u.id = se.user_id AND u.deactivated_at IS NULL AND (u.guest_expires_at IS NULL OR u.guest_expires_at > $2)
   LEFT JOIN schools s ON s.id = u.school_id
   LEFT JOIN guardian_contacts gc ON gc.student_id = u.id
   WHERE se.token_hash = $1 AND se.expires_at > $2`;
@@ -25,12 +28,14 @@ async function loadActor(tx: Tx, token: string, now: number): Promise<Actor | nu
   if (row.must_change_password) blocked = "password_change";
   else if (row.role === "student") {
     if (!row.released_at) blocked = "school_not_released";
-    else if (!row.consent_at) blocked = "consent_required";
+    // O visitante não tem dado pessoal, então não há consentimento de responsável a colher.
+    else if (!row.consent_at && !row.guest_expires_at) blocked = "consent_required";
   }
-  return { id: row.id, name: row.name, role: row.role, schoolId: row.school_id, grade: row.grade, blocked };
+  const guestUntil = row.guest_expires_at ? new Date(row.guest_expires_at).getTime() : null;
+  return { id: row.id, name: row.name, role: row.role, schoolId: row.school_id, grade: row.grade, blocked, guestUntil };
 }
 
-export const identityRoutes: ModuleRoutes = (app, { db, now, secureCookies, loginAttemptsPerMinute }) => {
+export const identityRoutes: ModuleRoutes = (app, { db, now, secureCookies, loginAttemptsPerMinute, guestAccess = false }) => {
   app.decorateRequest("actor", null);
   app.addHook("onRequest", async (request) => {
     const token = request.cookies[COOKIE];
@@ -52,6 +57,24 @@ export const identityRoutes: ModuleRoutes = (app, { db, now, secureCookies, logi
     });
   });
 
+  app.register(async (scope) => {
+    await scope.register(rateLimit, { max: GUEST_ENTRIES_PER_MINUTE, timeWindow: "1 minute" });
+    scope.post("/api/auth/visitante", async (_request, reply) => {
+      if (!guestAccess) throw new HttpError(404, "guest_disabled", "O acesso sem cadastro está desligado.");
+      await removeExpiredGuests(db, now());
+      const token = randomBytes(32).toString("hex");
+      const { expires } = await db.system(async (tx) => {
+        const guest = await createGuest(tx, now());
+        await tx.query(`INSERT INTO sessions (token_hash, user_id, expires_at) VALUES ($1, $2, $3)`, [sha256(token), guest.id, guest.expires]);
+        return guest;
+      });
+      reply.setCookie(COOKIE, token, { httpOnly: true, sameSite: "lax", secure: secureCookies, path: "/", expires });
+      return { ok: true };
+    });
+  });
+
+  app.get("/api/auth/opcoes", async () => ({ visitante: guestAccess }));
+
   // Não passa por requireActor: é justamente o que libera quem está bloqueado com senha provisória.
   app.post("/api/auth/password", async (request) => {
     const actor = request.actor;
@@ -70,7 +93,10 @@ export const identityRoutes: ModuleRoutes = (app, { db, now, secureCookies, logi
 
   app.post("/api/auth/logout", async (request, reply) => {
     const token = request.cookies[COOKIE];
-    if (token) await db.system((tx) => tx.query(`DELETE FROM sessions WHERE token_hash = $1`, [sha256(token)]));
+    const guest = request.actor?.guestUntil ? request.actor.id : null;
+    // Visitante que sai não volta: a conta e o que ele respondeu são apagados na hora.
+    if (guest) await db.system((tx) => removeGuest(tx, guest));
+    else if (token) await db.system((tx) => tx.query(`DELETE FROM sessions WHERE token_hash = $1`, [sha256(token)]));
     reply.clearCookie(COOKIE, { path: "/" });
     return { ok: true };
   });
@@ -91,6 +117,7 @@ export const identityRoutes: ModuleRoutes = (app, { db, now, secureCookies, logi
         grade: actor.grade,
         className: klass?.name ?? null,
         blocked: actor.blocked,
+        guestUntil: actor.guestUntil,
       };
     });
   });

@@ -1,12 +1,43 @@
-// Pessoas da escola: senha provisória para quem perdeu o acesso e pedidos de exclusão de dados.
+// Pessoas da escola: autorização dos responsáveis, senha provisória para quem perdeu o acesso e pedidos de exclusão de dados.
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { DeletionRequestView, Person, Role } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
-import { Async, PageHead } from "../ui/kit.tsx";
+import { Async, PageHead, Pill } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
 
 const ROLE_LABEL: Record<Role, string> = { student: "Aluno", teacher: "Professor", coordinator: "Coordenação", guardian: "Família", network_admin: "Rede" };
+
+function ConsentControl({ person }: { person: Person }) {
+  const client = useQueryClient();
+  const toast = useToast();
+  const [confirming, setConfirming] = useState(false);
+  const signed = person.consentAt !== null;
+  async function save() {
+    try {
+      await api.post(`/api/school/people/${person.id}/consent`, { signed: !signed });
+      toast(signed ? "Autorização retirada. O aluno não consegue mais entrar." : "Autorização registrada. O aluno já pode entrar.");
+      await client.invalidateQueries({ queryKey: ["people"] });
+    } catch (error) {
+      toast(error instanceof ApiError ? error.message : "Sem conexão com o servidor.");
+    } finally {
+      setConfirming(false);
+    }
+  }
+  return (
+    <div className="btn-row" style={{ margin: 0, alignItems: "center" }}>
+      {signed
+        ? <Pill tone="good">Autorização em {new Date(person.consentAt!).toLocaleDateString("pt-BR")}</Pill>
+        : <Pill tone="warn">Aguarda autorização</Pill>}
+      {confirming ? (
+        <>
+          <button className="btn slim" type="button" onClick={() => void save()}>{signed ? "Confirmar retirada" : "Confirmar: termo assinado"}</button>
+          <button className="btn soft slim" type="button" onClick={() => setConfirming(false)}>Cancelar</button>
+        </>
+      ) : <button className={signed ? "btn soft slim" : "btn slim"} type="button" onClick={() => setConfirming(true)}>{signed ? "Retirar autorização" : "Registrar termo assinado"}</button>}
+    </div>
+  );
+}
 
 function PersonRow({ person }: { person: Person }) {
   const toast = useToast();
@@ -27,6 +58,7 @@ function PersonRow({ person }: { person: Person }) {
         <div className="row-title">{person.name}</div>
         <div className="row-sub">{ROLE_LABEL[person.role]}{person.className ? ` · ${person.className}` : ""}{person.email ? ` · ${person.email}` : ""}</div>
       </div>
+      {person.role === "student" ? <ConsentControl person={person} /> : null}
       {temporary ? null : confirming ? (
         <div className="btn-row" style={{ margin: 0 }}>
           <button className="btn slim" type="button" onClick={() => void reset()}>Confirmar</button>
@@ -84,8 +116,8 @@ export function PeoplePage() {
       <PageHead kicker="Coordenação" title="Pessoas da escola" />
       <DeletionRequests />
       <section className="card" aria-labelledby="pessoas-title">
-        <h2 id="pessoas-title">Quem perdeu a senha</h2>
-        <p className="sub">Não enviamos senha por e-mail. Gere uma senha provisória e entregue à pessoa com segurança.</p>
+        <h2 id="pessoas-title">Alunos, autorizações e senhas</h2>
+        <p className="sub">O aluno só entra depois que a escola registra o termo assinado pelo responsável. Não enviamos senha por e-mail: gere uma senha provisória e entregue à pessoa com segurança.</p>
         <label className="field">Buscar por nome ou e-mail<input className="input" value={search} maxLength={120} onChange={(e) => setSearch(e.target.value)} /></label>
         <Async query={query}>
           {(people) => people.length === 0 ? <p className="sub">Ninguém encontrado.</p> : <div className="stack">{people.map((p) => <PersonRow key={p.id} person={p} />)}</div>}

@@ -14,6 +14,8 @@ export interface Me {
   className: string | null;
   /** Motivo pelo qual o aluno ainda não pode usar a plataforma. */
   blocked: "school_not_released" | "consent_required" | "password_change" | null;
+  /** Visitante sem cadastro: quando o acesso e os dados dele são apagados. */
+  guestUntil: number | null;
 }
 
 export const ChangePasswordInput = z.object({ current: z.string().min(1).max(200), next: z.string().min(8, "Use pelo menos 8 caracteres.").max(200) });
@@ -24,7 +26,12 @@ export interface Person {
   email: string | null;
   role: Role;
   className: string | null;
+  /** Só para aluno: quando a escola registrou a autorização assinada pelo responsável. */
+  consentAt: number | null;
 }
+
+/** A coordenação registra a autorização assinada pelo responsável, ou a retira. */
+export const ConsentInput = z.object({ signed: z.boolean() });
 
 export const DeletionRequestInput = z.object({ studentId: z.string().uuid().optional() });
 export const ResolveDeletionInput = z.object({ approved: z.boolean() });

@@ -19,6 +19,10 @@ export interface AppDeps {
   now: () => number;
   secureCookies: boolean;
   loginAttemptsPerMinute: number;
+  /** Libera o botão "Entrar sem cadastro". */
+  guestAccess?: boolean;
+  /** Atrás de proxy ou túnel: o IP de cada aluno vem do cabeçalho X-Forwarded-For. */
+  behindProxy?: boolean;
 }
 
 /** Contrato de todo módulo: recebe as dependências e registra as próprias rotas. */

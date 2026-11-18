@@ -6,7 +6,7 @@ import type { FamilyChild } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
 import { PageHead, saveFile } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
-import { PasswordForm, useMe } from "./session.tsx";
+import { guestDate, logout, PasswordForm, useMe } from "./session.tsx";
 
 function StudentData({ studentId, name }: { studentId?: string; name?: string }) {
   const toast = useToast();
@@ -53,9 +53,35 @@ function FamilyData() {
   return <>{query.data?.map((child) => <StudentData key={child.id} studentId={child.id} name={child.name} />)}</>;
 }
 
+function GuestAccount({ until }: { until: number }) {
+  const [confirming, setConfirming] = useState(false);
+  return (
+    <section className="card" aria-labelledby="visitante-title">
+      <h2 id="visitante-title">Você está como visitante</h2>
+      <p className="sub">Esta conta não tem nome, e-mail nem senha. O progresso fica guardado neste aparelho até {guestDate(until)} e depois é apagado. Para guardar de vez, peça uma conta à sua escola.</p>
+      <div className="btn-row">
+        {confirming ? (
+          <>
+            <button className="btn slim" type="button" onClick={() => void logout()}>Apagar agora</button>
+            <button className="btn soft slim" type="button" onClick={() => setConfirming(false)}>Cancelar</button>
+          </>
+        ) : <button className="btn outline slim" type="button" onClick={() => setConfirming(true)}>Sair e apagar meu progresso</button>}
+      </div>
+    </section>
+  );
+}
+
 export function AccountPage() {
   const me = useMe();
   const toast = useToast();
+  if (me.guestUntil) {
+    return (
+      <div className="page" style={{ maxWidth: 640 }}>
+        <PageHead kicker={me.name} title="Minha conta" />
+        <GuestAccount until={me.guestUntil} />
+      </div>
+    );
+  }
   const hasStudentData = me.role === "student" || me.role === "guardian";
   return (
     <div className="page" style={{ maxWidth: 640 }}>

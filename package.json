@@ -20,7 +20,9 @@
     "content:liberar": "node apps/api/src/cli/release.ts",
     "content:completar": "node apps/api/src/cli/complete.ts",
     "conta:admin": "node apps/api/src/cli/account.ts admin",
-    "conta:senha": "node apps/api/src/cli/account.ts senha"
+    "conta:senha": "node apps/api/src/cli/account.ts senha",
+    "conta:coordenacao": "node apps/api/src/cli/account.ts coordenacao",
+    "turma": "sh scripts/abrir-para-turma.sh"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

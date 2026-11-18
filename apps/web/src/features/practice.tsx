@@ -7,6 +7,7 @@ import { api, ApiError } from "../lib/api.ts";
 import { clearPack, flushQueue, loadPack, queueAttempt, savePack } from "../lib/offline.ts";
 import { Bar, clock, Html, Pill, useInterval } from "../ui/kit.tsx";
 import { FocusPicker } from "./focus-picker.tsx";
+import { useMe } from "./session.tsx";
 
 type Item = PracticeSessionPack["items"][number];
 // 0 texto, 1 comando, 2 alternativas, 3 conferência, 4 respondida
@@ -175,6 +176,7 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext }
 
 export function PracticePage() {
   const client = useQueryClient();
+  const { id: owner } = useMe();
   const [pack, setPack] = useState<PracticeSessionPack | null>(null);
   const [index, setIndex] = useState(0);
   const [resume, setResume] = useState<{ pack: PracticeSessionPack; done: number } | null>(null);
@@ -188,10 +190,10 @@ export function PracticePage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    void loadPack().then((saved) => {
+    void loadPack(owner).then((saved) => {
       if (saved && saved.done < saved.pack.items.length) setResume(saved);
     }).catch(() => {});
-  }, []);
+  }, [owner]);
 
   async function start() {
     setBusy(true);
@@ -202,7 +204,7 @@ export function PracticePage() {
         setMessage(next.notice);
         return;
       }
-      await savePack({ pack: next, done: 0 }).catch(() => {});
+      await savePack({ owner, pack: next, done: 0 }).catch(() => {});
       setMessage(next.notice);
       setPack(next);
       setIndex(0);
@@ -232,7 +234,7 @@ export function PracticePage() {
 
   if (pack) {
     const item = pack.items[index]!;
-    return <Question key={item.id} item={item} mode={pack.mode} position={index} total={pack.items.length} sessionId={pack.sessionId} onAnswered={() => void savePack({ pack, done: index + 1 }).catch(() => {})} onNext={() => void next()} />;
+    return <Question key={item.id} item={item} mode={pack.mode} position={index} total={pack.items.length} sessionId={pack.sessionId} onAnswered={() => void savePack({ owner, pack, done: index + 1 }).catch(() => {})} onNext={() => void next()} />;
   }
 
   return (

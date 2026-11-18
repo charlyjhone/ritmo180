@@ -33,13 +33,18 @@ async function store<T>(name: string, mode: IDBTransactionMode, work: (s: IDBObj
 }
 
 export interface SavedPack {
+  /** Dono do pacote: num aparelho compartilhado, um aluno não vê o treino do outro. */
+  owner: string;
   pack: PracticeSessionPack;
   /** Questões já respondidas neste pacote. */
   done: number;
 }
 
 export const savePack = (saved: SavedPack) => store(STATE, "readwrite", (s) => s.put(saved, PACK_KEY));
-export const loadPack = () => store<SavedPack | undefined>(STATE, "readonly", (s) => s.get(PACK_KEY));
+export async function loadPack(owner: string): Promise<SavedPack | undefined> {
+  const saved = await store<SavedPack | undefined>(STATE, "readonly", (s) => s.get(PACK_KEY));
+  return saved?.owner === owner ? saved : undefined;
+}
 export const clearPack = () => store(STATE, "readwrite", (s) => s.delete(PACK_KEY));
 export const pendingCount = () => store(OUTBOX, "readonly", (s) => s.count());
 

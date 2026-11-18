@@ -26,7 +26,7 @@ import { PracticePage } from "./features/practice.tsx";
 import { PrivacyPolicy } from "./features/privacy-policy.tsx";
 import { ReadingPage } from "./features/reading.tsx";
 import { SchoolHome } from "./features/school.tsx";
-import { logout, NAV, SessionGate, useMe } from "./features/session.tsx";
+import { guestDate, logout, NAV, SessionGate, useMe } from "./features/session.tsx";
 import { StudentHome } from "./features/student.tsx";
 import { TeacherHome } from "./features/teacher.tsx";
 import { Pill } from "./ui/kit.tsx";
@@ -80,9 +80,9 @@ function Shell() {
           </nav>
           <div className="topbar-end">
             <SyncStatus />
-            {me.school?.isDemo ? <Pill tone="warn">Demonstração</Pill> : null}
+            {me.guestUntil ? <Pill tone="warn">Visitante até {guestDate(me.guestUntil)}</Pill> : me.school?.isDemo ? <Pill tone="warn">Demonstração</Pill> : null}
             <NavLink className="btn soft slim" to="/conta">Conta</NavLink>
-            <button className="btn soft slim" type="button" onClick={() => void logout()}>Sair</button>
+            <button className="btn soft slim" type="button" onClick={() => void logout()}>{me.guestUntil ? "Sair e apagar" : "Sair"}</button>
           </div>
         </div>
       </header>

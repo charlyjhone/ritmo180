@@ -1,8 +1,9 @@
 // Sessão do usuário: login, perfil em cache para abrir sem internet e menu por papel.
-import { createContext, useContext, useState, type FormEvent, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Me, Role } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
+import { clearPack, flushQueue } from "../lib/offline.ts";
 
 const CACHE_KEY = "ritmo-me";
 const SessionContext = createContext<Me | null>(null);
@@ -38,7 +39,15 @@ async function fetchMe(): Promise<Me | null> {
   }
 }
 
+/** Data em que o acesso de visitante acaba, no formato curto do Brasil. */
+export function guestDate(until: number): string {
+  return new Date(until).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+}
+
 export async function logout() {
+  // Envia o que ainda está na fila e tira o treino salvo, para o próximo a usar o aparelho não ver nada.
+  await flushQueue().catch(() => {});
+  await clearPack().catch(() => {});
   await api.post("/api/auth/logout").catch(() => {});
   try {
     localStorage.removeItem(CACHE_KEY);
@@ -46,6 +55,60 @@ export async function logout() {
     // Nada a limpar.
   }
   location.assign("/");
+}
+
+const GUEST_PATH = "/visitante";
+
+/** Entra como visitante e volta para o início. Usado pelo botão e pelo link /visitante. */
+async function enterAsGuest() {
+  await api.post("/api/auth/visitante");
+  if (location.pathname === GUEST_PATH) history.replaceState(null, "", "/");
+}
+
+function GuestButton({ onError }: { onError: (message: string) => void }) {
+  const client = useQueryClient();
+  const options = useQuery({ queryKey: ["auth-options"], queryFn: () => api.get<{ visitante: boolean }>("/api/auth/opcoes"), staleTime: Infinity });
+  const [busy, setBusy] = useState(false);
+  if (!options.data?.visitante) return null;
+  async function enter() {
+    setBusy(true);
+    try {
+      await enterAsGuest();
+      await client.invalidateQueries({ queryKey: ["me"] });
+    } catch (e) {
+      onError(e instanceof ApiError ? e.message : "Sem conexão com o servidor.");
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <div className="guest-entry">
+      <div className="guest-divider"><span>ou</span></div>
+      <button className="btn soft" type="button" onClick={() => void enter()} disabled={busy}>{busy ? "Entrando…" : "Entrar sem cadastro"}</button>
+      <p className="sub" style={{ marginTop: 8 }}>Sem nome e sem e-mail. Seu progresso fica neste aparelho por 7 dias e depois é apagado.</p>
+    </div>
+  );
+}
+
+/** Link direto para compartilhar: abre a plataforma já como visitante. */
+function GuestLink() {
+  const client = useQueryClient();
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    enterAsGuest()
+      .then(() => client.invalidateQueries({ queryKey: ["me"] }))
+      .catch((e) => setError(e instanceof ApiError ? e.message : "Sem conexão com o servidor."));
+  }, [client]);
+  if (!error) return <div className="state" role="status">Preparando seu acesso…</div>;
+  return (
+    <main className="login">
+      <section className="card">
+        <h1 style={{ fontSize: 24 }}>Não deu para entrar</h1>
+        <div className="notice bad" role="alert">{error}</div>
+        <div className="btn-row"><a className="btn soft" href="/">Ir para o login</a></div>
+      </section>
+    </main>
+  );
 }
 
 function Login() {
@@ -80,6 +143,7 @@ function Login() {
           {error ? <div className="notice bad" role="alert">{error}</div> : null}
           <button className="btn" type="submit" disabled={busy}>{busy ? "Entrando…" : "Entrar"}</button>
         </form>
+        <GuestButton onError={setError} />
         <p className="sub" style={{ marginTop: 16 }}>Esqueceu a senha? Peça uma senha provisória à coordenação da sua escola.</p>
         <p className="sub"><a href="/privacidade">Política de privacidade</a></p>
       </section>
@@ -143,7 +207,7 @@ export function SessionGate({ children }: { children: ReactNode }) {
   if (query.isPending) return <div className="state" role="status">Carregando…</div>;
   if (query.isError) return <div className="state" role="alert">{query.error.message}</div>;
   const me = query.data;
-  if (!me) return <Login />;
+  if (!me) return location.pathname === GUEST_PATH ? <GuestLink /> : <Login />;
   if (me.blocked === "password_change") return <RequiredPasswordChange />;
   if (me.blocked) {
     return (

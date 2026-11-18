@@ -15,6 +15,8 @@ export function PrivacyPolicy() {
       <p>Para montar o treino, mostrar a evolução ao aluno, à família e à escola, e melhorar as questões com estatística de uso. Não vendemos dados nem usamos dados de alunos para publicidade.</p>
       <h2>Alunos menores de idade</h2>
       <p>O acesso de aluno menor depende do consentimento do responsável, registrado pela escola.</p>
+      <h2>Acesso sem cadastro</h2>
+      <p>Quem entra como visitante recebe um nome genérico e não informa nome, e-mail nem senha. O que o visitante faz fica guardado por 7 dias e depois é apagado. Ao clicar em Sair e apagar, a exclusão é imediata. As respostas de visitantes não entram na estatística das questões.</p>
       <h2>Quem pode ver</h2>
       <p>Cada escola só acessa os próprios dados. O professor vê as suas turmas, a família vê os próprios filhos e a coordenação vê a sua escola. Acessos sensíveis ficam registrados.</p>
       <h2>Seus direitos</h2>
