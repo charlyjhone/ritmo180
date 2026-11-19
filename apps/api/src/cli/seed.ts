@@ -1,6 +1,6 @@
 // Cria a escola de demonstração em banco local. Senha em data/credenciais-demonstracao.txt.
 import { randomBytes } from "node:crypto";
-import { writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { DATA_DIR, openDatabase } from "../platform/open.ts";
 import { seedDemo } from "../seed/demo.ts";
 
@@ -17,6 +17,8 @@ if (existing.length > 0) {
   const password = process.env.SEED_PASSWORD || randomBytes(9).toString("base64url");
   const started = Date.now();
   const a = await seedDemo(db, { now: Date.now(), password });
+  // Com DATABASE_URL o banco embutido não é aberto e a pasta data/ pode não existir (é o caso da CI).
+  mkdirSync(DATA_DIR, { recursive: true });
   writeFileSync(
     `${DATA_DIR}/credenciais-demonstracao.txt`,
     [`senha de todos: ${password}`, `aluno: ${a.student}`, `professor: ${a.teacher}`, `direção: ${a.coordinator}`, `família: ${a.guardian}`, `rede: ${a.network}`, ""].join("\n"),
