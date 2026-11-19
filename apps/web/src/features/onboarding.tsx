@@ -2,7 +2,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { OnboardingState, RosterCommitResult, RosterPreview } from "@ritmo/contracts";
+import type { CreatedPerson, OnboardingState, RosterCommitResult, RosterPreview } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
 import { Async, clock, PageHead, Pill, saveFile } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
@@ -11,7 +11,7 @@ import { useMe } from "./session.tsx";
 const STEPS = [
   ["Escola e marca", "Nome, cores e endereço"],
   ["Termos e LGPD", "Contrato e consentimentos"],
-  ["Alunos e turmas", "Importar planilha"],
+  ["Pessoas e turmas", "Coordenação e planilha"],
   ["Acessibilidade", "Tempo adicional e recursos"],
   ["Diagnóstico inicial", "Data e liberação"],
 ] as const;
@@ -80,6 +80,41 @@ function TermsStep({ state, path, onSaved }: StepProps) {
   );
 }
 
+/** A rede cria a conta da coordenação; daí em diante a coordenação cadastra o resto na página Pessoas. */
+function Coordinators({ state, path, onSaved }: StepProps) {
+  const toast = useToast();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [created, setCreated] = useState<{ email: string; password: string } | null>(null);
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    try {
+      const result = await api.post<CreatedPerson>(`${path}/coordinators`, { name, email });
+      setCreated({ email: email.trim().toLowerCase(), password: result.temporaryPassword });
+      setName("");
+      setEmail("");
+      onSaved(await api.get<OnboardingState>(path));
+    } catch (e) {
+      toast(e instanceof ApiError ? e.message : "Não foi possível cadastrar.");
+    }
+  }
+  return (
+    <div style={{ marginBottom: 28 }}>
+      <h2>Coordenação</h2>
+      <p className="sub">
+        {state.coordinators.length === 0 ? "Nenhuma conta de coordenação ainda." : `Coordenação: ${state.coordinators.map((c) => `${c.name} (${c.email})`).join(", ")}.`}{" "}
+        A coordenação cadastra professores, famílias e alunos avulsos na página Pessoas.
+      </p>
+      <form className="form-grid" onSubmit={(e) => void submit(e)} style={{ alignItems: "end" }}>
+        <label className="field">Nome completo<input className="input" value={name} minLength={3} maxLength={120} required onChange={(e) => setName(e.target.value)} /></label>
+        <label className="field">E-mail<input className="input" type="email" value={email} maxLength={160} required onChange={(e) => setEmail(e.target.value)} /></label>
+        <div><button className="btn" type="submit">Cadastrar coordenação</button></div>
+      </form>
+      {created ? <div className="notice" role="status" style={{ marginTop: 12 }}>Conta criada: <b className="mono">{created.email}</b>, senha provisória <b className="mono">{created.password}</b>. Ela só aparece agora e precisa ser trocada no primeiro acesso.</div> : null}
+    </div>
+  );
+}
+
 function RosterStep({ state, path, onSaved }: StepProps) {
   const client = useQueryClient();
   const toast = useToast();
@@ -102,7 +137,8 @@ function RosterStep({ state, path, onSaved }: StepProps) {
   async function commit() {
     const result = await api.post<RosterCommitResult>(`${path}/roster`, file);
     saveFile("senhas-provisorias.csv", result.credentialsCsv);
-    toast(`${result.created} alunos criados. Guarde o arquivo de senhas: ele não será mostrado de novo.`);
+    const students = result.created - result.teachers;
+    toast(`${students} ${students === 1 ? "aluno" : "alunos"} e ${result.teachers} ${result.teachers === 1 ? "professor" : "professores"} criados. Guarde o arquivo de senhas: ele não será mostrado de novo.`);
     setPreview(null);
     setFile(null);
     onSaved(await api.get<OnboardingState>(path));
@@ -110,9 +146,11 @@ function RosterStep({ state, path, onSaved }: StepProps) {
   }
   return (
     <div>
-      <h2>Alunos e turmas</h2>
-      <p className="sub">{state.roster.students} alunos cadastrados{state.roster.lastFile ? ` · último arquivo: ${state.roster.lastFile}` : ""}.</p>
-      <p className="sub">Envie um CSV com as colunas <span className="mono">nome; email; turma; serie; email_responsavel; consentimento</span>. A série usa o formato “9º ano” ou “1ª série”.</p>
+      <Coordinators state={state} path={path} onSaved={onSaved} />
+      <h2>Alunos, professores e turmas</h2>
+      <p className="sub">{state.roster.students} {state.roster.students === 1 ? "aluno" : "alunos"} e {state.roster.teachers} {state.roster.teachers === 1 ? "professor" : "professores"} cadastrados{state.roster.lastFile ? ` · último arquivo: ${state.roster.lastFile}` : ""}.</p>
+      <p className="sub">Envie um CSV com as colunas <span className="mono">nome; email; turma; serie; email_responsavel; consentimento</span> e, se quiser, <span className="mono">perfil</span>. A série usa o formato “9º ano” ou “1ª série”.</p>
+      <p className="sub">Para professor, escreva <span className="mono">professor</span> na coluna perfil e repita a linha para cada turma dele; o e-mail do responsável fica vazio. Quem já tem conta é pulado, então dá para reenviar a planilha com alunos novos.</p>
       <label className="drop" style={{ display: "block" }}>Selecionar arquivo CSV<input type="file" accept=".csv,text/csv" style={{ display: "block", margin: "12px auto 0" }} onChange={(e) => void choose(e.target.files?.[0])} /></label>
       {error ? <div className="notice bad" style={{ marginTop: 12 }} role="alert">{error}</div> : null}
       {preview ? (
@@ -122,9 +160,9 @@ function RosterStep({ state, path, onSaved }: StepProps) {
             <div className="table-wrap"><table className="tbl"><thead><tr><th scope="col">Linha</th><th scope="col">Nome</th><th scope="col">Problema</th></tr></thead>
               <tbody>{preview.problems.slice(0, 20).map((p) => <tr key={p.line}><td className="mono">{p.line}</td><td>{p.name}</td><td className="bad">{p.issue}</td></tr>)}</tbody></table></div>
           ) : null}
-          <div className="table-wrap"><table className="tbl"><thead><tr><th scope="col">Aluno</th><th scope="col">Turma</th><th scope="col">Responsável</th><th scope="col">Situação</th></tr></thead>
-            <tbody>{preview.sample.map((r) => <tr key={r.name}><td className="b">{r.name}</td><td>{r.className}</td><td className="soft">{r.guardian}</td><td className="soft">{r.status}</td></tr>)}</tbody></table></div>
-          <div className="btn-row"><button className="btn" type="button" disabled={preview.ready === 0} onClick={() => void commit()}>Importar {preview.ready} alunos</button></div>
+          <div className="table-wrap"><table className="tbl"><thead><tr><th scope="col">Nome</th><th scope="col">Turma</th><th scope="col">Responsável</th><th scope="col">Situação</th></tr></thead>
+            <tbody>{preview.sample.map((r) => <tr key={`${r.name}|${r.className}`}><td className="b">{r.name}</td><td>{r.className}</td><td className="soft">{r.guardian}</td><td className="soft">{r.status}</td></tr>)}</tbody></table></div>
+          <div className="btn-row"><button className="btn" type="button" disabled={preview.ready === 0} onClick={() => void commit()}>Importar {preview.ready} {preview.ready === 1 ? "linha" : "linhas"}</button></div>
         </>
       ) : null}
     </div>

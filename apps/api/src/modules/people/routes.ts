@@ -1,23 +1,56 @@
-// Pessoas da escola: a coordenação encontra uma conta, gera senha provisória e registra a autorização dos responsáveis.
-import { ConsentInput, type Person } from "@ritmo/contracts";
+// Pessoas da escola: a coordenação cadastra, edita e desativa contas, gera senha provisória e registra a autorização dos responsáveis.
+import { ActiveInput, ConsentInput, CreatePersonInput, ROLES, UpdatePersonInput, type CreatedPerson, type Person, type SchoolClass } from "@ritmo/contracts";
 import { HttpError, type ModuleRoutes } from "../../platform/http.ts";
 import { audit, requireActor, resetPassword, tenantOf } from "../identity/index.ts";
+import { assertEmailFree, createPerson, listClasses, listPeople, setActive, updatePerson } from "./service.ts";
 
-const LIMIT = 50;
+const LISTED_ROLES = new Set<string>(ROLES.filter((r) => r !== "network_admin"));
 
 export const peopleRoutes: ModuleRoutes = (app, { db, now }) => {
-  app.get<{ Querystring: { q?: string } }>("/api/school/people", async (request): Promise<Person[]> => {
+  app.get<{ Querystring: { q?: string; perfil?: string; inativos?: string } }>("/api/school/people", async (request): Promise<Person[]> => {
     const actor = requireActor(request, "coordinator");
-    const search = `%${(request.query.q ?? "").trim().toLowerCase()}%`;
-    const rows = await db.tenant(tenantOf(actor), (tx) => tx.query(
-      `SELECT u.id, u.name, u.email, u.role, c.name AS class_name, gc.consent_at
-       FROM users u LEFT JOIN class_students cs ON cs.student_id = u.id LEFT JOIN classes c ON c.id = cs.class_id
-       LEFT JOIN guardian_contacts gc ON gc.student_id = u.id
-       WHERE u.deactivated_at IS NULL AND (lower(u.name) LIKE $1 OR lower(coalesce(u.email, '')) LIKE $1)
-       ORDER BY u.name LIMIT ${LIMIT}`,
-      [search],
-    ));
-    return rows.map((r) => ({ id: r.id, name: r.name, email: r.email, role: r.role, className: r.class_name, consentAt: r.consent_at ? new Date(r.consent_at).getTime() : null }));
+    const role = request.query.perfil && LISTED_ROLES.has(request.query.perfil) ? request.query.perfil : undefined;
+    return db.tenant(tenantOf(actor), (tx) => listPeople(tx, { q: request.query.q, role, inactive: request.query.inativos === "sim" }));
+  });
+
+  app.get("/api/school/classes", async (request): Promise<SchoolClass[]> => {
+    const actor = requireActor(request, "coordinator");
+    return db.tenant(tenantOf(actor), listClasses);
+  });
+
+  app.post("/api/school/people", async (request): Promise<CreatedPerson> => {
+    const actor = requireActor(request, "coordinator");
+    const schoolId = actor.schoolId!;
+    const input = CreatePersonInput.parse(request.body);
+    await assertEmailFree(db, input.email);
+    return db.tenant(tenantOf(actor), async (tx) => {
+      const created = await createPerson(tx, schoolId, input);
+      await audit(tx, actor, schoolId, `user.create.${input.role}`, created.id);
+      return created;
+    });
+  });
+
+  app.patch<{ Params: { id: string } }>("/api/school/people/:id", async (request) => {
+    const actor = requireActor(request, "coordinator");
+    const schoolId = actor.schoolId!;
+    const input = UpdatePersonInput.parse(request.body);
+    return db.tenant(tenantOf(actor), async (tx) => {
+      await updatePerson(tx, schoolId, request.params.id, input);
+      await audit(tx, actor, schoolId, "user.update", request.params.id);
+      return { ok: true };
+    });
+  });
+
+  app.post<{ Params: { id: string } }>("/api/school/people/:id/active", async (request) => {
+    const actor = requireActor(request, "coordinator");
+    const schoolId = actor.schoolId!;
+    const { active } = ActiveInput.parse(request.body);
+    if (request.params.id === actor.id) throw new HttpError(422, "own_account", "Você não pode desativar a sua própria conta.");
+    return db.tenant(tenantOf(actor), async (tx) => {
+      await setActive(tx, request.params.id, active, now());
+      await audit(tx, actor, schoolId, active ? "user.reactivate" : "user.deactivate", request.params.id);
+      return { active };
+    });
   });
 
   // Sem autorização registrada o aluno não entra. Retirar a autorização bloqueia o acesso já na próxima tela.

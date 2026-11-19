@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { LightMyRequestResponse } from "fastify";
-import type { ClassExamReport, DeletionRequestView, ExamResultView, ExamSittingView, ExamSummary, ItemSuggestionView, MistakeBook, Person, PracticeSessionPack, StudentDashboard, StudyPlan, SyncResult, TrainingCatalog } from "@ritmo/contracts";
+import type { ClassExamReport, CreatedPerson, DeletionRequestView, RosterCommitResult, SchoolClass, ExamResultView, ExamSittingView, ExamSummary, ItemSuggestionView, MistakeBook, Person, PracticeSessionPack, StudentDashboard, StudyPlan, SyncResult, TrainingCatalog } from "@ritmo/contracts";
 import { normalizeItems, parseCanonicalJson } from "@ritmo/ingest";
 import { buildApp } from "../src/app.ts";
 import { openPglite } from "../src/platform/db-pglite.ts";
@@ -466,6 +466,107 @@ describe("contas", () => {
     await teacher.post("/api/auth/password", { current: temporaryPassword, next: PASSWORD });
     expect((await teacher.get("/api/teacher/classes")).statusCode).toBe(200);
     expect((await as(await login(a.teacher)).post(`/api/school/people/${people[0]!.id}/reset-password`)).statusCode).toBe(403);
+  });
+});
+
+describe("cadastro de pessoas", () => {
+  /** Entra com a senha provisória, troca a senha e devolve a sessão já liberada. */
+  async function firstAccess(email: string, temporary: string) {
+    const r = await app.inject({ method: "POST", url: "/api/auth/login", payload: { email, password: temporary } });
+    expect(r.statusCode).toBe(200);
+    const client = as(r.cookies[0]!.value);
+    expect((await client.post("/api/auth/password", { current: temporary, next: "senha-definitiva-1" })).statusCode).toBe(200);
+    return client;
+  }
+
+  it("a coordenação cadastra aluno, professor e família, cada um com o vínculo certo", async () => {
+    const coordinator = as(await login(a.coordinator));
+    const classes = json<SchoolClass[]>(await coordinator.get("/api/school/classes"));
+    expect(classes.length).toBeGreaterThan(1);
+    const [first, second] = classes;
+
+    const student = json<CreatedPerson>(await coordinator.post("/api/school/people", {
+      role: "student", name: "Aluna Cadastrada", email: "aluna.nova@escola.test", className: "Turma Nova", grade: "3ª série", guardianEmail: "mae.nova@escola.test", consent: true,
+    }));
+    const studentClient = await firstAccess("aluna.nova@escola.test", student.temporaryPassword);
+    expect((await studentClient.get("/api/insights/student")).statusCode).toBe(200);
+    expect(json<any>(await studentClient.get("/api/me")).className).toBe("Turma Nova");
+
+    const teacher = json<CreatedPerson>(await coordinator.post("/api/school/people", { role: "teacher", name: "Professor Cadastrado", email: "prof.novo@escola.test", classIds: [first!.id, second!.id] }));
+    const teacherClient = await firstAccess("prof.novo@escola.test", teacher.temporaryPassword);
+    const own = json<{ id: string }[]>(await teacherClient.get("/api/teacher/classes"));
+    expect(own.map((c) => c.id).sort()).toEqual([first!.id, second!.id].sort());
+
+    const guardian = json<CreatedPerson>(await coordinator.post("/api/school/people", { role: "guardian", name: "Mãe Cadastrada", email: "mae.nova@escola.test", studentIds: [student.id] }));
+    const guardianClient = await firstAccess("mae.nova@escola.test", guardian.temporaryPassword);
+    expect(json<{ id: string }[]>(await guardianClient.get("/api/insights/family")).map((c) => c.id)).toEqual([student.id]);
+
+    const [listed] = json<Person[]>(await coordinator.get(`/api/school/people?q=${encodeURIComponent("Mãe Cadastrada")}`));
+    expect(listed!.students.map((s) => s.name)).toEqual(["Aluna Cadastrada"]);
+    const [prof] = json<Person[]>(await coordinator.get(`/api/school/people?q=prof.novo&perfil=teacher`));
+    expect(prof!.classes).toHaveLength(2);
+  });
+
+  it("recusa e-mail repetido, turma de outra escola e quem não é da coordenação, sem deixar conta pela metade", async () => {
+    const coordinator = as(await login(a.coordinator));
+    const repeated = await coordinator.post("/api/school/people", { role: "coordinator", name: "Outra Pessoa", email: a.teacher });
+    expect(repeated.statusCode).toBe(409);
+    const badClass = await coordinator.post("/api/school/people", { role: "teacher", name: "Sem Turma", email: "sem.turma@escola.test", classIds: [randomUUID()] });
+    expect(badClass.statusCode).toBe(422);
+    expect(json<Person[]>(await coordinator.get("/api/school/people?q=sem.turma"))).toHaveLength(0);
+    expect((await coordinator.post("/api/school/people", { role: "guardian", name: "Sem Aluno", email: "sem.aluno@escola.test", studentIds: [] })).statusCode).toBe(400);
+    const teacher = as(await login(a.teacher));
+    expect((await teacher.post("/api/school/people", { role: "coordinator", name: "Invasor Teste", email: "invasor@escola.test" })).statusCode).toBe(403);
+  });
+
+  it("muda a turma, troca as turmas do professor, desativa e reativa", async () => {
+    const coordinator = as(await login(a.coordinator));
+    const classes = json<SchoolClass[]>(await coordinator.get("/api/school/classes"));
+    const created = json<CreatedPerson>(await coordinator.post("/api/school/people", { role: "teacher", name: "Professora Móvel", email: "prof.movel@escola.test", classIds: [classes[0]!.id] }));
+    expect((await coordinator.patch(`/api/school/people/${created.id}`, { classIds: [classes[1]!.id], name: "Professora Movida" })).statusCode).toBe(200);
+    const [moved] = json<Person[]>(await coordinator.get("/api/school/people?q=prof.movel"));
+    expect(moved!.name).toBe("Professora Movida");
+    expect(moved!.classes.map((c) => c.id)).toEqual([classes[1]!.id]);
+
+    const teacher = await firstAccess("prof.movel@escola.test", created.temporaryPassword);
+    expect((await coordinator.post(`/api/school/people/${created.id}/active`, { active: false })).statusCode).toBe(200);
+    expect((await teacher.get("/api/me")).statusCode).toBe(401);
+    const blocked = await app.inject({ method: "POST", url: "/api/auth/login", payload: { email: "prof.movel@escola.test", password: "senha-definitiva-1" } });
+    expect(blocked.statusCode).toBe(401);
+    expect(json<Person[]>(await coordinator.get("/api/school/people?q=prof.movel"))).toHaveLength(0);
+    expect(json<Person[]>(await coordinator.get("/api/school/people?q=prof.movel&inativos=sim"))[0]!.active).toBe(false);
+    expect((await coordinator.post(`/api/school/people/${created.id}/active`, { active: true })).statusCode).toBe(200);
+    const back = await app.inject({ method: "POST", url: "/api/auth/login", payload: { email: "prof.movel@escola.test", password: "senha-definitiva-1" } });
+    expect(back.statusCode).toBe(200);
+
+    const me = json<any>(await coordinator.get("/api/me"));
+    expect((await coordinator.post(`/api/school/people/${me.id}/active`, { active: false })).statusCode).toBe(422);
+  });
+
+  it("a rede cadastra a coordenação na implantação, e a planilha aceita professores", async () => {
+    const network = as(await login(a.network));
+    const id = a.pendingSchoolId;
+    const coord = json<CreatedPerson>(await network.post(`/api/onboarding/${id}/coordinators`, { name: "Coordenação Nova", email: "coord.nova@escola.test" }));
+    const coordinator = await firstAccess("coord.nova@escola.test", coord.temporaryPassword);
+    expect((await coordinator.get("/api/school/classes")).statusCode).toBe(200);
+    expect((await as(await login(a.coordinator)).post(`/api/onboarding/${id}/coordinators`, { name: "Fora Daqui", email: "fora@escola.test" })).statusCode).toBe(403);
+
+    const csv = `nome;email;turma;serie;email_responsavel;consentimento;perfil
+Ana Planilha;ana.planilha@escola.test;2ª B;2ª série;resp.ana@escola.test;sim;
+Prof Planilha;prof.planilha@escola.test;2ª B;2ª série;;;professor
+Prof Planilha;prof.planilha@escola.test;2ª C;2ª série;;;professor
+Repetido;${a.teacher};2ª B;2ª série;;;professor
+Estranho;estranho@escola.test;2ª B;2ª série;x@escola.test;;diretor`;
+    const preview = json<any>(await network.post(`/api/onboarding/${id}/roster/preview`, { filename: "b.csv", csv }));
+    expect(preview.ready).toBe(4);
+    expect(preview.problems.map((p: any) => p.line)).toEqual([6]);
+    const commit = json<RosterCommitResult>(await network.post(`/api/onboarding/${id}/roster`, { filename: "b.csv", csv }));
+    expect(commit).toMatchObject({ created: 2, teachers: 1, skipped: 1 });
+    const state = json<any>(await network.get(`/api/onboarding/${id}`));
+    expect(state.roster.teachers).toBe(1);
+    expect(state.coordinators.map((c: any) => c.email)).toContain("coord.nova@escola.test");
+    const [prof] = json<Person[]>(await coordinator.get("/api/school/people?q=prof.planilha"));
+    expect(prof!.classes.map((c) => c.name)).toEqual(["2ª B", "2ª C"]);
   });
 });
 

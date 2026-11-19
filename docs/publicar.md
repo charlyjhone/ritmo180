@@ -34,7 +34,12 @@ Confira em `https://seu-endereco/api/health`. A resposta `{"ok":true}` indica qu
 DATABASE_URL=... npm run conta:admin -- voce@escola.com.br "Seu nome"
 ```
 
-A senha provisória aparece só no terminal e precisa ser trocada no primeiro acesso. Para recuperar uma conta da rede, use `npm run conta:senha -- email`. Quem é de escola recebe a senha provisória pela coordenação, na página Pessoas.
+A senha provisória aparece só no terminal e precisa ser trocada no primeiro acesso. Para recuperar uma conta da rede, use `npm run conta:senha -- email`.
+
+Depois, tudo é feito no site:
+
+- Na página **Rede**, crie a escola. Na **Implantação** dela, cadastre a conta da coordenação e importe a planilha de alunos (e, se quiser, de professores, com a coluna `perfil`).
+- A coordenação cadastra professores, famílias e alunos avulsos na página **Pessoas**, onde também edita turmas, desativa contas e gera senha provisória para quem perdeu o acesso.
 
 `npm run db:seed` cria só dados de demonstração e é recusado em produção.
 
