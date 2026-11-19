@@ -1,13 +1,14 @@
 // Implantação de uma escola, salva a cada passo para ser retomada depois.
-import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { accommodationFactor, DEFAULT_SECONDS_PER_QUESTION } from "@ritmo/engine";
 import { GRADES, type OnboardingState, type RosterCommitResult, type RosterPreview, type UpdateOnboarding } from "@ritmo/contracts";
 import type { Tx } from "../../platform/db.ts";
 import { HttpError } from "../../platform/http.ts";
-import { hashPassword, temporaryPassword } from "../identity/index.ts";
+import { ensureClass, insertAccount } from "../people/index.ts";
 
+// "perfil" é opcional: vazio ou "aluno" cria aluno; "professor" cria professor (uma linha por turma).
 const REQUIRED_COLUMNS = ["nome", "email", "turma", "serie", "email_responsavel"];
+const TEACHER = /^professora?$/i;
 const email = z.string().email();
 
 interface RosterRow {
@@ -18,6 +19,7 @@ interface RosterRow {
   grade: string;
   guardian: string;
   consent: boolean;
+  teacher: boolean;
 }
 
 function parseLine(line: string, separator: string): string[] {
@@ -51,21 +53,29 @@ export function parseRoster(csv: string): { rows: RosterRow[]; preview: RosterPr
   const rows: RosterRow[] = [];
   const problems: RosterPreview["problems"] = [];
   const seen = new Set<string>();
+  const seenStudents = new Set<string>();
+  const seenTeachers = new Set<string>();
   lines.slice(1).forEach((text, index) => {
     const line = index + 2;
     const cells = parseLine(text, separator);
     const get = (name: string) => cells[columns.indexOf(name)] ?? "";
-    const row = { line, name: get("nome"), email: get("email").toLowerCase(), className: get("turma"), grade: get("serie"), guardian: get("email_responsavel").toLowerCase(), consent: /^(sim|s|yes)$/i.test(get("consentimento")) };
+    const profile = get("perfil");
+    const teacher = TEACHER.test(profile);
+    const row = { line, name: get("nome"), email: get("email").toLowerCase(), className: get("turma"), grade: get("serie"), guardian: get("email_responsavel").toLowerCase(), consent: /^(sim|s|yes)$/i.test(get("consentimento")), teacher };
+    // Professor repete o e-mail numa linha por turma; aluno aparece uma vez só.
+    const key = teacher ? `${row.email}|${row.className}` : row.email;
     const issues: string[] = [];
+    if (profile && !teacher && !/^alun[oa]$/i.test(profile)) issues.push(`perfil "${profile}" não reconhecido`);
     if (row.name.length < 3) issues.push("nome incompleto");
-    if (!email.safeParse(row.email).success) issues.push("e-mail do aluno inválido");
-    else if (seen.has(row.email)) issues.push("e-mail repetido");
+    if (!email.safeParse(row.email).success) issues.push(teacher ? "e-mail do professor inválido" : "e-mail do aluno inválido");
+    else if (seen.has(key) || (!teacher && seenTeachers.has(row.email)) || (teacher && seenStudents.has(row.email))) issues.push("e-mail repetido");
     if (!row.className) issues.push("turma vazia");
     if (!(GRADES as readonly string[]).includes(row.grade)) issues.push(`série "${row.grade}" não reconhecida`);
-    if (!email.safeParse(row.guardian).success) issues.push("e-mail do responsável inválido");
+    if (!teacher && !email.safeParse(row.guardian).success) issues.push("e-mail do responsável inválido");
     if (issues.length > 0) problems.push({ line, name: row.name || "(sem nome)", issue: issues.join(", ") });
     else {
-      seen.add(row.email);
+      seen.add(key);
+      (teacher ? seenTeachers : seenStudents).add(row.email);
       rows.push(row);
     }
   });
@@ -75,36 +85,54 @@ export function parseRoster(csv: string): { rows: RosterRow[]; preview: RosterPr
       total: lines.length - 1,
       ready: rows.length,
       problems,
-      sample: rows.slice(0, 5).map((r) => ({ name: r.name, className: r.className, guardian: r.guardian, status: r.consent ? "Consentimento recebido" : "Aguarda consentimento" })),
+      sample: rows.slice(0, 5).map((r) => ({ name: r.name, className: r.className, guardian: r.teacher ? "—" : r.guardian, status: r.teacher ? "Professor" : r.consent ? "Consentimento recebido" : "Aguarda consentimento" })),
     },
   };
 }
 
-export async function commitRoster(tx: Tx, schoolId: string, filename: string, csv: string): Promise<RosterCommitResult> {
+/**
+ * Cria as contas da planilha. `takenEmails` são os e-mails já usados em qualquer escola (o e-mail é único na rede):
+ * essas linhas são puladas, exceto professor desta escola, que só ganha a turma nova.
+ */
+export async function commitRoster(tx: Tx, schoolId: string, filename: string, csv: string, takenEmails: ReadonlySet<string> = new Set()): Promise<RosterCommitResult> {
   const { rows } = parseRoster(csv);
   const credentials = ["nome,email,senha_provisoria"];
+  const createdHere = new Map<string, string>();
   let created = 0;
+  let teachers = 0;
   let skipped = 0;
   for (const r of rows) {
-    const existing = (await tx.query(`SELECT id FROM users WHERE lower(email) = $1`, [r.email]))[0];
-    if (existing) {
+    const classId = await ensureClass(tx, schoolId, r.className, r.grade);
+    const here = createdHere.get(r.email) ?? (await tx.query(`SELECT id, role FROM users WHERE lower(email) = $1`, [r.email]))[0];
+    const existingId = typeof here === "string" ? here : here?.role === "teacher" ? (here.id as string) : null;
+    if (r.teacher && existingId) {
+      await tx.query(`INSERT INTO class_teachers (class_id, teacher_id, school_id) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING`, [classId, existingId, schoolId]);
+      if (!createdHere.has(r.email)) skipped++;
+      continue;
+    }
+    if (here || takenEmails.has(r.email)) {
       skipped++;
       continue;
     }
-    const className = r.className;
-    await tx.query(`INSERT INTO classes (school_id, name, grade) VALUES ($1,$2,$3) ON CONFLICT (school_id, name) DO NOTHING`, [schoolId, className, r.grade]);
-    const classId = (await tx.query(`SELECT id FROM classes WHERE school_id = $1 AND name = $2`, [schoolId, className]))[0]!.id;
-    const password = temporaryPassword();
-    const { hash, salt } = await hashPassword(password);
-    const id = randomUUID();
-    await tx.query(`INSERT INTO users (id, school_id, email, name, role, pass_hash, pass_salt, grade, must_change_password) VALUES ($1,$2,$3,$4,'student',$5,$6,$7,true)`, [id, schoolId, r.email, r.name, hash, salt, r.grade]);
-    await tx.query(`INSERT INTO class_students (class_id, student_id, school_id) VALUES ($1,$2,$3)`, [classId, id, schoolId]);
-    await tx.query(`INSERT INTO guardian_contacts (student_id, school_id, guardian_email, consent_at) VALUES ($1,$2,$3,$4)`, [id, schoolId, r.guardian, r.consent ? new Date() : null]);
-    credentials.push(`"${r.name.replace(/"/g, '""')}",${r.email},${password}`);
+    const account = await insertAccount(tx, { schoolId, name: r.name, email: r.email, role: r.teacher ? "teacher" : "student", grade: r.teacher ? null : r.grade });
+    if (r.teacher) {
+      await tx.query(`INSERT INTO class_teachers (class_id, teacher_id, school_id) VALUES ($1,$2,$3)`, [classId, account.id, schoolId]);
+      createdHere.set(r.email, account.id);
+      teachers++;
+    } else {
+      await tx.query(`INSERT INTO class_students (class_id, student_id, school_id) VALUES ($1,$2,$3)`, [classId, account.id, schoolId]);
+      await tx.query(`INSERT INTO guardian_contacts (student_id, school_id, guardian_email, consent_at) VALUES ($1,$2,$3,$4)`, [account.id, schoolId, r.guardian, r.consent ? new Date() : null]);
+    }
+    credentials.push(`"${r.name.replace(/"/g, '""')}",${r.email},${account.temporaryPassword}`);
     created++;
   }
   await tx.query(`UPDATE schools SET last_roster_file = $2 WHERE id = $1`, [schoolId, filename]);
-  return { created, skipped, credentialsCsv: credentials.join("\n") };
+  return { created, teachers, skipped, credentialsCsv: credentials.join("\n") };
+}
+
+/** E-mails da planilha que já têm conta em alguma escola. */
+export function rosterEmails(csv: string): string[] {
+  return [...new Set(parseRoster(csv).rows.map((r) => r.email))];
 }
 
 export async function onboardingState(tx: Tx, schoolId: string): Promise<OnboardingState> {
@@ -116,6 +144,8 @@ export async function onboardingState(tx: Tx, schoolId: string): Promise<Onboard
      FROM users u LEFT JOIN guardian_contacts gc ON gc.student_id = u.id WHERE u.role = 'student' AND u.school_id = $1`,
     [schoolId],
   ))[0]!;
+  const teachers = (await tx.query(`SELECT count(*)::int AS n FROM users WHERE role = 'teacher' AND school_id = $1 AND deactivated_at IS NULL`, [schoolId]))[0]!.n as number;
+  const coordinators = await tx.query(`SELECT id, name, email FROM users WHERE role = 'coordinator' AND school_id = $1 AND deactivated_at IS NULL ORDER BY name`, [schoolId]);
   const accommodations = await tx.query(
     `SELECT a.id, u.name, c.name AS class_name, a.kind, a.extra_minutes, a.resources FROM accommodations a
      JOIN users u ON u.id = a.student_id LEFT JOIN class_students cs ON cs.student_id = u.id LEFT JOIN classes c ON c.id = cs.class_id
@@ -137,7 +167,8 @@ export async function onboardingState(tx: Tx, schoolId: string): Promise<Onboard
     school: { name: s.name, city: s.city, grades: s.grades, slug: s.slug, brandColor: s.brand_color, hasLogo: s.has_logo },
     terms: { dpaSigned: s.dpa_signed, dpoContact: s.dpo_contact, dataIsolation: true },
     consent: { accepted: counts.consented, total: counts.students },
-    roster: { students: counts.students, pendingEmail: counts.pending, lastFile: s.last_roster_file },
+    roster: { students: counts.students, teachers, pendingEmail: counts.pending, lastFile: s.last_roster_file },
+    coordinators: coordinators.map((c) => ({ id: c.id, name: c.name, email: c.email })),
     accommodations: accommodations.map((a) => ({
       id: a.id, student: a.name, className: a.class_name ?? "—", kind: a.kind, extraMinutes: a.extra_minutes,
       targetSeconds: Math.round(DEFAULT_SECONDS_PER_QUESTION * accommodationFactor(a.extra_minutes)), resources: a.resources,

@@ -1,9 +1,10 @@
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { AccommodationInput, CreateSchool, ImportRoster, UpdateOnboardingInput } from "@ritmo/contracts";
+import { AccommodationInput, CreateCoordinatorInput, CreateSchool, ImportRoster, UpdateOnboardingInput, type CreatedPerson } from "@ritmo/contracts";
 import { HttpError, type ModuleRoutes } from "../../platform/http.ts";
 import { audit, requireActor, type Actor } from "../identity/index.ts";
-import { commitRoster, onboardingState, parseRoster, releaseSchool, updateOnboarding } from "./service.ts";
+import { assertEmailFree, insertAccount } from "../people/index.ts";
+import { commitRoster, onboardingState, parseRoster, releaseSchool, rosterEmails, updateOnboarding } from "./service.ts";
 
 const MAX_LOGO_BYTES = 512 * 1024;
 const LogoInput = z.object({ pngBase64: z.string().max(Math.ceil((MAX_LOGO_BYTES * 4) / 3) + 8) });
@@ -62,10 +63,27 @@ export const onboardingRoutes: ModuleRoutes = (app, { db, now }) => {
     const schoolId = request.params.id;
     canManage(actor, schoolId);
     const { filename, csv } = ImportRoster.parse(request.body);
+    const emails = rosterEmails(csv);
+    const taken = await db.system((tx) => tx.query(`SELECT lower(email) AS email FROM users WHERE lower(email) = ANY($1::text[])`, [emails]));
     return db.tenant({ schoolId }, async (tx) => {
-      const result = await commitRoster(tx, schoolId, filename, csv);
+      const result = await commitRoster(tx, schoolId, filename, csv, new Set(taken.map((t) => t.email as string)));
       await audit(tx, actor, schoolId, "roster.import", filename);
       return result;
+    });
+  });
+
+  // A rede cadastra a coordenação; daí em diante a coordenação cadastra o resto em Pessoas.
+  app.post<{ Params: { id: string } }>("/api/onboarding/:id/coordinators", async (request): Promise<CreatedPerson> => {
+    const actor = requireActor(request);
+    const schoolId = request.params.id;
+    canManage(actor, schoolId);
+    const input = CreateCoordinatorInput.parse(request.body);
+    await assertEmailFree(db, input.email);
+    return db.tenant({ schoolId }, async (tx) => {
+      if ((await tx.query(`SELECT 1 FROM schools WHERE id = $1`, [schoolId])).length === 0) throw new HttpError(404, "not_found", "Escola não encontrada.");
+      const created = await insertAccount(tx, { schoolId, name: input.name, email: input.email, role: "coordinator" });
+      await audit(tx, actor, schoolId, "user.create.coordinator", created.id);
+      return created;
     });
   });
 

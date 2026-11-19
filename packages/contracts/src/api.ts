@@ -1,6 +1,6 @@
 // Contratos HTTP entre interface e servidor. Entradas validadas com zod; saídas tipadas.
 import { z } from "zod";
-import { AREAS, type Area, type Role } from "./taxonomy.ts";
+import { AREAS, GRADES, type Area, type Role } from "./taxonomy.ts";
 import { LETTERS, type Letter, type PracticeAnswerKey, type PracticeItem } from "./item.ts";
 
 export const LoginInput = z.object({ email: z.string().email().max(160), password: z.string().min(8).max(200) });
@@ -26,8 +26,53 @@ export interface Person {
   email: string | null;
   role: Role;
   className: string | null;
+  /** Turmas do aluno (uma) ou do professor (várias). */
+  classes: { id: string; name: string }[];
+  /** Só para família: os alunos ligados à conta. */
+  students: { id: string; name: string }[];
   /** Só para aluno: quando a escola registrou a autorização assinada pelo responsável. */
   consentAt: number | null;
+  active: boolean;
+}
+
+export interface SchoolClass {
+  id: string;
+  name: string;
+  grade: string;
+}
+
+const personName = z.string().trim().min(3, "Escreva o nome completo.").max(120);
+const personEmail = z.string().trim().toLowerCase().email("E-mail inválido.").max(160);
+const className = z.string().trim().min(1, "Escreva a turma.").max(40);
+const grade = z.enum(GRADES);
+const ids = z.array(z.string().uuid()).max(40);
+
+/** A coordenação cadastra uma pessoa por vez. A senha provisória volta uma única vez. */
+export const CreatePersonInput = z.discriminatedUnion("role", [
+  z.object({ role: z.literal("student"), name: personName, email: personEmail, className, grade, guardianEmail: personEmail, consent: z.boolean() }),
+  z.object({ role: z.literal("teacher"), name: personName, email: personEmail, classIds: ids }),
+  z.object({ role: z.literal("guardian"), name: personName, email: personEmail, studentIds: ids.min(1, "Escolha pelo menos um aluno.") }),
+  z.object({ role: z.literal("coordinator"), name: personName, email: personEmail }),
+]);
+export type CreatePerson = z.infer<typeof CreatePersonInput>;
+
+/** Só os campos que valem para o perfil da pessoa são aplicados. */
+export const UpdatePersonInput = z.object({
+  name: personName.optional(),
+  className: className.optional(),
+  grade: grade.optional(),
+  classIds: ids.optional(),
+  studentIds: ids.min(1, "Escolha pelo menos um aluno.").optional(),
+});
+export type UpdatePerson = z.infer<typeof UpdatePersonInput>;
+
+export const ActiveInput = z.object({ active: z.boolean() });
+
+export const CreateCoordinatorInput = z.object({ name: personName, email: personEmail });
+
+export interface CreatedPerson {
+  id: string;
+  temporaryPassword: string;
 }
 
 /** A coordenação registra a autorização assinada pelo responsável, ou a retira. */
@@ -359,7 +404,9 @@ export interface OnboardingState {
   school: { name: string; city: string; grades: string; slug: string; brandColor: string; hasLogo: boolean };
   terms: { dpaSigned: boolean; dpoContact: string; dataIsolation: boolean };
   consent: { accepted: number; total: number };
-  roster: { students: number; pendingEmail: number; lastFile: string | null };
+  roster: { students: number; teachers: number; pendingEmail: number; lastFile: string | null };
+  /** Contas da coordenação: a rede cadastra pela implantação, e a coordenação cuida do resto em Pessoas. */
+  coordinators: { id: string; name: string; email: string }[];
   accommodations: { id: string; student: string; className: string; kind: string; extraMinutes: number; targetSeconds: number; resources: string }[];
   students: { id: string; name: string; className: string }[];
   diagnostic: { date: string | null; scope: string };
@@ -386,6 +433,8 @@ export interface RosterPreview {
 
 export interface RosterCommitResult {
   created: number;
+  /** Professores criados; os que já existiam só ganham as turmas novas. */
+  teachers: number;
   skipped: number;
   /** CSV com as senhas provisórias. Mostrado uma única vez, nunca guardado em texto. */
   credentialsCsv: string;
