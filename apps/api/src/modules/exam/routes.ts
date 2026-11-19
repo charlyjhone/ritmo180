@@ -1,15 +1,39 @@
-import { CreateExamInput, ExamResponseInput } from "@ritmo/contracts";
-import type { ModuleRoutes } from "../../platform/http.ts";
+import { CreateExamInput, CreateMyExamInput, ExamResponseInput } from "@ritmo/contracts";
+import { HttpError, type ModuleRoutes } from "../../platform/http.ts";
+import type { Tx } from "../../platform/db.ts";
 import { requireActor, tenantOf, type Actor } from "../identity/index.ts";
-import { createExam, examResult, finishSitting, listExams, saveResponse, sittingView, startSitting } from "./service.ts";
+import { classExamReports, createExam, createOwnExam, examResult, finishSitting, listExams, saveResponse, sittingView, startSitting } from "./service.ts";
 
 const student = (actor: Actor) => ({ id: actor.id, schoolId: actor.schoolId! });
+
+async function assertTeaches(tx: Tx, actor: Actor, classId: string): Promise<void> {
+  if (actor.role === "coordinator") return;
+  const assigned = await tx.query(`SELECT 1 FROM class_teachers WHERE class_id = $1 AND teacher_id = $2`, [classId, actor.id]);
+  if (!assigned[0]) throw new HttpError(403, "forbidden", "Esta turma não está atribuída a você.");
+}
 
 export const examRoutes: ModuleRoutes = (app, { db, now }) => {
   app.post("/api/exams", async (request) => {
     const actor = requireActor(request, "teacher", "coordinator");
     const input = CreateExamInput.parse(request.body);
-    return db.tenant(tenantOf(actor), (tx) => createExam(tx, { ...input, schoolId: actor.schoolId!, teacherId: actor.id }, now()));
+    return db.tenant(tenantOf(actor), async (tx) => {
+      await assertTeaches(tx, actor, input.classId);
+      return createExam(tx, { ...input, schoolId: actor.schoolId!, teacherId: actor.id }, now());
+    });
+  });
+
+  app.get<{ Params: { id: string } }>("/api/teacher/classes/:id/exams", async (request) => {
+    const actor = requireActor(request, "teacher", "coordinator");
+    return db.tenant(tenantOf(actor), async (tx) => {
+      await assertTeaches(tx, actor, request.params.id);
+      return classExamReports(tx, request.params.id);
+    });
+  });
+
+  app.post("/api/exams/mine", async (request) => {
+    const actor = requireActor(request, "student");
+    const input = CreateMyExamInput.parse(request.body);
+    return db.tenant(tenantOf(actor), (tx) => createOwnExam(tx, student(actor), input, now()));
   });
 
   app.get("/api/exams", async (request) => {

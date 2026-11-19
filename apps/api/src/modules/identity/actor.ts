@@ -11,6 +11,8 @@ export interface Actor {
   schoolId: string | null;
   grade: string | null;
   blocked: Me["blocked"];
+  /** Fim do acesso de visitante; null para contas da escola. */
+  guestUntil: number | null;
 }
 
 declare module "fastify" {

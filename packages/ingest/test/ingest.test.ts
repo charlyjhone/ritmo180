@@ -64,4 +64,14 @@ describe("Banco ENEM", () => {
       .toMatchObject({ area: "CN", skill: "H11", irt: { a: 2.1, b: 2, c: 0.04 } });
     expect(bancoRow(columns({ 1: "BIO-2", 2: "Biologia", 3: "Genética", 11: "BIO-1" }))).toBeNull();
   });
+
+  it("remove caracteres de controle vindos de PDF", () => {
+    const [item] = normalizeItems([{ ...JSON.parse(readFileSync(new URL("../examples/exemplo-disciplinas.json", import.meta.url), "utf8"))[0], stemHtml: "<p>Quanto\u0000 vale?</p>" }]).items;
+    expect(item!.stemHtml).toBe("<p>Quanto vale?</p>");
+  });
+
+  it("explica quando a disciplina não existe", () => {
+    const batch = normalizeItems([{ externalId: "x", discipline: "Astrologia" }]);
+    expect(batch.rejected[0]!.errors).toContain("disciplina não reconhecida: Astrologia");
+  });
 });

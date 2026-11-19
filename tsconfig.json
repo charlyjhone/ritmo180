@@ -17,5 +17,7 @@
     "skipLibCheck": true,
     "types": ["node", "vite/client"]
   },
-  "include": ["packages/*/src", "packages/*/test", "apps/*/src", "apps/*/test", "scripts"]
+  "include": ["packages/*/src", "packages/*/test", "apps/*/src", "apps/*/test", "scripts"],
+  // O Laboratório tem tsconfig próprio (rodado em npm run typecheck)
+  "exclude": ["apps/lab"]
 }

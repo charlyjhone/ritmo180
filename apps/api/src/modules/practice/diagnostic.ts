@@ -1,31 +1,32 @@
 // Diagnóstico adaptativo: usa só itens calibrados e para quando a nota fica precisa o bastante.
 import { randomUUID } from "node:crypto";
 import { AREAS, type Area, type DiagnosticStep, type Letter, type PracticeItem } from "@ritmo/contracts";
-import { DEFAULT_ADAPTIVE, estimateTheta, nextAdaptiveItem } from "@ritmo/engine";
+import { DEFAULT_ADAPTIVE, estimateTheta, nextAdaptiveItem, type Candidate } from "@ritmo/engine";
 import type { Tx } from "../../platform/db.ts";
 import { HttpError } from "../../platform/http.ts";
-import { loadServable, toPracticeItem, type CatalogItem } from "../catalog/index.ts";
+import { loadCandidates, loadItems, toPracticeItem } from "../catalog/index.ts";
 import { createSessionRow, recordAttempts } from "./attempts.ts";
 import { scoreViewOf } from "./progress.ts";
 
 const stripTarget = ({ targetSeconds: _, ...item }: PracticeItem) => item;
 
-async function pool(tx: Tx, area: Area): Promise<CatalogItem[]> {
-  return (await loadServable(tx, { area })).filter((i) => i.irt);
+async function pool(tx: Tx, area: Area): Promise<Candidate[]> {
+  return (await loadCandidates(tx, { area })).filter((i) => i.irt);
 }
 
-async function answeredIn(tx: Tx, sessionId: string, items: Map<string, CatalogItem>) {
+async function answeredIn(tx: Tx, sessionId: string, items: Map<string, Candidate>) {
   const rows = await tx.query(`SELECT item_id, correct, topic FROM attempts WHERE session_id = $1 ORDER BY position`, [sessionId]);
   return rows.filter((r) => items.get(r.item_id)?.irt).map((r) => ({ itemId: r.item_id, topic: r.topic, correct: r.correct, params: items.get(r.item_id)!.irt! }));
 }
 
-async function step(tx: Tx, sessionId: string, area: Area, candidates: CatalogItem[]): Promise<DiagnosticStep> {
+async function step(tx: Tx, sessionId: string, area: Area, candidates: Candidate[]): Promise<DiagnosticStep> {
   const byId = new Map(candidates.map((c) => [c.id, c]));
   const answered = await answeredIn(tx, sessionId, byId);
   const next = nextAdaptiveItem(candidates.map((c) => ({ id: c.id, topic: c.topic, params: c.irt! })), answered);
   const score = next.done ? scoreViewOf(area, estimateTheta(answered)) : null;
   if (next.done) await tx.query(`UPDATE practice_sessions SET plan = jsonb_set(plan, '{done}', 'true') WHERE id = $1`, [sessionId]);
-  return { sessionId, done: next.done, answered: answered.length, item: next.nextItemId ? stripTarget(toPracticeItem(byId.get(next.nextItemId)!, 0)) : null, score, unavailable: null };
+  const item = next.nextItemId ? (await loadItems(tx, [next.nextItemId])).get(next.nextItemId)! : null;
+  return { sessionId, done: next.done, answered: answered.length, item: item ? stripTarget(toPracticeItem(item, 0)) : null, score, unavailable: null };
 }
 
 export async function startDiagnostic(tx: Tx, student: { id: string; schoolId: string }, area: Area): Promise<DiagnosticStep> {

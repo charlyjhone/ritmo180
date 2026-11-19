@@ -1,24 +1,31 @@
 // Simulado: prova sem gabarito até a entrega, com o relógio controlado pelo servidor.
 import { randomUUID } from "node:crypto";
-import type { Area, ExamResultView, ExamSittingView, ExamSummary, Letter, PracticeItem } from "@ritmo/contracts";
+import { AREA_NAMES, type Area, type ClassExamReport, type ExamResultView, type ExamSittingView, type ExamSummary, type Letter, type PracticeItem } from "@ritmo/contracts";
 import {
   accommodationFactor, assembleExam, DEFAULT_SECONDS_PER_QUESTION, difficultyScore, estimateTheta, fatigueCurve, formatClock,
-  incoherences, SeededRng, whatIfScenarios, type ExamResponse,
+  incoherences, SeededRng, spreadAcrossAreas, whatIfScenarios, type ExamResponse,
 } from "@ritmo/engine";
 import type { Row, Tx } from "../../platform/db.ts";
 import { HttpError } from "../../platform/http.ts";
-import { loadItems, loadServable, toCandidate, toPracticeItem } from "../catalog/index.ts";
+import { loadCandidates, loadItems, toPracticeItem } from "../catalog/index.ts";
 import { createSessionRow, extraMinutesOf, recordAttempts, scoreViewOf } from "../practice/index.ts";
 
 const GRACE_MS = 60_000;
+const REPORTED_EXAMS = 5;
+const WEAKEST_TOPICS = 3;
+
+const AVAILABLE_TO_STUDENT = `(e.owner_student_id = $1 OR e.class_id IN (SELECT class_id FROM class_students WHERE student_id = $1))`;
 
 export async function createExam(
   tx: Tx,
-  input: { schoolId: string; classId: string; teacherId: string; title: string; parts: { area: Area; discipline?: string; count: number }[] },
+  input: {
+    schoolId: string; classId: string; teacherId: string; title: string; parts?: { area: Area; discipline?: string; count: number }[];
+    area?: Area; discipline?: string; topic?: string; questions?: number;
+  },
   now: number,
 ) {
-  const items = await loadServable(tx);
-  const assembled = assembleExam(input.parts, items.map(toCandidate), new SeededRng(now % 2_147_483_647));
+  const pool = await loadCandidates(tx, input);
+  const assembled = assembleExam(input.parts ?? spreadAcrossAreas(pool, input.questions!), pool, new SeededRng(now % 2_147_483_647));
   if (assembled.itemIds.length === 0) throw new HttpError(422, "no_items", "Não há questões publicadas para esta prova.");
   const seconds = Math.round(DEFAULT_SECONDS_PER_QUESTION);
   const id = randomUUID();
@@ -29,11 +36,49 @@ export async function createExam(
   return { id, questions: assembled.itemIds.length, shortages: assembled.shortages };
 }
 
+/** Resultado de cada simulado da turma. Só conta as provas entregues: prova em aberto ainda pode mudar. */
+export async function classExamReports(tx: Tx, classId: string): Promise<ClassExamReport[]> {
+  const exams = await tx.query(`SELECT id, title, item_ids, created_at FROM exams WHERE class_id = $1 ORDER BY created_at DESC LIMIT $2`, [classId, REPORTED_EXAMS]);
+  const students = await tx.query(`SELECT u.id, u.name FROM class_students cs JOIN users u ON u.id = cs.student_id WHERE cs.class_id = $1 ORDER BY u.name`, [classId]);
+  return Promise.all(exams.map(async (exam) => {
+    const sittings = await tx.query(
+      `SELECT s.student_id, s.finished_at, count(r.choice)::int AS answered, count(*) FILTER (WHERE r.choice = i.answer)::int AS correct
+       FROM exam_sittings s LEFT JOIN exam_responses r ON r.sitting_id = s.id LEFT JOIN items i ON i.id = r.item_id
+       WHERE s.exam_id = $1 GROUP BY s.student_id, s.finished_at`,
+      [exam.id],
+    );
+    const topics = await tx.query(
+      `SELECT i.topic, count(*)::int AS total, count(*) FILTER (WHERE r.choice = i.answer)::int AS correct
+       FROM exam_sittings s JOIN exam_responses r ON r.sitting_id = s.id JOIN items i ON i.id = r.item_id
+       WHERE s.exam_id = $1 AND s.finished_at IS NOT NULL GROUP BY i.topic`,
+      [exam.id],
+    );
+    const bySitting = new Map(sittings.map((s) => [s.student_id, s]));
+    return {
+      id: exam.id,
+      title: exam.title,
+      questions: exam.item_ids.length,
+      createdAt: new Date(exam.created_at).getTime(),
+      weakestTopics: topics
+        .map((t) => ({ topic: t.topic as string, correctPct: Math.round((t.correct / t.total) * 100) }))
+        .sort((x, y) => x.correctPct - y.correctPct).slice(0, WEAKEST_TOPICS),
+      students: students.map((student) => {
+        const sitting = bySitting.get(student.id);
+        const finished = !!sitting?.finished_at;
+        return {
+          id: student.id, name: student.name, status: finished ? "finished" as const : sitting ? "started" as const : "pending" as const,
+          answered: sitting?.answered ?? 0, correct: finished ? sitting!.correct : 0,
+        };
+      }),
+    };
+  }));
+}
+
 export async function listExams(tx: Tx, studentId: string): Promise<ExamSummary[]> {
   const rows = await tx.query(
-    `SELECT e.id, e.title, e.item_ids, e.duration_seconds, s.id AS sitting_id, s.finished_at
-     FROM exams e JOIN class_students cs ON cs.class_id = e.class_id AND cs.student_id = $1
-     LEFT JOIN exam_sittings s ON s.exam_id = e.id AND s.student_id = $1
+    `SELECT e.id, e.title, e.item_ids, e.duration_seconds, e.owner_student_id, s.id AS sitting_id, s.finished_at
+     FROM exams e LEFT JOIN exam_sittings s ON s.exam_id = e.id AND s.student_id = $1
+     WHERE ${AVAILABLE_TO_STUDENT}
      ORDER BY e.created_at DESC`,
     [studentId],
   );
@@ -42,6 +87,7 @@ export async function listExams(tx: Tx, studentId: string): Promise<ExamSummary[
     title: r.title,
     questions: r.item_ids.length,
     durationMinutes: Math.round(r.duration_seconds / 60),
+    mine: r.owner_student_id === studentId,
     sitting: r.sitting_id ? { id: r.sitting_id, finished: !!r.finished_at } : null,
   }));
 }
@@ -59,7 +105,7 @@ const totalMs = (s: Row, extra: number) => s.duration_seconds * accommodationFac
 
 export async function startSitting(tx: Tx, student: { id: string; schoolId: string }, examId: string, now: number): Promise<string> {
   const exam = (await tx.query(
-    `SELECT e.id FROM exams e JOIN class_students cs ON cs.class_id = e.class_id AND cs.student_id = $1 WHERE e.id = $2`,
+    `SELECT e.id FROM exams e WHERE e.id = $2 AND ${AVAILABLE_TO_STUDENT}`,
     [student.id, examId],
   ))[0];
   if (!exam) throw new HttpError(404, "not_found", "Prova não encontrada para sua turma.");
@@ -111,6 +157,42 @@ export async function saveResponse(
   );
 }
 
+const OWN_EXAM_FRESH_DAYS = 21;
+
+function ownExamTitle(input: { area?: Area; discipline?: string; topic?: string }): string {
+  const subject = input.topic ?? input.discipline ?? (input.area ? AREA_NAMES[input.area] : null);
+  return subject ? `Simulado de ${subject}` : "Simulado geral";
+}
+
+/** Monta e já inicia a prova, dando preferência a questões que o aluno não viu nas últimas semanas. */
+export async function createOwnExam(
+  tx: Tx,
+  student: { id: string; schoolId: string },
+  input: { area?: Area; discipline?: string; topic?: string; questions: number },
+  now: number,
+): Promise<{ sittingId: string; questions: number }> {
+  const open = await tx.query(
+    `SELECT s.id FROM exam_sittings s JOIN exams e ON e.id = s.exam_id WHERE e.owner_student_id = $1 AND s.finished_at IS NULL LIMIT 1`,
+    [student.id],
+  );
+  if (open[0]) throw new HttpError(409, "exam_open", "Termine o simulado em andamento antes de criar outro.");
+  const pool = await loadCandidates(tx, input);
+  const seen = await tx.query(`SELECT DISTINCT item_id FROM attempts WHERE student_id = $1 AND answered_at >= $2`, [student.id, new Date(now - OWN_EXAM_FRESH_DAYS * 86_400_000)]);
+  const seenIds = new Set(seen.map((r) => r.item_id));
+  const rng = new SeededRng(now % 2_147_483_647);
+  const fresh = assembleExam(spreadAcrossAreas(pool, input.questions), pool.filter((i) => !seenIds.has(i.id)), rng);
+  const repeats = assembleExam(fresh.shortages.map((s) => ({ area: s.area, count: s.missing })), pool.filter((i) => seenIds.has(i.id)), rng);
+  const itemIds = [...fresh.itemIds, ...repeats.itemIds];
+  if (itemIds.length === 0) throw new HttpError(422, "no_items", "Ainda não há questões publicadas para essa escolha.");
+  const seconds = Math.round(DEFAULT_SECONDS_PER_QUESTION);
+  const id = randomUUID();
+  await tx.query(
+    `INSERT INTO exams (id, school_id, owner_student_id, title, item_ids, duration_seconds, seconds_per_question, created_by) VALUES ($1,$2,$3,$4,$5::uuid[],$6,$7,$3)`,
+    [id, student.schoolId, student.id, ownExamTitle(input), itemIds, itemIds.length * seconds, seconds],
+  );
+  return { sittingId: await startSitting(tx, student, id, now), questions: itemIds.length };
+}
+
 /** A entrega joga as respostas no mesmo registro do treino: uma só fonte para nota e painéis. */
 export async function finishSitting(tx: Tx, sittingId: string, student: { id: string; schoolId: string }, now: number): Promise<void> {
   const s = await loadSitting(tx, sittingId, student.id);
@@ -146,6 +228,16 @@ export async function examResult(tx: Tx, sittingId: string, studentId: string): 
     return scoreViewOf(area, scored.length ? estimateTheta(scored.map((r) => ({ params: r.params!, correct: r.correct }))) : undefined);
   });
   const answered = responses.filter((r) => !r.blank);
+  const topics = new Map<string, ExamResultView["byTopic"][number] & { ms: number }>();
+  for (const r of responses) {
+    const { discipline, topic } = items.get(r.itemId)!;
+    const key = `${discipline}\n${topic}`;
+    const entry = topics.get(key) ?? { discipline, topic, correct: 0, total: 0, avgSeconds: 0, ms: 0 };
+    entry.total++;
+    entry.correct += r.correct ? 1 : 0;
+    entry.ms += r.timeMs;
+    topics.set(key, entry);
+  }
   const main = areas[0]!;
   const inMain = responses.filter((r) => r.area === main);
   const incoherent = incoherences(inMain).map((i) => {
@@ -168,5 +260,16 @@ export async function examResult(tx: Tx, sittingId: string, studentId: string): 
     fatigue: fatigueCurve(responses),
     whatIf: whatIfScenarios(main, inMain),
     incoherent,
+    correct: responses.filter((r) => r.correct).length,
+    byTopic: [...topics.values()]
+      .map(({ ms, ...t }) => ({ ...t, avgSeconds: Math.round(ms / t.total / 1000) }))
+      .sort((x, y) => x.correct / x.total - y.correct / y.total || y.total - x.total),
+    review: responses.map((r) => {
+      const item = items.get(r.itemId)!;
+      return {
+        number: r.position + 1, seconds: Math.round(r.timeMs / 1000), discipline: item.discipline, topic: item.topic, contextHtml: item.contextHtml,
+        stemHtml: item.stemHtml, alternatives: item.alternatives, answer: item.answer, choice: byPosition.get(r.position)?.choice ?? null, solutionHtml: item.solutionHtml,
+      };
+    }),
   };
 }

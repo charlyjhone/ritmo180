@@ -1,0 +1,57 @@
+name: check
+on:
+  push:
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+  # A imagem de produção leva a interface e o Laboratório (apps/lab/dist): compilar aqui pega erro no Dockerfile antes da publicação.
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t ritmo180 .
+      - name: Conferir que a imagem leva a interface e o Laboratório
+        run: docker run --rm --entrypoint sh ritmo180 -c "test -f apps/web/dist/index.html && test -f apps/lab/dist/index.html && test -f content/laboratorio.json"
+  postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgres://ritmo:ritmo@localhost:5432/ritmo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Criar o papel igual ao de produção
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql -h localhost -U postgres -c "CREATE ROLE app_user NOLOGIN"
+          psql -h localhost -U postgres -c "CREATE ROLE ritmo LOGIN PASSWORD 'ritmo' BYPASSRLS"
+          psql -h localhost -U postgres -c "GRANT app_user TO ritmo"
+          psql -h localhost -U postgres -c "CREATE DATABASE ritmo OWNER ritmo"
+      - run: npm run db:seed
+      - name: Subir o servidor e conferir o banco
+        run: |
+          npm start &
+          for attempt in $(seq 1 30); do curl -fs localhost:5180/api/health && exit 0; sleep 1; done
+          exit 1

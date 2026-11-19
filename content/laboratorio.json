@@ -1,0 +1,4683 @@
+[
+ {
+  "externalId": "lab-projetil-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Cinemática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em um treino de futebol, uma bola é chutada a partir do gramado com velocidade de 20 m/s, formando 30° com a horizontal. Despreze a resistência do ar e considere g = 10 m/s², sen 60° ≈ 0,87.</p>",
+  "stemHtml": "A que distância do ponto de chute a bola toca o gramado pela primeira vez?",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "17,3 m",
+    "trap": "17,3 m usa sen 30° no lugar de sen 60°."
+   },
+   {
+    "letter": "B",
+    "html": "20,0 m"
+   },
+   {
+    "letter": "C",
+    "html": "34,6 m"
+   },
+   {
+    "letter": "D",
+    "html": "40,0 m"
+   },
+   {
+    "letter": "E",
+    "html": "69,3 m"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>Sem resistência do ar, o alcance é R = v₀²·sen(2θ)/g.</p><p>R = 20²·sen 60°/10 = 400·0,87/10 ≈ 34,6 m.</p><p>A alternativa 17,3 m usa sen 30° no lugar de sen 60°; 40 m esquece o seno.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste v₀ = 20 m/s, θ = 30°, g = 10 m/s² e resistência do ar desligada. Lance e leia o alcance.</p><span class=\"lab-ref\">projetil?v0=20&amp;angleDeg=30&amp;g=10&amp;cd=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-projetil-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Cinemática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Dois jogadores de vôlei sacam com bolas de mesma velocidade inicial, ambas a partir do nível do chão: um com inclinação de 30° e outro com 60° em relação à horizontal. A resistência do ar é desprezível.</p>",
+  "stemHtml": "Comparando os dois saques, conclui-se que",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "o saque a 60° alcança o dobro da distância do saque a 30°"
+   },
+   {
+    "letter": "B",
+    "html": "o saque a 30° sobe mais, pois sua velocidade horizontal é maior"
+   },
+   {
+    "letter": "C",
+    "html": "os dois sobem à mesma altura, mas o saque a 30° vai mais longe"
+   },
+   {
+    "letter": "D",
+    "html": "os dois ficam o mesmo tempo no ar, pois têm a mesma velocidade inicial"
+   },
+   {
+    "letter": "E",
+    "html": "os alcances são iguais, mas a bola sacada a 60° sobe mais e fica mais tempo no ar"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>O alcance depende de sen(2θ): sen 60° = sen 120°, então 30° e 60° dão o mesmo alcance.</p><p>A altura máxima depende de sen²θ e o tempo de voo de sen θ, que são maiores a 60°.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Lance com v₀ = 20 m/s a 30° e depois a 60° (sem ar) e compare alcance, altura máxima e tempo de voo.</p><span class=\"lab-ref\">projetil?v0=20&amp;angleDeg=30&amp;cd=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-muv-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Cinemática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um carro trafega a 72 km/h quando o motorista aciona os freios, produzindo uma desaceleração constante de 5 m/s² até o veículo parar.</p>",
+  "stemHtml": "Desconsiderando o tempo de reação do motorista, a distância percorrida durante a frenagem é",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "20 m"
+   },
+   {
+    "letter": "B",
+    "html": "40 m"
+   },
+   {
+    "letter": "C",
+    "html": "80 m",
+    "trap": "80 m vem de esquecer o fator ½."
+   },
+   {
+    "letter": "D",
+    "html": "144 m"
+   },
+   {
+    "letter": "E",
+    "html": "400 m"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>72 km/h = 20 m/s. Por Torricelli: 0 = v₀² − 2aΔs.</p><p>Δs = 20²/(2·5) = 40 m.</p><p>Quem usa 72 sem converter chega a valores absurdos; 80 m vem de esquecer o fator ½.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste x₀ = 0, v₀ = 20 m/s e a = −5 m/s². Pause quando a velocidade zerar e leia a posição.</p><span class=\"lab-ref\">muv?x0=0&amp;v0=20&amp;a=-5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-muv-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Cinemática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma moto parte do repouso e, com aceleração constante, atinge 30 m/s em 6 s. O gráfico da velocidade em função do tempo nesse intervalo é uma reta.</p>",
+  "stemHtml": "Nesses 6 s, o deslocamento da moto, obtido pela área sob o gráfico, é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "5 m"
+   },
+   {
+    "letter": "B",
+    "html": "30 m"
+   },
+   {
+    "letter": "C",
+    "html": "45 m"
+   },
+   {
+    "letter": "D",
+    "html": "90 m"
+   },
+   {
+    "letter": "E",
+    "html": "180 m",
+    "trap": "180 m é a área do retângulo: esquece que a velocidade começou em zero."
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>A área sob o gráfico v × t é um triângulo de base 6 s e altura 30 m/s.</p><p>Δs = 6·30/2 = 90 m (ou a = 5 m/s² e Δs = a·t²/2 = 90 m).</p><p>180 m é a área do retângulo: esquece que a velocidade começou em zero.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste v₀ = 0 e a = 5 m/s²; em t = 6 s a velocidade é 30 m/s. Compare a posição com a área do gráfico v × t.</p><span class=\"lab-ref\">muv?x0=0&amp;v0=0&amp;a=5&amp;tMax=6</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-newton-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Dinâmica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma caixa de 20 kg é solta, em repouso, sobre uma rampa inclinada de 30°. Os coeficientes de atrito entre a caixa e a rampa são μₑ = 0,50 (estático) e μc = 0,30 (cinético). Use g = 10 m/s², sen 30° = 0,50 e cos 30° ≈ 0,87.</p>",
+  "stemHtml": "A aceleração da caixa ao longo da rampa tem módulo aproximado de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "zero, pois o atrito estático a mantém parada"
+   },
+   {
+    "letter": "B",
+    "html": "1,0 m/s²"
+   },
+   {
+    "letter": "C",
+    "html": "2,4 m/s²"
+   },
+   {
+    "letter": "D",
+    "html": "5,0 m/s²",
+    "trap": "5,0 m/s² ignora o atrito."
+   },
+   {
+    "letter": "E",
+    "html": "7,6 m/s²"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>Componente do peso ao longo da rampa: P·sen 30° = 200·0,5 = 100 N. Normal: N = 200·0,87 ≈ 174 N.</p><p>Atrito estático máximo: 0,50·174 = 87 N &lt; 100 N, então a caixa desliza.</p><p>Com atrito cinético 0,30·174 ≈ 52 N: a = (100 − 52)/20 ≈ 2,4 m/s². 5,0 m/s² ignora o atrito.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste m = 20 kg, θ = 30°, μₑ = 0,50, μc = 0,30, F = 0 e g = 10 m/s² e leia a aceleração.</p><span class=\"lab-ref\">newton?m=20&amp;thetaDeg=30&amp;muS=0.5&amp;muK=0.3&amp;F=0&amp;g=10</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-newton-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Dinâmica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma pessoa empurra horizontalmente, com força de 30 N, um armário de 10 kg apoiado em um piso plano. Os coeficientes de atrito são 0,40 (estático) e 0,30 (cinético). Considere g = 10 m/s².</p>",
+  "stemHtml": "Nessa situação, a força de atrito que o piso exerce sobre o armário tem intensidade de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0 N"
+   },
+   {
+    "letter": "B",
+    "html": "3 N"
+   },
+   {
+    "letter": "C",
+    "html": "12 N"
+   },
+   {
+    "letter": "D",
+    "html": "30 N"
+   },
+   {
+    "letter": "E",
+    "html": "40 N"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>O atrito estático máximo é μₑ·N = 0,40·100 = 40 N. Como 30 N &lt; 40 N, o armário não se move.</p><p>Em repouso, o atrito estático equilibra a força aplicada: vale 30 N, e não o valor máximo de 40 N.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste θ = 0°, m = 10 kg, μₑ = 0,40, μc = 0,30, F = 30 N e g = 10 m/s². O diagrama mostra o atrito de 30 N com o bloco parado.</p><span class=\"lab-ref\">newton?m=10&amp;thetaDeg=0&amp;muS=0.4&amp;muK=0.3&amp;F=30&amp;g=10</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-energia-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Trabalho e Energia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um skatista parte do repouso do alto de uma pista em forma de U, a 5,0 m acima do ponto mais baixo. O atrito e a resistência do ar são desprezíveis. Considere g = 10 m/s².</p>",
+  "stemHtml": "A velocidade do skatista ao passar pelo ponto mais baixo da pista é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "2,5 m/s"
+   },
+   {
+    "letter": "B",
+    "html": "5,0 m/s"
+   },
+   {
+    "letter": "C",
+    "html": "7,1 m/s"
+   },
+   {
+    "letter": "D",
+    "html": "10 m/s"
+   },
+   {
+    "letter": "E",
+    "html": "50 m/s"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>A energia potencial se converte em cinética: m·g·h = m·v²/2.</p><p>v = √(2gh) = √(2·10·5) = 10 m/s, independentemente da massa.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Escolha o meio-tubo (U), atrito zero, g = 10 m/s² e largada em x ≈ 4,5 m (altura de 5 m). Leia a velocidade no fundo.</p><span class=\"lab-ref\">energia?trackId=U&amp;c=0&amp;g=10&amp;x0=4.47</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-energia-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Trabalho e Energia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Na mesma pista de 5,0 m de altura, um skatista de 60 kg parte do repouso e chega ao ponto mais baixo com velocidade de 8,0 m/s, porque parte da energia foi dissipada pelo atrito. Use g = 10 m/s².</p>",
+  "stemHtml": "A energia mecânica dissipada até o ponto mais baixo é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "480 J"
+   },
+   {
+    "letter": "B",
+    "html": "1 080 J"
+   },
+   {
+    "letter": "C",
+    "html": "1 920 J"
+   },
+   {
+    "letter": "D",
+    "html": "3 000 J"
+   },
+   {
+    "letter": "E",
+    "html": "4 920 J"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>Energia inicial: m·g·h = 60·10·5 = 3 000 J. Energia cinética no fundo: 60·8²/2 = 1 920 J.</p><p>Dissipada: 3 000 − 1 920 = 1 080 J, que vira energia térmica.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ligue o atrito na pista em U e acompanhe a barra de energia térmica crescendo enquanto a mecânica diminui.</p><span class=\"lab-ref\">energia?trackId=U&amp;c=0.3&amp;g=10</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-pendulo-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Antigos relógios de pêndulo usavam um pêndulo que leva 2,0 s para completar uma oscilação completa (ida e volta), em pequenas amplitudes. Considere g = 10 m/s² e π² ≈ 10.</p>",
+  "stemHtml": "O comprimento desse pêndulo é, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,50 m"
+   },
+   {
+    "letter": "B",
+    "html": "1,0 m"
+   },
+   {
+    "letter": "C",
+    "html": "2,0 m"
+   },
+   {
+    "letter": "D",
+    "html": "4,0 m"
+   },
+   {
+    "letter": "E",
+    "html": "10 m"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>T = 2π√(L/g) ⇒ L = g·T²/(4π²).</p><p>L = 10·4/(4·10) = 1,0 m.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste g = 10 m/s², amplitude pequena (5°) e procure o comprimento que dá período de 2,0 s.</p><span class=\"lab-ref\">pendulo?g=10&amp;th0=5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-pendulo-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um estudante quadruplica o comprimento do fio de um pêndulo simples, mantendo a massa e a pequena amplitude de oscilação.</p>",
+  "stemHtml": "Em relação ao valor inicial, o período do pêndulo",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "cai à metade"
+   },
+   {
+    "letter": "B",
+    "html": "não se altera"
+   },
+   {
+    "letter": "C",
+    "html": "fica √2 vezes maior"
+   },
+   {
+    "letter": "D",
+    "html": "dobra"
+   },
+   {
+    "letter": "E",
+    "html": "quadruplica"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>O período é proporcional a √L: √4 = 2, então o período dobra.</p><p>A massa não interfere no período.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Meça o período com L = 0,5 m e depois com L = 2,0 m.</p><span class=\"lab-ref\">pendulo?L=0.5&amp;th0=5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-mola-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um corpo de 0,50 kg preso a uma mola de constante elástica 200 N/m oscila sem atrito. Use π ≈ 3,14.</p>",
+  "stemHtml": "O período de oscilação desse sistema é, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,03 s"
+   },
+   {
+    "letter": "B",
+    "html": "0,05 s"
+   },
+   {
+    "letter": "C",
+    "html": "0,10 s"
+   },
+   {
+    "letter": "D",
+    "html": "0,20 s"
+   },
+   {
+    "letter": "E",
+    "html": "0,31 s"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>T = 2π√(m/k) = 2π√(0,5/200) = 2π·0,05 ≈ 0,31 s.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste k = 200 N/m, m = 0,50 kg e amortecimento zero; compare o período medido com 2π√(m/k).</p><span class=\"lab-ref\">mola?k=200&amp;m=0.5&amp;b=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-mola-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em uma balança de feira, um peixe de 1,0 kg é pendurado em uma mola de constante elástica 200 N/m. Use g = 10 m/s².</p>",
+  "stemHtml": "Na posição de equilíbrio, a mola fica alongada em",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,05 cm"
+   },
+   {
+    "letter": "B",
+    "html": "0,2 cm"
+   },
+   {
+    "letter": "C",
+    "html": "0,5 cm"
+   },
+   {
+    "letter": "D",
+    "html": "2 cm"
+   },
+   {
+    "letter": "E",
+    "html": "5 cm"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>No equilíbrio, k·x = m·g ⇒ x = 10/200 = 0,05 m = 5 cm.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste k = 200 N/m, m = 1,0 kg e g = 10 m/s² e leia o alongamento de equilíbrio.</p><span class=\"lab-ref\">mola?k=200&amp;m=1&amp;g=10</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-colisoes-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Impulso e Quantidade de Movimento",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em um trilho de ar, um carrinho de 2,0 kg a 3,0 m/s colide com outro de 1,0 kg em repouso. Após o choque, os carrinhos seguem engatados.</p>",
+  "stemHtml": "A velocidade do conjunto logo após a colisão é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "2,0 m/s"
+   },
+   {
+    "letter": "B",
+    "html": "3,0 m/s"
+   },
+   {
+    "letter": "C",
+    "html": "4,5 m/s"
+   },
+   {
+    "letter": "D",
+    "html": "6,0 m/s"
+   },
+   {
+    "letter": "E",
+    "html": "9,0 m/s"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>A quantidade de movimento se conserva: 2·3 + 1·0 = (2 + 1)·v.</p><p>v = 6/3 = 2,0 m/s.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste m₁ = 2 kg, v₁ = 3 m/s, m₂ = 1 kg, v₂ = 0 e coeficiente de restituição e = 0.</p><span class=\"lab-ref\">colisoes?m1=2&amp;v1=3&amp;m2=1&amp;v2=0&amp;e=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-colisoes-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Impulso e Quantidade de Movimento",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Na colisão descrita (2,0 kg a 3,0 m/s contra 1,0 kg em repouso, saindo engatados), parte da energia cinética se transforma em outras formas de energia.</p>",
+  "stemHtml": "A energia cinética perdida no choque é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "zero, pois a energia sempre se conserva"
+   },
+   {
+    "letter": "B",
+    "html": "1,5 J"
+   },
+   {
+    "letter": "C",
+    "html": "3,0 J"
+   },
+   {
+    "letter": "D",
+    "html": "6,0 J"
+   },
+   {
+    "letter": "E",
+    "html": "9,0 J"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>Antes: 2·3²/2 = 9 J. Depois: 3·2²/2 = 6 J.</p><p>Perda: 3 J (um terço). A energia total se conserva, mas a cinética não, numa colisão inelástica.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Na mesma configuração (e = 0), compare as energias cinéticas antes e depois no painel.</p><span class=\"lab-ref\">colisoes?m1=2&amp;v1=3&amp;m2=1&amp;v2=0&amp;e=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-empuxo-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Hidrostática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um bloco maciço de madeira com densidade 600 kg/m³ flutua em repouso na água (densidade 1 000 kg/m³).</p>",
+  "stemHtml": "A fração do volume do bloco que fica submersa é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "30%"
+   },
+   {
+    "letter": "B",
+    "html": "40%"
+   },
+   {
+    "letter": "C",
+    "html": "50%"
+   },
+   {
+    "letter": "D",
+    "html": "60%"
+   },
+   {
+    "letter": "E",
+    "html": "100%"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>No equilíbrio, empuxo = peso: ρágua·Vsub·g = ρbloco·V·g.</p><p>Vsub/V = 600/1000 = 60%.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Escolha um corpo de 600 kg/m³ em água e leia a fração submersa no equilíbrio.</p><span class=\"lab-ref\">empuxo?fluid=0&amp;rhoC=600</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-empuxo-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Hidrostática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um mergulhador está a 20 m de profundidade no mar, cuja água tem densidade 1 030 kg/m³. A pressão atmosférica local é 1,0 atm ≈ 1,0·10⁵ Pa. Use g = 10 m/s².</p>",
+  "stemHtml": "A pressão total sobre o mergulhador é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "2,0 atm"
+   },
+   {
+    "letter": "B",
+    "html": "3,0 atm"
+   },
+   {
+    "letter": "C",
+    "html": "10 atm"
+   },
+   {
+    "letter": "D",
+    "html": "20 atm"
+   },
+   {
+    "letter": "E",
+    "html": "21 atm"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>p = p₀ + ρ·g·h = 1,0·10⁵ + 1030·10·20 ≈ 1,0·10⁵ + 2,1·10⁵ Pa.</p><p>p ≈ 3,1·10⁵ Pa ≈ 3 atm: cada 10 m de água somam cerca de 1 atm.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> O medidor do simulador vai até 1,2 m: confira que cada metro de água soma ρ·g·h ≈ 10 kPa e extrapole para 20 m.</p><span class=\"lab-ref\">empuxo?fluid=0&amp;depth=1&amp;g=10</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-orbitas-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Gravitação",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um exoplaneta descreve órbita circular a 4 UA de uma estrela de mesma massa que o Sol. A Terra orbita o Sol a 1 UA com período de 1 ano.</p>",
+  "stemHtml": "O período orbital do exoplaneta é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "4 anos"
+   },
+   {
+    "letter": "B",
+    "html": "8 anos"
+   },
+   {
+    "letter": "C",
+    "html": "16 anos"
+   },
+   {
+    "letter": "D",
+    "html": "32 anos"
+   },
+   {
+    "letter": "E",
+    "html": "64 anos"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>T²/a³ é o mesmo para corpos que orbitam a mesma estrela: T² = 4³ = 64.</p><p>T = 8 anos.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste M = 1 M☉, r = 4 UA e velocidade circular (fração 1,00). Meça o período.</p><span class=\"lab-ref\">orbitas?M=1&amp;r0=4&amp;f=1</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-orbitas-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Gravitação",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um cometa tem órbita elíptica em que a distância ao Sol no afélio é o triplo da distância no periélio.</p>",
+  "stemHtml": "A razão entre a velocidade do cometa no periélio e no afélio é",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1/3"
+   },
+   {
+    "letter": "B",
+    "html": "1, pois a velocidade orbital é constante"
+   },
+   {
+    "letter": "C",
+    "html": "√3"
+   },
+   {
+    "letter": "D",
+    "html": "3"
+   },
+   {
+    "letter": "E",
+    "html": "9"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>Pela lei das áreas (conservação do momento angular), r·v é igual nos dois extremos da órbita.</p><p>v_peri/v_afe = r_afe/r_peri = 3: o cometa é mais rápido perto do Sol.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste r = 3 UA e fração da velocidade circular ≈ 0,71. Compare as velocidades no afélio e no periélio.</p><span class=\"lab-ref\">orbitas?M=1&amp;r0=3&amp;f=0.71</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-circuitos-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Eletrodinâmica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Três resistores idênticos de 6 Ω são ligados em paralelo aos terminais de uma bateria ideal de 12 V.</p>",
+  "stemHtml": "A corrente fornecida pela bateria é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,67 A",
+    "trap": "0,67 A é o resultado da ligação em série (18 Ω)."
+   },
+   {
+    "letter": "B",
+    "html": "2,0 A"
+   },
+   {
+    "letter": "C",
+    "html": "4,0 A"
+   },
+   {
+    "letter": "D",
+    "html": "6,0 A"
+   },
+   {
+    "letter": "E",
+    "html": "18 A"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>Em paralelo: 1/Req = 3/6 ⇒ Req = 2 Ω.</p><p>I = 12/2 = 6,0 A. 0,67 A é o resultado da ligação em série (18 Ω).</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Monte o circuito em paralelo com R₁ = R₂ = R₃ = 6 Ω, fem 12 V e resistência interna mínima.</p><span class=\"lab-ref\">circuitos?mode=paralelo&amp;R1=6&amp;R2=6&amp;R3=6&amp;emf=12&amp;r=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-circuitos-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Eletrodinâmica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Resistores de 2 Ω, 4 Ω e 6 Ω são ligados em série a uma bateria ideal de 12 V.</p>",
+  "stemHtml": "A tensão elétrica sobre o resistor de 6 Ω é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1 V"
+   },
+   {
+    "letter": "B",
+    "html": "2 V"
+   },
+   {
+    "letter": "C",
+    "html": "4 V"
+   },
+   {
+    "letter": "D",
+    "html": "6 V"
+   },
+   {
+    "letter": "E",
+    "html": "12 V"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>Req = 12 Ω, então I = 12/12 = 1 A, a mesma em todos.</p><p>U = R·I = 6·1 = 6 V: em série, a tensão se divide na proporção das resistências.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Monte em série R₁ = 2 Ω, R₂ = 4 Ω, R₃ = 6 Ω com fem 12 V e leia a tensão em R₃.</p><span class=\"lab-ref\">circuitos?mode=serie&amp;R1=2&amp;R2=4&amp;R3=6&amp;emf=12&amp;r=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-inducao-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Eletromagnetismo",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um gerador tem uma bobina de 100 espiras, cada uma com área de 0,020 m², girando a 60 rotações por segundo em um campo magnético uniforme de 0,50 T. Use π ≈ 3,14.</p>",
+  "stemHtml": "A força eletromotriz máxima induzida é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1,0 V"
+   },
+   {
+    "letter": "B",
+    "html": "60 V"
+   },
+   {
+    "letter": "C",
+    "html": "188 V",
+    "trap": "188 V esquece o fator 2 de ω = 2πf."
+   },
+   {
+    "letter": "D",
+    "html": "377 V"
+   },
+   {
+    "letter": "E",
+    "html": "600 V"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>O fluxo é Φ = N·B·A·cos(ωt), e a fem é ε = N·B·A·ω·sen(ωt).</p><p>ε_máx = 100·0,50·0,020·2π·60 ≈ 377 V. 188 V esquece o fator 2 de ω = 2πf.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> No modo gerador, ajuste N = 100, A = 200 cm², B = 0,50 T e f = 5 Hz: o pico é 31,4 V. Como a fem é proporcional a f, a 60 Hz ela é 12 vezes maior.</p><span class=\"lab-ref\">inducao?mode=gerador&amp;N=100&amp;Acm=200&amp;B=0.5&amp;f=5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-inducao-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Eletromagnetismo",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em uma usina, a turbina passa a girar o gerador com o dobro da frequência anterior, mantendo o campo magnético e a bobina.</p>",
+  "stemHtml": "A tensão máxima produzida pelo gerador passa a ser",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "o dobro da anterior"
+   },
+   {
+    "letter": "B",
+    "html": "a metade da anterior"
+   },
+   {
+    "letter": "C",
+    "html": "igual à anterior"
+   },
+   {
+    "letter": "D",
+    "html": "o quádruplo da anterior"
+   },
+   {
+    "letter": "E",
+    "html": "√2 vezes a anterior"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>A fem depende da rapidez com que o fluxo varia: ε_máx = N·B·A·2πf.</p><p>Dobrar f dobra a fem máxima.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Compare o pico da fem com f = 2 Hz e com f = 4 Hz.</p><span class=\"lab-ref\">inducao?mode=gerador&amp;f=2</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-refracao-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Óptica Geométrica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um feixe de laser passa do ar (n = 1,00) para a água (n = 1,33), incidindo a 60° com a normal à superfície.</p>",
+  "stemHtml": "O ângulo de refração na água é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "30°"
+   },
+   {
+    "letter": "B",
+    "html": "41°"
+   },
+   {
+    "letter": "C",
+    "html": "49°"
+   },
+   {
+    "letter": "D",
+    "html": "60°"
+   },
+   {
+    "letter": "E",
+    "html": "80°"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>n₁·sen θ₁ = n₂·sen θ₂ ⇒ sen θ₂ = 0,866/1,33 ≈ 0,65.</p><p>θ₂ ≈ 41°: a luz se aproxima da normal ao entrar no meio mais refringente.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste n₁ = 1,00 e n₂ = 1,33 e o ângulo de incidência para 60°.</p><span class=\"lab-ref\">refracao?n1=1&amp;n2=1.33&amp;th1d=60</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-refracao-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Óptica Geométrica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma lâmpada no fundo de uma piscina emite luz em várias direções. Parte dessa luz não sai para o ar e é totalmente refletida na superfície da água (n = 1,33).</p>",
+  "stemHtml": "O menor ângulo de incidência, medido em relação à normal, a partir do qual ocorre reflexão total é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "30°"
+   },
+   {
+    "letter": "B",
+    "html": "37°"
+   },
+   {
+    "letter": "C",
+    "html": "42°"
+   },
+   {
+    "letter": "D",
+    "html": "45°"
+   },
+   {
+    "letter": "E",
+    "html": "49°"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>No ângulo limite, o refratado sai rasante (90°): sen L = n₂/n₁ = 1/1,33.</p><p>L ≈ 49°. 42° é o ângulo limite do vidro (n ≈ 1,5).</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste n₁ = 1,33 e n₂ = 1,00 e aumente o ângulo de incidência até o feixe refratado desaparecer.</p><span class=\"lab-ref\">refracao?n1=1.33&amp;n2=1&amp;th1d=30</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-lentes-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Óptica Geométrica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um objeto é colocado a 15 cm de uma lente convergente de distância focal 10 cm.</p>",
+  "stemHtml": "A imagem formada se localiza a",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "6 cm da lente, sendo virtual"
+   },
+   {
+    "letter": "B",
+    "html": "10 cm da lente, sendo real"
+   },
+   {
+    "letter": "C",
+    "html": "15 cm da lente, sendo virtual"
+   },
+   {
+    "letter": "D",
+    "html": "30 cm da lente, sendo real e invertida"
+   },
+   {
+    "letter": "E",
+    "html": "45 cm da lente, sendo real e direita"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>1/f = 1/p + 1/p′ ⇒ 1/p′ = 1/10 − 1/15 = 1/30.</p><p>p′ = 30 cm &gt; 0: imagem real; aumento A = −p′/p = −2 (invertida e duas vezes maior).</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Escolha lente convergente, f = 10 cm e objeto a 15 cm. Confira a posição da imagem.</p><span class=\"lab-ref\">lentes?el=convergente&amp;fAbs=10&amp;p=15</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-lentes-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Óptica Geométrica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma pessoa míope usa óculos com lentes divergentes de distância focal −25 cm.</p>",
+  "stemHtml": "O \"grau\" dessa lente, isto é, sua vergência, é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "−4,0 di"
+   },
+   {
+    "letter": "B",
+    "html": "−0,25 di"
+   },
+   {
+    "letter": "C",
+    "html": "+0,25 di"
+   },
+   {
+    "letter": "D",
+    "html": "+4,0 di"
+   },
+   {
+    "letter": "E",
+    "html": "−25 di"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>V = 1/f com f em metros: V = 1/(−0,25) = −4,0 di.</p><p>A miopia é corrigida por lentes divergentes (vergência negativa).</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Escolha lente divergente com f = 25 cm e leia a vergência no painel.</p><span class=\"lab-ref\">lentes?el=divergente&amp;fAbs=25</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-ondas-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma corda com densidade linear de 0,050 kg/m é mantida esticada por uma tração de 20 N.</p>",
+  "stemHtml": "A velocidade de propagação de um pulso transversal nessa corda é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,4 m/s"
+   },
+   {
+    "letter": "B",
+    "html": "2 m/s"
+   },
+   {
+    "letter": "C",
+    "html": "4,5 m/s",
+    "trap": "4,5 m/s tira a raiz só da tração."
+   },
+   {
+    "letter": "D",
+    "html": "10 m/s"
+   },
+   {
+    "letter": "E",
+    "html": "20 m/s"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>v = √(T/μ) = √(20/0,050) = √400 = 20 m/s.</p><p>4,5 m/s tira a raiz só da tração; 400 sem a raiz seria o quadrado da velocidade.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste T = 20 N e μ = 0,05 kg/m, envie um pulso e meça a velocidade.</p><span class=\"lab-ref\">ondas?T=20&amp;mu=0.05&amp;source=pulso</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-ondas-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em um laboratório, uma corda de 8,0 m, presa nas duas extremidades, tem densidade linear de 0,050 kg/m e tração de 20 N.</p>",
+  "stemHtml": "A frequência do 3º harmônico (três ventres) dessa corda é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1,25 Hz",
+    "trap": "1,25 Hz é a fundamental."
+   },
+   {
+    "letter": "B",
+    "html": "2,5 Hz"
+   },
+   {
+    "letter": "C",
+    "html": "3,75 Hz"
+   },
+   {
+    "letter": "D",
+    "html": "7,5 Hz",
+    "trap": "7,5 Hz usa L no lugar de 2L."
+   },
+   {
+    "letter": "E",
+    "html": "20 Hz"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>v = √(20/0,050) = 20 m/s.</p><p>Com pontas fixas, fₙ = n·v/(2L): f₃ = 3·20/16 = 3,75 Hz. 1,25 Hz é a fundamental; 7,5 Hz usa L no lugar de 2L.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste T = 20 N, μ = 0,05 kg/m, pontas fixas, e escolha o 3º harmônico.</p><span class=\"lab-ref\">ondas?T=20&amp;mu=0.05&amp;source=oscilador&amp;end=fixa&amp;f=3.75</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-projetil-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Cinemática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em uma cobrança de lateral, um goleiro chuta a bola a 30 m/s com inclinação de 30° em relação ao solo. Despreze a resistência do ar e use g = 10 m/s².</p>",
+  "stemHtml": "A altura máxima atingida pela bola, em relação ao ponto de chute, é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "5,6 m"
+   },
+   {
+    "letter": "B",
+    "html": "45 m",
+    "trap": "45 m usaria a velocidade inteira, como num lançamento vertical."
+   },
+   {
+    "letter": "C",
+    "html": "22,5 m"
+   },
+   {
+    "letter": "D",
+    "html": "33,75 m"
+   },
+   {
+    "letter": "E",
+    "html": "11,25 m"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>Só a componente vertical importa: v₀y = 30·sen 30° = 15 m/s.</p><p>H = v₀y²/(2g) = 225/20 = 11,25 m. 45 m usaria a velocidade inteira, como num lançamento vertical.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste v₀ = 30 m/s, θ = 30°, g = 10 m/s² e ar desligado; leia a altura máxima.</p><span class=\"lab-ref\">projetil?v0=30&amp;angleDeg=30&amp;g=10&amp;cd=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-projetil-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Cinemática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um projétil é lançado do solo com velocidade de 25 m/s, a 53° da horizontal. Despreze o ar e considere g = 10 m/s², sen 53° = 0,8 e cos 53° = 0,6.</p>",
+  "stemHtml": "O tempo que o projétil permanece no ar é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "2,0 s",
+    "trap": "2,0 s é só o tempo de subida."
+   },
+   {
+    "letter": "B",
+    "html": "2,5 s"
+   },
+   {
+    "letter": "C",
+    "html": "3,0 s",
+    "trap": "3,0 s usaria o cosseno."
+   },
+   {
+    "letter": "D",
+    "html": "4,0 s"
+   },
+   {
+    "letter": "E",
+    "html": "5,0 s"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>v₀y = 25·0,8 = 20 m/s. A subida dura v₀y/g = 2 s e a descida, outros 2 s.</p><p>T = 2v₀y/g = 4,0 s. 2,0 s é só o tempo de subida; 3,0 s usaria o cosseno.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste v₀ = 25 m/s, θ = 53°, g = 10 m/s² e ar desligado; leia o tempo de voo.</p><span class=\"lab-ref\">projetil?v0=25&amp;angleDeg=53&amp;g=10&amp;cd=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-projetil-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Cinemática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>No vácuo, o maior alcance de um lançamento a partir do solo ocorre a 45°. Com a resistência do ar, a bola de futebol perde energia ao longo de todo o voo.</p>",
+  "stemHtml": "Comparando com o lançamento no vácuo, com o ar",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "o alcance aumenta, porque o ar sustenta a bola"
+   },
+   {
+    "letter": "B",
+    "html": "o alcance diminui, mas o ângulo de alcance máximo continua sendo 45°"
+   },
+   {
+    "letter": "C",
+    "html": "apenas a componente vertical da velocidade é afetada"
+   },
+   {
+    "letter": "D",
+    "html": "a trajetória continua sendo uma parábola simétrica, apenas menor"
+   },
+   {
+    "letter": "E",
+    "html": "o alcance e a altura máxima diminuem, e o ângulo de alcance máximo fica abaixo de 45°"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>O arrasto se opõe à velocidade inteira, então freia também o movimento horizontal: a trajetória deixa de ser parabólica e a descida é mais íngreme que a subida.</p><p>Como voos altos duram mais e sofrem mais perda, o melhor ângulo fica abaixo de 45°.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Com o ar ligado, compare os alcances a 35°, 40° e 45° com a mesma velocidade; a curva sem ar aparece tracejada.</p><span class=\"lab-ref\">projetil?v0=30&amp;angleDeg=35&amp;cd=0.25</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-muv-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Cinemática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um velocista parte do repouso e acelera uniformemente a 2,5 m/s².</p>",
+  "stemHtml": "Ao completar os primeiros 20 m, sua velocidade é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "10 m/s"
+   },
+   {
+    "letter": "B",
+    "html": "7,1 m/s"
+   },
+   {
+    "letter": "C",
+    "html": "5,0 m/s"
+   },
+   {
+    "letter": "D",
+    "html": "50 m/s"
+   },
+   {
+    "letter": "E",
+    "html": "100 m/s",
+    "trap": "100 m/s esquece a raiz quadrada."
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>Sem o tempo, use Torricelli: v² = v₀² + 2aΔs = 0 + 2·2,5·20 = 100.</p><p>v = 10 m/s. 100 m/s esquece a raiz quadrada.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste x₀ = 0, v₀ = 0 e a = 2,5 m/s²; pause quando x = 20 m e leia v.</p><span class=\"lab-ref\">muv?x0=0&amp;v0=0&amp;a=2.5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-muv-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Cinemática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>A posição de um carrinho é dada por x(t) = 10 + 5t − 0,5t², em unidades do SI.</p>",
+  "stemHtml": "A posição do carrinho no instante t = 4 s é",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "18 m"
+   },
+   {
+    "letter": "B",
+    "html": "38 m",
+    "trap": "38 m soma o termo quadrático em vez de subtrair."
+   },
+   {
+    "letter": "C",
+    "html": "26 m"
+   },
+   {
+    "letter": "D",
+    "html": "30 m"
+   },
+   {
+    "letter": "E",
+    "html": "22 m"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>x(4) = 10 + 5·4 − 0,5·16 = 10 + 20 − 8 = 22 m.</p><p>Comparando com x = x₀ + v₀t + at²/2: x₀ = 10 m, v₀ = 5 m/s e a = −1 m/s². 38 m soma o termo quadrático em vez de subtrair.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste x₀ = 10 m, v₀ = 5 m/s e a = −1 m/s² e leia a posição em t = 4 s.</p><span class=\"lab-ref\">muv?x0=10&amp;v0=5&amp;a=-1</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-muv-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Cinemática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma bola é lançada para cima por uma rampa e, depois de parar por um instante, desce de volta. O movimento tem aceleração constante, dirigida para baixo da rampa.</p>",
+  "stemHtml": "No instante em que a velocidade da bola é nula,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "a aceleração também é nula"
+   },
+   {
+    "letter": "B",
+    "html": "a aceleração muda de sentido"
+   },
+   {
+    "letter": "C",
+    "html": "a bola está em equilíbrio"
+   },
+   {
+    "letter": "D",
+    "html": "a aceleração continua a mesma, e é ela que faz a bola começar a descer"
+   },
+   {
+    "letter": "E",
+    "html": "a posição da bola é mínima"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>Velocidade nula não significa aceleração nula: a aceleração é constante durante todo o movimento.</p><p>No gráfico v × t a reta cruza o zero sem mudar de inclinação; nesse instante a posição é máxima, não mínima.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste v₀ = 10 m/s e a = −2 m/s²: o gráfico v × t cruza o zero em t = 5 s com a mesma inclinação.</p><span class=\"lab-ref\">muv?x0=0&amp;v0=10&amp;a=-2</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-newton-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Dinâmica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma caixa de 5 kg desliza por uma rampa lisa (sem atrito) inclinada 30° em relação à horizontal. Use g = 10 m/s².</p>",
+  "stemHtml": "O módulo da aceleração da caixa é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "5,0 m/s²"
+   },
+   {
+    "letter": "B",
+    "html": "2,5 m/s²"
+   },
+   {
+    "letter": "C",
+    "html": "8,7 m/s²",
+    "trap": "8,7 m/s² usa o cosseno."
+   },
+   {
+    "letter": "D",
+    "html": "10 m/s²"
+   },
+   {
+    "letter": "E",
+    "html": "25 m/s²"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>Sem atrito, só a componente do peso ao longo da rampa acelera a caixa: a = g·sen θ = 10·0,5 = 5 m/s².</p><p>A massa não interfere. 8,7 m/s² usa o cosseno.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste θ = 30°, atritos zero, F = 0 e g = 10 m/s²; mude a massa e veja a aceleração ficar igual.</p><span class=\"lab-ref\">newton?thetaDeg=30&amp;muS=0&amp;muK=0&amp;F=0&amp;g=10</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-newton-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Dinâmica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um operário empurra um caixote de 10 kg rampa acima, paralelamente a ela, com velocidade constante. A rampa tem 30° de inclinação e o coeficiente de atrito cinético é 0,20. Use g = 10 m/s² e cos 30° ≈ 0,87.</p>",
+  "stemHtml": "A força exercida pelo operário é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "17 N"
+   },
+   {
+    "letter": "B",
+    "html": "33 N",
+    "trap": "33 N subtrai o atrito, como se o caixote descesse."
+   },
+   {
+    "letter": "C",
+    "html": "50 N"
+   },
+   {
+    "letter": "D",
+    "html": "67 N"
+   },
+   {
+    "letter": "E",
+    "html": "100 N"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>Velocidade constante ⇒ força resultante nula. Subindo, o atrito aponta para baixo da rampa.</p><p>F = mg·sen θ + μc·mg·cos θ = 50 + 0,2·87 ≈ 67 N. 33 N subtrai o atrito, como se o caixote descesse.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste m = 10 kg, θ = 30°, μc = 0,20, g = 10 m/s², v₀ = +2 m/s e procure a força F que deixa a aceleração nula.</p><span class=\"lab-ref\">newton?m=10&amp;thetaDeg=30&amp;muK=0.2&amp;v0=2&amp;g=10</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-newton-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Dinâmica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um bloco de 20 kg está parado sobre uma rampa de 30°. O coeficiente de atrito estático entre o bloco e a rampa é 0,80. Use g = 10 m/s² e cos 30° ≈ 0,87.</p>",
+  "stemHtml": "A força de atrito que atua sobre o bloco tem módulo de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0 N"
+   },
+   {
+    "letter": "B",
+    "html": "200 N"
+   },
+   {
+    "letter": "C",
+    "html": "139 N"
+   },
+   {
+    "letter": "D",
+    "html": "160 N"
+   },
+   {
+    "letter": "E",
+    "html": "100 N"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>Parado, o atrito estático equilibra exatamente a componente do peso: f = mg·sen θ = 200·0,5 = 100 N.</p><p>μₑ·N = 0,8·174 ≈ 139 N é só o valor máximo possível, não o atrito que realmente atua.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste m = 20 kg, θ = 30°, μₑ = 0,80, F = 0 e g = 10 m/s²; o diagrama mostra o atrito de 100 N e o limite μₑN.</p><span class=\"lab-ref\">newton?m=20&amp;thetaDeg=30&amp;muS=0.8&amp;F=0&amp;g=10</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-energia-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Trabalho e Energia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um skatista passa pelo ponto mais baixo de uma pista em U com velocidade de 8 m/s. Despreze atritos e use g = 10 m/s².</p>",
+  "stemHtml": "A altura máxima, em relação ao fundo, que ele atinge na pista é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "3,2 m"
+   },
+   {
+    "letter": "B",
+    "html": "1,6 m"
+   },
+   {
+    "letter": "C",
+    "html": "0,8 m"
+   },
+   {
+    "letter": "D",
+    "html": "6,4 m",
+    "trap": "6,4 m esquece o fator 1/2 da energia cinética."
+   },
+   {
+    "letter": "E",
+    "html": "8,0 m"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>mv²/2 = mgh ⇒ h = v²/(2g) = 64/20 = 3,2 m.</p><p>A massa se cancela. 6,4 m esquece o fator 1/2 da energia cinética.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Pista em U, atrito zero, g = 10 m/s²: largue de uma altura de 3,2 m (x ≈ 3,6 m) e veja a velocidade no fundo chegar a 8 m/s.</p><span class=\"lab-ref\">energia?trackId=U&amp;c=0&amp;g=10&amp;x0=3.58</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-energia-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Trabalho e Energia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Na pista com dois vales, os fundos estão na altura zero e a corcova central tem 2,7 m de altura. Despreze atritos e use g = 10 m/s².</p>",
+  "stemHtml": "A menor velocidade que o skatista precisa ter no fundo de um vale para passar para o outro é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "2,7 m/s"
+   },
+   {
+    "letter": "B",
+    "html": "5,2 m/s"
+   },
+   {
+    "letter": "C",
+    "html": "54 m/s",
+    "trap": "54 m/s esquece a raiz."
+   },
+   {
+    "letter": "D",
+    "html": "27 m/s"
+   },
+   {
+    "letter": "E",
+    "html": "7,3 m/s"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>No topo da corcova a velocidade pode chegar a quase zero: mv²/2 = mgh.</p><p>v = √(2·10·2,7) = √54 ≈ 7,3 m/s. 54 m/s esquece a raiz.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Pista W, atrito zero e g = 10 m/s²: largue quase no topo (x = 0,05 m) e leia a velocidade nos vales.</p><span class=\"lab-ref\">energia?trackId=W&amp;c=0&amp;g=10&amp;x0=0.05</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-energia-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Trabalho e Energia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma skatista de 50 kg parte do repouso a 5,0 m de altura em uma pista em U. Por causa do atrito, do outro lado ela sobe apenas até 3,0 m de altura. Use g = 10 m/s².</p>",
+  "stemHtml": "A energia mecânica convertida em energia térmica nesse percurso foi de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1 000 J"
+   },
+   {
+    "letter": "B",
+    "html": "250 J"
+   },
+   {
+    "letter": "C",
+    "html": "100 J"
+   },
+   {
+    "letter": "D",
+    "html": "1 500 J",
+    "trap": "1 500 J usaria só a altura final."
+   },
+   {
+    "letter": "E",
+    "html": "2 500 J"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>Nos dois pontos extremos a velocidade é nula, então só a energia potencial muda.</p><p>ΔE = mg(h₁ − h₂) = 50·10·2 = 1 000 J. 1 500 J usaria só a altura final; 2 500 J, só a inicial.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Pista U com atrito ligado, m = 50 kg e g = 10 m/s²: a barra de energia térmica cresce o que a mecânica perde.</p><span class=\"lab-ref\">energia?trackId=U&amp;c=0.3&amp;m=50&amp;g=10</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-pendulo-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um pêndulo simples de 1,0 m de comprimento é levado a Marte, onde g ≈ 3,7 m/s². As oscilações têm pequena amplitude.</p>",
+  "stemHtml": "O período desse pêndulo em Marte é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1,0 s"
+   },
+   {
+    "letter": "B",
+    "html": "2,0 s"
+   },
+   {
+    "letter": "C",
+    "html": "10,7 s"
+   },
+   {
+    "letter": "D",
+    "html": "6,3 s"
+   },
+   {
+    "letter": "E",
+    "html": "3,3 s"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>T = 2π√(L/g) = 2π√(1/3,7) ≈ 6,28·0,52 ≈ 3,3 s.</p><p>Na Terra seria 2,0 s: com gravidade menor, o pêndulo oscila mais devagar.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste L = 1,0 m, θ₀ = 5° e g = 3,7 m/s² (Marte) e meça o período.</p><span class=\"lab-ref\">pendulo?L=1&amp;th0=5&amp;g=3.7</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-pendulo-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em um relógio de pêndulo, a pequena massa de latão do pêndulo é trocada por outra, de chumbo, com o dobro da massa, mantendo o mesmo comprimento.</p>",
+  "stemHtml": "Para pequenas oscilações, o período do pêndulo",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "não se altera"
+   },
+   {
+    "letter": "B",
+    "html": "aumenta √2 vezes"
+   },
+   {
+    "letter": "C",
+    "html": "dobra"
+   },
+   {
+    "letter": "D",
+    "html": "cai pela metade"
+   },
+   {
+    "letter": "E",
+    "html": "diminui √2 vezes"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>O peso (que puxa) e a inércia (que resiste) crescem na mesma proporção, e a massa se cancela: T = 2π√(L/g).</p><p>O relógio só adianta ou atrasa se o comprimento ou a gravidade mudarem.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Mantenha L e g e mude a massa de 0,1 kg para 2 kg: o período medido não muda.</p><span class=\"lab-ref\">pendulo?m=0.1&amp;th0=5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-pendulo-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>A fórmula T = 2π√(L/g) vale para pequenas amplitudes. Um pêndulo é solto a 90° da vertical, e seu período é medido com precisão.</p>",
+  "stemHtml": "A razão entre o período medido e o previsto pela fórmula de pequenas amplitudes é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,85"
+   },
+   {
+    "letter": "B",
+    "html": "1,00"
+   },
+   {
+    "letter": "C",
+    "html": "2,00"
+   },
+   {
+    "letter": "D",
+    "html": "1,41"
+   },
+   {
+    "letter": "E",
+    "html": "1,18"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>Em grandes ângulos a força restauradora cresce menos que o ângulo (sen θ &lt; θ), e o pêndulo fica mais lento.</p><p>O período exato, por integral elíptica, é cerca de 18% maior a 90°.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Solte de θ₀ = 90° sem amortecimento: o painel compara o período medido com o exato e com o de pequenas amplitudes.</p><span class=\"lab-ref\">pendulo?th0=90&amp;b=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-mola-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um corpo de 1,0 kg preso a uma mola de constante 100 N/m é afastado 20 cm do equilíbrio e solto. Despreze atritos.</p>",
+  "stemHtml": "A maior velocidade atingida pelo corpo é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "2,0 m/s"
+   },
+   {
+    "letter": "B",
+    "html": "1,0 m/s"
+   },
+   {
+    "letter": "C",
+    "html": "0,2 m/s"
+   },
+   {
+    "letter": "D",
+    "html": "4,0 m/s"
+   },
+   {
+    "letter": "E",
+    "html": "20 m/s",
+    "trap": "20 m/s usa a amplitude em centímetros."
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>Toda a energia elástica vira cinética no equilíbrio: kA²/2 = mv²/2.</p><p>v = A√(k/m) = 0,20·10 = 2,0 m/s. 20 m/s usa a amplitude em centímetros.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste k = 100 N/m, m = 1,0 kg, A = 0,20 m e amortecimento zero; leia a velocidade ao passar pelo equilíbrio.</p><span class=\"lab-ref\">mola?k=100&amp;m=1&amp;A=0.2&amp;b=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-mola-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um sistema massa-mola oscila com certo período. A massa presa à mola é então quadruplicada.</p>",
+  "stemHtml": "O novo período, comparado ao original, fica",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "4 vezes menor"
+   },
+   {
+    "letter": "B",
+    "html": "2 vezes menor"
+   },
+   {
+    "letter": "C",
+    "html": "igual"
+   },
+   {
+    "letter": "D",
+    "html": "2 vezes maior"
+   },
+   {
+    "letter": "E",
+    "html": "4 vezes maior"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>T = 2π√(m/k): o período é proporcional à raiz da massa.</p><p>√4 = 2, então o período dobra.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Com k = 100 N/m, meça o período com m = 0,5 kg e depois com m = 2,0 kg.</p><span class=\"lab-ref\">mola?k=100&amp;m=0.5&amp;b=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-mola-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um amortecedor de automóvel combina uma mola com um fluido viscoso. Em um modelo de laboratório, um corpo preso a uma mola oscila dentro de um óleo, com amortecimento fraco.</p>",
+  "stemHtml": "Em relação à oscilação sem óleo,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "a amplitude diminui com o tempo e o período fica praticamente igual, um pouco maior"
+   },
+   {
+    "letter": "B",
+    "html": "a amplitude se mantém e o período diminui"
+   },
+   {
+    "letter": "C",
+    "html": "a amplitude diminui e o período cai pela metade"
+   },
+   {
+    "letter": "D",
+    "html": "a energia mecânica se conserva"
+   },
+   {
+    "letter": "E",
+    "html": "o corpo para imediatamente no ponto de equilíbrio"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>O atrito viscoso retira energia a cada ciclo, e a amplitude decai exponencialmente.</p><p>O período amortecido é 2π/√(ω₀² − γ²): com γ pequeno, quase igual ao original e ligeiramente maior.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste k = 100 N/m, m = 1 kg e compare b = 0 com b = 2 kg/s: veja a envoltória e o período no painel.</p><span class=\"lab-ref\">mola?k=100&amp;m=1&amp;b=2</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-colisoes-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Impulso e Quantidade de Movimento",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em uma mesa de sinuca, a bola branca, a 3 m/s, atinge de frente outra bola de mesma massa, parada. Considere a colisão perfeitamente elástica.</p>",
+  "stemHtml": "Logo após a colisão, a velocidade da bola que estava parada é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0"
+   },
+   {
+    "letter": "B",
+    "html": "1,5 m/s",
+    "trap": "1,5 m/s seria a velocidade comum numa colisão perfeitamente inelástica."
+   },
+   {
+    "letter": "C",
+    "html": "2,0 m/s"
+   },
+   {
+    "letter": "D",
+    "html": "3,0 m/s"
+   },
+   {
+    "letter": "E",
+    "html": "6,0 m/s"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>Com massas iguais e e = 1, as bolas trocam de velocidade: a branca para e a outra sai a 3 m/s.</p><p>1,5 m/s seria a velocidade comum numa colisão perfeitamente inelástica.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste mA = mB = 1 kg, vA = 3 m/s, vB = 0 e e = 1.</p><span class=\"lab-ref\">colisoes?m1=1&amp;v1=3&amp;m2=1&amp;v2=0&amp;e=1</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-colisoes-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Impulso e Quantidade de Movimento",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um carrinho de 2 kg, a 3 m/s, colide com outro de 1 kg em repouso. O coeficiente de restituição da colisão é 0,5.</p>",
+  "stemHtml": "A velocidade do carrinho de 2 kg logo após a colisão é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0"
+   },
+   {
+    "letter": "B",
+    "html": "1,0 m/s"
+   },
+   {
+    "letter": "C",
+    "html": "3,0 m/s"
+   },
+   {
+    "letter": "D",
+    "html": "2,0 m/s",
+    "trap": "2,0 m/s seria a velocidade comum com e = 0."
+   },
+   {
+    "letter": "E",
+    "html": "1,5 m/s"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>Momento: 2·3 = 2v₁ + v₂. Restituição: v₂ − v₁ = 0,5·3 = 1,5.</p><p>Somando: 3v₁ = 4,5 ⇒ v₁ = 1,5 m/s (e v₂ = 3,0 m/s). 2,0 m/s seria a velocidade comum com e = 0.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste mA = 2 kg, vA = 3 m/s, mB = 1 kg, vB = 0 e e = 0,5.</p><span class=\"lab-ref\">colisoes?m1=2&amp;v1=3&amp;m2=1&amp;v2=0&amp;e=0.5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-colisoes-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Impulso e Quantidade de Movimento",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Dois carrinhos se movem em sentidos opostos: um de 4 kg a 2 m/s, para a direita, e outro de 2 kg a 3 m/s, para a esquerda. Eles colidem e seguem grudados.</p>",
+  "stemHtml": "A velocidade do conjunto logo após a colisão tem módulo de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,33 m/s"
+   },
+   {
+    "letter": "B",
+    "html": "0,50 m/s"
+   },
+   {
+    "letter": "C",
+    "html": "1,0 m/s"
+   },
+   {
+    "letter": "D",
+    "html": "2,3 m/s",
+    "trap": "2,3 m/s somaria os momentos como se fossem no mesmo sentido."
+   },
+   {
+    "letter": "E",
+    "html": "2,5 m/s"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>Sentidos opostos têm sinais opostos: Q = 4·2 − 2·3 = 2 kg·m/s.</p><p>v = Q/(m₁ + m₂) = 2/6 ≈ 0,33 m/s, para a direita. 2,3 m/s somaria os momentos como se fossem no mesmo sentido.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste mA = 4 kg, vA = 2 m/s, mB = 2 kg, vB = −3 m/s e e = 0.</p><span class=\"lab-ref\">colisoes?m1=4&amp;v1=2&amp;m2=2&amp;v2=-3&amp;e=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-empuxo-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Hidrostática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um cubo maciço de 20 cm de aresta, feito de um material com densidade de 3 000 kg/m³, está totalmente submerso em água (1 000 kg/m³), pendurado por um fio. Use g = 10 m/s².</p>",
+  "stemHtml": "A tração no fio (peso aparente do cubo) é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "80 N"
+   },
+   {
+    "letter": "B",
+    "html": "160 N"
+   },
+   {
+    "letter": "C",
+    "html": "240 N"
+   },
+   {
+    "letter": "D",
+    "html": "320 N",
+    "trap": "320 N somaria o empuxo ao peso."
+   },
+   {
+    "letter": "E",
+    "html": "2 400 N"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>V = 0,2³ = 0,008 m³. Peso: 3 000·0,008·10 = 240 N. Empuxo: 1 000·0,008·10 = 80 N.</p><p>Peso aparente = 240 − 80 = 160 N. 320 N somaria o empuxo ao peso.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste a = 0,20 m, ρc = 3 000 kg/m³, g = 10 m/s² e água: com o bloco no fundo, compare peso, empuxo e normal.</p><span class=\"lab-ref\">empuxo?fluid=0&amp;a=0.2&amp;rhoC=3000&amp;g=10</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-empuxo-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Hidrostática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um bloco de madeira flutua em água doce (1 000 kg/m³) com 25% do seu volume acima da superfície.</p>",
+  "stemHtml": "A densidade dessa madeira é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "750 kg/m³"
+   },
+   {
+    "letter": "B",
+    "html": "500 kg/m³"
+   },
+   {
+    "letter": "C",
+    "html": "250 kg/m³",
+    "trap": "250 kg/m³ confunde a parte emersa com a submersa."
+   },
+   {
+    "letter": "D",
+    "html": "1 000 kg/m³"
+   },
+   {
+    "letter": "E",
+    "html": "1 333 kg/m³"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>Flutuando, peso = empuxo: ρc·V = ρágua·V_sub ⇒ ρc/ρágua = fração submersa.</p><p>Submersos 75% ⇒ ρc = 0,75·1 000 = 750 kg/m³. 250 kg/m³ confunde a parte emersa com a submersa.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Em água, procure a densidade do bloco que deixa 75% submerso no equilíbrio.</p><span class=\"lab-ref\">empuxo?fluid=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-empuxo-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Hidrostática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um navio carregado sai do Rio Amazonas (água doce) e entra no Oceano Atlântico (água salgada, mais densa), sem alterar sua carga.</p>",
+  "stemHtml": "Ao entrar no mar, o navio",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "afunda mais, porque o empuxo diminui"
+   },
+   {
+    "letter": "B",
+    "html": "afunda mais, porque a água salgada é mais densa"
+   },
+   {
+    "letter": "C",
+    "html": "mantém a mesma linha-d’água, porque o peso não mudou"
+   },
+   {
+    "letter": "D",
+    "html": "sobe um pouco, pois precisa deslocar menos volume para ter o mesmo empuxo"
+   },
+   {
+    "letter": "E",
+    "html": "sobe um pouco, porque o empuxo passa a ser maior que o peso"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>Flutuando, o empuxo sempre iguala o peso, que não mudou. Como E = ρ·g·V_sub, se ρ aumenta, o volume submerso diminui.</p><p>A alternativa E erra ao dizer que o empuxo supera o peso no equilíbrio.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Com um bloco que flutua, troque o fluido de Água para Água do mar e compare a fração submersa.</p><span class=\"lab-ref\">empuxo?fluid=0&amp;rhoC=600</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-orbitas-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Gravitação",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um planeta descreve uma órbita circular de raio 2 UA em torno de uma estrela com o dobro da massa do Sol. Pela lei de Kepler generalizada, T² = a³/M, com T em anos, a em UA e M em massas solares.</p>",
+  "stemHtml": "O período orbital desse planeta é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1,0 ano"
+   },
+   {
+    "letter": "B",
+    "html": "1,4 ano"
+   },
+   {
+    "letter": "C",
+    "html": "4,0 anos"
+   },
+   {
+    "letter": "D",
+    "html": "2,8 anos"
+   },
+   {
+    "letter": "E",
+    "html": "2,0 anos"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>T² = 2³/2 = 4 ⇒ T = 2 anos.</p><p>Em torno do Sol seria √8 ≈ 2,8 anos: a estrela mais massiva atrai mais e o planeta gira mais rápido.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste M = 2 M☉, r₀ = 2 UA e velocidade circular; meça o período.</p><span class=\"lab-ref\">orbitas?M=2&amp;r0=2&amp;f=1</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-orbitas-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Gravitação",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Dois planetas giram em órbitas circulares em torno da mesma estrela: um a 1 UA e outro a 4 UA.</p>",
+  "stemHtml": "A razão entre a velocidade orbital do planeta mais distante e a do mais próximo é",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1/16"
+   },
+   {
+    "letter": "B",
+    "html": "1/4"
+   },
+   {
+    "letter": "C",
+    "html": "1/2"
+   },
+   {
+    "letter": "D",
+    "html": "2"
+   },
+   {
+    "letter": "E",
+    "html": "4"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>Na órbita circular a gravidade é a força centrípeta: GMm/r² = mv²/r ⇒ v = √(GM/r).</p><p>v₄/v₁ = √(1/4) = 1/2. Planetas distantes andam mais devagar e ainda percorrem órbitas maiores.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Com velocidade circular, compare a velocidade (km/s) em r₀ = 1 UA e em r₀ = 4 UA.</p><span class=\"lab-ref\">orbitas?M=1&amp;r0=1&amp;f=1</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-orbitas-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Gravitação",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>A órbita de um cometa em torno do Sol é uma elipse muito alongada.</p>",
+  "stemHtml": "De acordo com a segunda lei de Kepler, o cometa",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "tem velocidade constante ao longo da órbita"
+   },
+   {
+    "letter": "B",
+    "html": "é mais rápido no afélio, o ponto mais distante do Sol"
+   },
+   {
+    "letter": "C",
+    "html": "é mais rápido no periélio, pois varre áreas iguais em tempos iguais"
+   },
+   {
+    "letter": "D",
+    "html": "leva o mesmo tempo para percorrer qualquer arco de mesmo comprimento"
+   },
+   {
+    "letter": "E",
+    "html": "tem período proporcional à distância média ao Sol"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>A linha Sol–cometa varre áreas iguais em tempos iguais (conservação do momento angular).</p><p>Perto do Sol o \"raio\" é curto, então o arco precisa ser longo: o cometa é mais rápido no periélio. A alternativa E distorce a terceira lei (T² ∝ a³).</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Use uma fração de velocidade baixa (órbita alongada) e ligue as áreas varridas: os setores têm áreas iguais.</p><span class=\"lab-ref\">orbitas?M=1&amp;r0=1&amp;f=0.5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-circuitos-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Eletrodinâmica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um resistor de 4 Ω está em série com dois resistores de 12 Ω associados em paralelo. O conjunto é ligado a uma bateria ideal de 12 V.</p>",
+  "stemHtml": "A corrente em cada um dos resistores de 12 Ω é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,3 A"
+   },
+   {
+    "letter": "B",
+    "html": "0,6 A"
+   },
+   {
+    "letter": "C",
+    "html": "1,0 A"
+   },
+   {
+    "letter": "D",
+    "html": "1,2 A",
+    "trap": "1,2 A é a corrente total."
+   },
+   {
+    "letter": "E",
+    "html": "3,0 A"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>O paralelo de 12 Ω com 12 Ω vale 6 Ω. Req = 4 + 6 = 10 Ω e I = 12/10 = 1,2 A.</p><p>A corrente se divide igualmente entre os dois ramos iguais: 0,6 A em cada. 1,2 A é a corrente total.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Associação mista: R₁ = 4 Ω, R₂ = R₃ = 12 Ω, ε = 12 V e r = 0; leia a corrente em R₂.</p><span class=\"lab-ref\">circuitos?mode=misto&amp;R1=4&amp;R2=12&amp;R3=12&amp;emf=12&amp;r=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-circuitos-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Eletrodinâmica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma bateria de força eletromotriz 12 V e resistência interna 2 Ω alimenta três resistores em série, de 2 Ω, 3 Ω e 5 Ω.</p>",
+  "stemHtml": "A tensão entre os terminais da bateria, durante o funcionamento, é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "10 V"
+   },
+   {
+    "letter": "B",
+    "html": "8 V"
+   },
+   {
+    "letter": "C",
+    "html": "2 V"
+   },
+   {
+    "letter": "D",
+    "html": "12 V",
+    "trap": "12 V seria a tensão com a bateria desligada (ou ideal)."
+   },
+   {
+    "letter": "E",
+    "html": "14 V"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>Corrente: I = ε/(Req + r) = 12/(10 + 2) = 1 A.</p><p>U = ε − r·I = 12 − 2 = 10 V. 12 V seria a tensão com a bateria desligada (ou ideal).</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Em série: R₁ = 2 Ω, R₂ = 3 Ω, R₃ = 5 Ω, ε = 12 V e r = 2 Ω; leia a tensão nos terminais.</p><span class=\"lab-ref\">circuitos?mode=serie&amp;R1=2&amp;R2=3&amp;R3=5&amp;emf=12&amp;r=2</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-circuitos-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Eletrodinâmica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Três lâmpadas idênticas, de resistência 6 Ω cada, são ligadas em paralelo a uma bateria ideal de 12 V.</p>",
+  "stemHtml": "A potência total dissipada pelas lâmpadas é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "8 W"
+   },
+   {
+    "letter": "B",
+    "html": "24 W"
+   },
+   {
+    "letter": "C",
+    "html": "36 W"
+   },
+   {
+    "letter": "D",
+    "html": "72 W"
+   },
+   {
+    "letter": "E",
+    "html": "216 W"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>Em paralelo, cada lâmpada recebe os 12 V: P = U²/R = 144/6 = 24 W.</p><p>Total: 3·24 = 72 W. 8 W seria o resultado com as lâmpadas em série (Req = 18 Ω).</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Em paralelo, R₁ = R₂ = R₃ = 6 Ω, ε = 12 V e r = 0; some as potências do painel.</p><span class=\"lab-ref\">circuitos?mode=paralelo&amp;R1=6&amp;R2=6&amp;R3=6&amp;emf=12&amp;r=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-inducao-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Eletromagnetismo",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma bobina de 200 espiras, cada uma com área de 100 cm², está perpendicular a um campo magnético uniforme de 0,40 T.</p>",
+  "stemHtml": "O fluxo magnético total através da bobina (concatenado pelas espiras) é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,008 Wb"
+   },
+   {
+    "letter": "B",
+    "html": "0,08 Wb"
+   },
+   {
+    "letter": "C",
+    "html": "80 Wb",
+    "trap": "80 Wb deixa a área em cm²."
+   },
+   {
+    "letter": "D",
+    "html": "8 Wb"
+   },
+   {
+    "letter": "E",
+    "html": "0,8 Wb"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>100 cm² = 0,01 m². Por espira: Φ = B·A = 0,4·0,01 = 0,004 Wb.</p><p>Com 200 espiras: NΦ = 0,8 Wb. 80 Wb deixa a área em cm².</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> No gerador, ajuste N = 200, A = 100 cm² e B = 0,40 T; o gráfico de fluxo tem pico de 0,8 Wb.</p><span class=\"lab-ref\">inducao?mode=gerador&amp;N=200&amp;Acm=100&amp;B=0.4</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-inducao-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Eletromagnetismo",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um ímã atravessa uma bobina e o pico de tensão induzida é medido. O experimento é repetido com o ímã passando com o dobro da velocidade.</p>",
+  "stemHtml": "O novo pico de tensão induzida é",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "a metade do anterior"
+   },
+   {
+    "letter": "B",
+    "html": "igual ao anterior"
+   },
+   {
+    "letter": "C",
+    "html": "√2 vezes o anterior"
+   },
+   {
+    "letter": "D",
+    "html": "o dobro do anterior"
+   },
+   {
+    "letter": "E",
+    "html": "quatro vezes o anterior"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>A fem é a taxa de variação do fluxo: ε = −dΦ/dt. A mesma variação de fluxo acontece na metade do tempo.</p><p>Assim, o pico dobra. A área sob a curva ε × t (a variação total de fluxo) continua a mesma.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> No modo ímã, compare o pico com v = 1 m/s e com v = 2 m/s.</p><span class=\"lab-ref\">inducao?mode=ima&amp;vMag=1</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-inducao-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Eletromagnetismo",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>O polo norte de um ímã é aproximado de uma bobina ligada a uma lâmpada.</p>",
+  "stemHtml": "De acordo com a lei de Lenz, a corrente induzida na bobina",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "cria um polo norte na face voltada para o ímã, que se opõe à aproximação"
+   },
+   {
+    "letter": "B",
+    "html": "só aparece quando o ímã para dentro da bobina"
+   },
+   {
+    "letter": "C",
+    "html": "cria um polo sul na face voltada para o ímã, que o atrai"
+   },
+   {
+    "letter": "D",
+    "html": "tem o mesmo sentido, quer o ímã se aproxime ou se afaste"
+   },
+   {
+    "letter": "E",
+    "html": "independe da velocidade do ímã"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>A corrente induzida se opõe à variação do fluxo que a produziu: se o ímã se aproxima, a bobina o repele.</p><p>Para repelir um polo norte, a face da bobina vira norte. Ao afastar o ímã, a corrente inverte e passa a atraí-lo.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> No modo ímã, observe o sinal da fem: ele se inverte quando o ímã passa do centro e começa a se afastar.</p><span class=\"lab-ref\">inducao?mode=ima</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-refracao-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Óptica Geométrica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>O índice de refração de um vidro é 1,5. Considere a velocidade da luz no vácuo igual a 3,0 × 10⁸ m/s.</p>",
+  "stemHtml": "A velocidade da luz nesse vidro é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1,0 × 10⁸ m/s"
+   },
+   {
+    "letter": "B",
+    "html": "1,5 × 10⁸ m/s"
+   },
+   {
+    "letter": "C",
+    "html": "2,0 × 10⁸ m/s"
+   },
+   {
+    "letter": "D",
+    "html": "3,0 × 10⁸ m/s"
+   },
+   {
+    "letter": "E",
+    "html": "4,5 × 10⁸ m/s",
+    "trap": "4,5 × 10⁸ m/s multiplica em vez de dividir e superaria a velocidade da luz no vácuo."
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>n = c/v ⇒ v = c/n = 3,0 × 10⁸/1,5 = 2,0 × 10⁸ m/s.</p><p>4,5 × 10⁸ m/s multiplica em vez de dividir e superaria a velocidade da luz no vácuo.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste n₁ = 1,0, n₂ = 1,5 e ligue “Ver como onda”: o comprimento de onda no vidro cai para λ/1,5, como a velocidade.</p><span class=\"lab-ref\">refracao?n1=1&amp;n2=1.5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-refracao-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Óptica Geométrica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Óculos polarizados reduzem o reflexo em superfícies de vidro e água. A luz refletida fica totalmente polarizada quando o ângulo de incidência satisfaz tg θ = n₂/n₁ (ângulo de Brewster).</p>",
+  "stemHtml": "Para luz incidindo do ar (n = 1,0) em um vidro com n = 1,5, esse ângulo é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "34°"
+   },
+   {
+    "letter": "B",
+    "html": "42°"
+   },
+   {
+    "letter": "C",
+    "html": "49°"
+   },
+   {
+    "letter": "D",
+    "html": "56°"
+   },
+   {
+    "letter": "E",
+    "html": "90°"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>θ = arctg(1,5) ≈ 56°.</p><p>42° é o ângulo limite do vidro para o ar (sen θ = 1/1,5), que só existe saindo do meio mais refringente.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste n₁ = 1,0 e n₂ = 1,5: o painel de dados mostra o ângulo de Brewster (56,3°). Leve a incidência até ele.</p><span class=\"lab-ref\">refracao?n1=1&amp;n2=1.5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-refracao-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Óptica Geométrica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um feixe de luz monocromática passa do ar para a água.</p>",
+  "stemHtml": "Ao entrar na água, a luz",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "mantém a velocidade e muda a frequência"
+   },
+   {
+    "letter": "B",
+    "html": "mantém a frequência e diminui a velocidade e o comprimento de onda"
+   },
+   {
+    "letter": "C",
+    "html": "mantém o comprimento de onda e diminui a frequência"
+   },
+   {
+    "letter": "D",
+    "html": "aumenta a velocidade e a frequência"
+   },
+   {
+    "letter": "E",
+    "html": "muda de cor, porque a frequência diminui"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>A frequência é imposta pela fonte e não muda na fronteira; por isso a cor se mantém.</p><p>Como v = λf e a velocidade cai (v = c/n), o comprimento de onda também diminui na mesma proporção.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Com n₂ &gt; n₁, ligue “Ver como onda” e observe as frentes ficarem mais próximas no segundo meio.</p><span class=\"lab-ref\">refracao?n1=1&amp;n2=1.5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-lentes-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Óptica Geométrica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um objeto é colocado a 30 cm de uma lente convergente de distância focal 10 cm.</p>",
+  "stemHtml": "O aumento linear transversal da imagem formada é",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "−2"
+   },
+   {
+    "letter": "B",
+    "html": "−0,5"
+   },
+   {
+    "letter": "C",
+    "html": "+0,5"
+   },
+   {
+    "letter": "D",
+    "html": "+1"
+   },
+   {
+    "letter": "E",
+    "html": "+2"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>1/f = 1/p + 1/p′ ⇒ 1/p′ = 1/10 − 1/30 = 2/30 ⇒ p′ = 15 cm.</p><p>A = −p′/p = −15/30 = −0,5: imagem real, invertida e com metade do tamanho. +0,5 ignora a inversão.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Lente convergente, f = 10 cm, objeto a 30 cm: o painel mostra p′ e o aumento.</p><span class=\"lab-ref\">lentes?el=convergente&amp;fAbs=10&amp;p=30</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-lentes-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Óptica Geométrica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um espelho de maquiagem é côncavo, com distância focal de 20 cm. Uma pessoa posiciona o rosto a 10 cm do espelho.</p>",
+  "stemHtml": "A imagem do rosto é",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "real, invertida e duas vezes maior"
+   },
+   {
+    "letter": "B",
+    "html": "virtual, direita e duas vezes maior"
+   },
+   {
+    "letter": "C",
+    "html": "virtual, direita e com metade do tamanho"
+   },
+   {
+    "letter": "D",
+    "html": "real, direita e do mesmo tamanho"
+   },
+   {
+    "letter": "E",
+    "html": "imprópria (no infinito)"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>1/p′ = 1/20 − 1/10 = −1/20 ⇒ p′ = −20 cm (imagem virtual, atrás do espelho).</p><p>A = −p′/p = 20/10 = +2: direita e ampliada. A imagem só seria imprópria com o rosto exatamente no foco.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Espelho côncavo, f = 20 cm, objeto a 10 cm: veja a imagem virtual atrás do espelho.</p><span class=\"lab-ref\">lentes?el=concavo&amp;fAbs=20&amp;p=10</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-lentes-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Óptica Geométrica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>No olho míope, a imagem de objetos distantes se forma antes da retina.</p>",
+  "stemHtml": "Para corrigir a miopia, usam-se lentes",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "convergentes, que aproximam a imagem do cristalino"
+   },
+   {
+    "letter": "B",
+    "html": "convergentes, que afastam a imagem da retina"
+   },
+   {
+    "letter": "C",
+    "html": "bifocais, que juntam duas lentes convergentes"
+   },
+   {
+    "letter": "D",
+    "html": "cilíndricas, que corrigem a curvatura da córnea"
+   },
+   {
+    "letter": "E",
+    "html": "divergentes, que fazem a imagem se formar mais longe, sobre a retina"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>O olho míope converge demais. Uma lente divergente (vergência negativa) abre o feixe antes que ele chegue ao olho.</p><p>Assim a imagem se desloca para trás, até a retina. Lentes cilíndricas corrigem o astigmatismo.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Compare a mesma distância do objeto com lente convergente e divergente: a divergente forma imagem virtual mais próxima.</p><span class=\"lab-ref\">lentes?el=convergente&amp;fAbs=10&amp;p=15</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-ondas-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em uma corda, ondas se propagam a 20 m/s. Uma das extremidades é sacudida 4 vezes por segundo.</p>",
+  "stemHtml": "O comprimento de onda produzido é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,2 m",
+    "trap": "0,2 m faz f/v."
+   },
+   {
+    "letter": "B",
+    "html": "2,5 m"
+   },
+   {
+    "letter": "C",
+    "html": "5 m"
+   },
+   {
+    "letter": "D",
+    "html": "10 m"
+   },
+   {
+    "letter": "E",
+    "html": "80 m",
+    "trap": "80 m multiplica velocidade e frequência."
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>v = λ·f ⇒ λ = v/f = 20/4 = 5 m.</p><p>80 m multiplica velocidade e frequência; 0,2 m faz f/v.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste T = 20 N e μ = 0,05 kg/m (v = 20 m/s), oscilador a 4 Hz e ponta sem fim; meça o comprimento de onda.</p><span class=\"lab-ref\">ondas?T=20&amp;mu=0.05&amp;source=oscilador&amp;end=sem-fim&amp;f=4</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-ondas-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um violonista aperta a tarraxa e a tração em uma corda passa de 5 N para 20 N.</p>",
+  "stemHtml": "A velocidade das ondas nessa corda",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "dobra"
+   },
+   {
+    "letter": "B",
+    "html": "não muda"
+   },
+   {
+    "letter": "C",
+    "html": "cai pela metade"
+   },
+   {
+    "letter": "D",
+    "html": "quadruplica"
+   },
+   {
+    "letter": "E",
+    "html": "fica 16 vezes maior"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>v = √(T/μ): a velocidade cresce com a raiz da tração.</p><p>T multiplicada por 4 ⇒ v multiplicada por √4 = 2. Por isso a nota fica mais aguda (f = v/λ).</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Com μ = 0,05 kg/m, compare a velocidade com T = 5 N e com T = 20 N.</p><span class=\"lab-ref\">ondas?T=5&amp;mu=0.05</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-ondas-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Ondulatória",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um pulso para cima percorre uma corda até chegar a uma extremidade presa a uma parede.</p>",
+  "stemHtml": "Após a reflexão, o pulso",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "desaparece, porque a parede absorve toda a energia"
+   },
+   {
+    "letter": "B",
+    "html": "volta para cima, com a mesma forma"
+   },
+   {
+    "letter": "C",
+    "html": "volta invertido (para baixo)"
+   },
+   {
+    "letter": "D",
+    "html": "atravessa a parede e continua"
+   },
+   {
+    "letter": "E",
+    "html": "volta com o dobro da velocidade"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>A ponta presa não pode se mover: a parede aplica na corda uma força oposta, e o pulso volta invertido (inversão de fase).</p><p>Em uma extremidade livre o pulso volta do mesmo lado. A velocidade depende só da corda, não da reflexão.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Envie um pulso com extremidade fixa e depois com extremidade livre e compare o pulso refletido.</p><span class=\"lab-ref\">ondas?source=pulso&amp;end=fixa</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-calorimetria-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Termologia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Para preparar um banho, uma pessoa mistura, em um recipiente isolado, 200 g de água a 80 °C com 300 g de água a 20 °C.</p>",
+  "stemHtml": "Desprezando perdas de calor, a temperatura final da mistura é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "36 °C"
+   },
+   {
+    "letter": "B",
+    "html": "44 °C"
+   },
+   {
+    "letter": "C",
+    "html": "50 °C",
+    "trap": "50 °C seria a média simples, que ignora as massas."
+   },
+   {
+    "letter": "D",
+    "html": "56 °C"
+   },
+   {
+    "letter": "E",
+    "html": "60 °C"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>Calor cedido = calor recebido: 200·c·(80 − T) = 300·c·(T − 20).</p><p>16 000 − 200T = 300T − 6 000 ⇒ T = 44 °C. 50 °C seria a média simples, que ignora as massas.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Corpo A: água, 0,20 kg, 80 °C. Corpo B: água, 0,30 kg, 20 °C. Coloque em contato e leia a temperatura de equilíbrio.</p><span class=\"lab-ref\">calorimetria?matA=agua&amp;mA=0.2&amp;TA0=80&amp;matB=agua&amp;mB=0.3&amp;TB0=20</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-calorimetria-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Termologia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em um copo isolado com 400 g de água a 30 °C, colocam-se 100 g de gelo a 0 °C. Considere o calor específico da água 1 cal/(g·°C) e o calor latente de fusão do gelo 80 cal/g.</p>",
+  "stemHtml": "Atingido o equilíbrio térmico, o conteúdo do copo estará a",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "8 °C, com todo o gelo derretido"
+   },
+   {
+    "letter": "B",
+    "html": "0 °C, restando gelo na mistura"
+   },
+   {
+    "letter": "C",
+    "html": "6 °C, com todo o gelo derretido"
+   },
+   {
+    "letter": "D",
+    "html": "15 °C, com todo o gelo derretido"
+   },
+   {
+    "letter": "E",
+    "html": "24 °C, com todo o gelo derretido"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>Para resfriar a água até 0 °C, ela libera 400·1·30 = 12 000 cal. Derreter todo o gelo exige 100·80 = 8 000 cal: sobra calor, então todo o gelo derrete.</p><p>Os 4 000 cal restantes aquecem os 500 g de água: ΔT = 4 000/500 = 8 °C.</p><p>24 °C é o resultado de quem esquece o calor latente e trata o gelo como água a 0 °C.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Corpo A: gelo, 0,10 kg, 0 °C. Corpo B: água, 0,40 kg, 30 °C. Acompanhe o platô de fusão e a temperatura final.</p><span class=\"lab-ref\">calorimetria?matA=gelo&amp;mA=0.1&amp;TA0=0&amp;matB=agua&amp;mB=0.4&amp;TB0=30</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-gases-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Termologia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um pneu é calibrado com 2,0 atm a 27 °C. Após uma viagem, o ar no interior atinge 57 °C. Considere que o volume do pneu não varia e que o ar se comporta como gás ideal.</p>",
+  "stemHtml": "A nova pressão do ar no pneu é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "2,2 atm"
+   },
+   {
+    "letter": "B",
+    "html": "2,4 atm"
+   },
+   {
+    "letter": "C",
+    "html": "2,6 atm"
+   },
+   {
+    "letter": "D",
+    "html": "4,2 atm",
+    "trap": "4,2 atm vem de usar as temperaturas em °C (2·57/27)."
+   },
+   {
+    "letter": "E",
+    "html": "4,4 atm"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>Com volume constante, p/T é constante, com T em kelvin: 27 °C = 300 K e 57 °C = 330 K.</p><p>p = 2,0·330/300 = 2,2 atm. 4,2 atm vem de usar as temperaturas em °C (2·57/27).</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Fixe o volume (largura da caixa) e registre a pressão a 300 K e a 330 K. A razão entre as pressões é 1,1.</p><span class=\"lab-ref\">gases?T=300</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-gases-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Termologia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Use a equação dos gases ideais, pV = nRT, com R = 0,082 atm·L/(mol·K).</p>",
+  "stemHtml": "O volume ocupado por 1 mol de gás ideal a 0 °C e 1 atm é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1,0 L"
+   },
+   {
+    "letter": "B",
+    "html": "11,2 L"
+   },
+   {
+    "letter": "C",
+    "html": "22,4 L"
+   },
+   {
+    "letter": "D",
+    "html": "24,5 L",
+    "trap": "24,5 L é o volume molar a 25 °C."
+   },
+   {
+    "letter": "E",
+    "html": "44,8 L"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>V = nRT/p = 1·0,082·273/1 ≈ 22,4 L.</p><p>24,5 L é o volume molar a 25 °C.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Registre pontos (p, V, T) e confira que pV/(NT) fica constante: é a mesma constante usada no cálculo.</p><span class=\"lab-ref\">gases</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-ph-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Soluções",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um técnico prepara uma solução aquosa de ácido clorídrico (HCl), um ácido forte, na concentração de 0,010 mol/L.</p>",
+  "stemHtml": "O pH dessa solução é",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "2"
+   },
+   {
+    "letter": "B",
+    "html": "1"
+   },
+   {
+    "letter": "C",
+    "html": "7"
+   },
+   {
+    "letter": "D",
+    "html": "12"
+   },
+   {
+    "letter": "E",
+    "html": "13"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>O HCl se ioniza totalmente: [H⁺] = 0,010 = 10⁻² mol/L.</p><p>pH = −log[H⁺] = 2. Uma solução ácida tem pH menor que 7.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Escolha HCl com 0,010 mol/L e leia o pH antes de abrir a torneira da bureta.</p><span class=\"lab-ref\">ph?anId=HCl&amp;Ca=0.01</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-ph-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Soluções",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Para controlar a qualidade de um vinagre, 25 mL da amostra foram titulados com solução de NaOH 0,10 mol/L, usando fenolftaleína como indicador. A mudança de cor ocorreu após a adição de 20 mL da base.</p>",
+  "stemHtml": "A concentração de ácido acético na amostra é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,04 mol/L"
+   },
+   {
+    "letter": "B",
+    "html": "0,08 mol/L"
+   },
+   {
+    "letter": "C",
+    "html": "0,10 mol/L"
+   },
+   {
+    "letter": "D",
+    "html": "0,125 mol/L",
+    "trap": "0,125 mol/L inverte os volumes."
+   },
+   {
+    "letter": "E",
+    "html": "0,80 mol/L"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>Na equivalência, mol de ácido = mol de base: Ca·25 = 0,10·20.</p><p>Ca = 2/25 = 0,08 mol/L. 0,125 mol/L inverte os volumes.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Escolha ácido acético 0,08 mol/L, 25 mL, NaOH 0,10 mol/L e fenolftaleína. A viragem ocorre em 20 mL.</p><span class=\"lab-ref\">ph?anId=CH3COOH&amp;Ca=0.08&amp;Va=25&amp;Ct=0.1&amp;indId=fenol</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estequiometria-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Estequiometria",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>O gás natural é formado principalmente por metano, que queima segundo CH₄ + 2 O₂ → CO₂ + 2 H₂O. Massas molares: C = 12, H = 1 e O = 16 g/mol.</p>",
+  "stemHtml": "Na combustão completa de 32 g de metano, com oxigênio em excesso, a massa de gás carbônico liberada é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "16 g"
+   },
+   {
+    "letter": "B",
+    "html": "22 g"
+   },
+   {
+    "letter": "C",
+    "html": "44 g"
+   },
+   {
+    "letter": "D",
+    "html": "64 g"
+   },
+   {
+    "letter": "E",
+    "html": "88 g"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>32 g de CH₄ correspondem a 32/16 = 2 mol. A proporção é 1 CH₄ : 1 CO₂.</p><p>Formam-se 2 mol de CO₂ = 2·44 = 88 g.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Escolha a combustão do metano com 32 g de CH₄ e oxigênio sobrando (por exemplo 160 g). Reaja e leia a massa de CO₂.</p><span class=\"lab-ref\">estequiometria?reacao=metano&amp;g0=32&amp;g1=160</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estequiometria-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Estequiometria",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em um experimento, 4 g de hidrogênio reagem com 16 g de oxigênio segundo 2 H₂ + O₂ → 2 H₂O (massas molares: H₂ = 2, O₂ = 32 e H₂O = 18 g/mol).</p>",
+  "stemHtml": "Ao final, a massa de água formada é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "4 g"
+   },
+   {
+    "letter": "B",
+    "html": "9 g"
+   },
+   {
+    "letter": "C",
+    "html": "18 g"
+   },
+   {
+    "letter": "D",
+    "html": "20 g",
+    "trap": "20 g somaria o excesso que não reagiu."
+   },
+   {
+    "letter": "E",
+    "html": "36 g"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>4 g de H₂ = 2 mol (exigiriam 1 mol de O₂); 16 g de O₂ = 0,5 mol. O oxigênio é o limitante.</p><p>0,5 mol de O₂ formam 1 mol de H₂O = 18 g. Sobram 2 g de H₂ (excesso). 20 g somaria o excesso que não reagiu.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Escolha a formação da água com 4 g de H₂ e 16 g de O₂, rendimento 100%.</p><span class=\"lab-ref\">estequiometria?reacao=agua&amp;g0=4&amp;g1=16&amp;yieldPct=100</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-pilhas-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Eletroquímica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>A pilha de Daniell é formada por zinco em solução de Zn²⁺ e cobre em solução de Cu²⁺, ambas 1 mol/L. Os potenciais padrão de redução são: Zn²⁺/Zn = −0,76 V e Cu²⁺/Cu = +0,34 V.</p>",
+  "stemHtml": "A diferença de potencial dessa pilha nas condições padrão é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "−1,10 V"
+   },
+   {
+    "letter": "B",
+    "html": "0,34 V"
+   },
+   {
+    "letter": "C",
+    "html": "0,42 V",
+    "trap": "0,42 V vem de somar os valores sem o sinal correto."
+   },
+   {
+    "letter": "D",
+    "html": "0,76 V"
+   },
+   {
+    "letter": "E",
+    "html": "1,10 V"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>ΔE° = E°(cátodo) − E°(ânodo) = 0,34 − (−0,76) = 1,10 V.</p><p>O zinco, de menor potencial, oxida (ânodo); o cobre reduz (cátodo). 0,42 V vem de somar os valores sem o sinal correto.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Monte Zn | Zn²⁺ 1 mol/L e Cu²⁺ 1 mol/L | Cu sem fonte externa e leia a ddp inicial.</p><span class=\"lab-ref\">pilhas?idA=Zn&amp;idB=Cu&amp;cA=1&amp;cB=1&amp;U=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-pilhas-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Eletroquímica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Na cobreação de uma peça, uma corrente constante de 2,0 A passa por uma solução de Cu²⁺ durante 1 hora. Considere a constante de Faraday 96 500 C/mol e a massa molar do cobre 63,5 g/mol.</p>",
+  "stemHtml": "A massa de cobre depositada na peça é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,59 g"
+   },
+   {
+    "letter": "B",
+    "html": "1,19 g"
+   },
+   {
+    "letter": "C",
+    "html": "2,37 g"
+   },
+   {
+    "letter": "D",
+    "html": "4,74 g",
+    "trap": "4,74 g esquece os 2 elétrons."
+   },
+   {
+    "letter": "E",
+    "html": "7,20 g"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>Carga: Q = i·t = 2,0·3 600 = 7 200 C.</p><p>Cu²⁺ + 2 e⁻ → Cu: 2·96 500 C depositam 63,5 g. m = 7 200·63,5/193 000 ≈ 2,37 g. 4,74 g esquece os 2 elétrons.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Na pilha Zn/Cu, o gráfico de massa mostra o cátodo ganhando cobre; o painel confere Δm = M·∫I dt/(2F).</p><span class=\"lab-ref\">pilhas?idA=Zn&amp;idB=Cu</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estufa-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Química Ambiental",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Se a Terra não tivesse atmosfera, mas mantivesse o mesmo albedo (30%), sua temperatura média seria determinada apenas pelo equilíbrio entre a radiação solar absorvida e a radiação infravermelha emitida.</p>",
+  "stemHtml": "Nessas condições, a temperatura média da superfície seria de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "−273 °C"
+   },
+   {
+    "letter": "B",
+    "html": "−18 °C"
+   },
+   {
+    "letter": "C",
+    "html": "0 °C"
+   },
+   {
+    "letter": "D",
+    "html": "15 °C"
+   },
+   {
+    "letter": "E",
+    "html": "33 °C",
+    "trap": "33 °C é a diferença entre os dois valores."
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>Igualando o absorvido, S(1 − α)/4 ≈ 238 W/m², à emissão σT⁴, obtém-se T ≈ 255 K ≈ −18 °C.</p><p>O efeito estufa natural eleva essa média para cerca de +15 °C; 33 °C é a diferença entre os dois valores.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> O cartão \"Sem efeito estufa\" mostra a temperatura de equilíbrio sem atmosfera para o albedo escolhido.</p><span class=\"lab-ref\">estufa?albedo=0.3</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estufa-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Química Ambiental",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Com o aquecimento global, áreas cobertas de gelo e neve no Ártico estão sendo substituídas por oceano e solo exposto, que são mais escuros.</p>",
+  "stemHtml": "Essa substituição tende a",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "diminuir o albedo, aumentando a absorção de radiação solar e intensificando o aquecimento"
+   },
+   {
+    "letter": "B",
+    "html": "aumentar o albedo, refletindo mais luz e compensando o aquecimento"
+   },
+   {
+    "letter": "C",
+    "html": "não alterar o clima, pois o gelo não interfere no balanço de energia"
+   },
+   {
+    "letter": "D",
+    "html": "reduzir a concentração de CO₂, que é absorvido pelo gelo derretido"
+   },
+   {
+    "letter": "E",
+    "html": "aumentar a emissão de radiação infravermelha e resfriar o planeta"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>Superfícies escuras refletem menos (albedo menor) e absorvem mais energia solar.</p><p>O aquecimento derrete mais gelo, num ciclo de retroalimentação positiva.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Reduza o albedo de 0,30 para 0,25 e simule: a temperatura de equilíbrio sobe vários graus.</p><span class=\"lab-ref\">estufa?albedo=0.25</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-calorimetria-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Termologia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma peça de ferro de 0,50 kg, a 100 °C, é mergulhada em 1,0 kg de água a 20 °C, em um recipiente isolado. Os calores específicos são 450 J/(kg·°C) para o ferro e 4 186 J/(kg·°C) para a água.</p>",
+  "stemHtml": "A temperatura de equilíbrio será de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "21 °C"
+   },
+   {
+    "letter": "B",
+    "html": "24 °C"
+   },
+   {
+    "letter": "C",
+    "html": "40 °C"
+   },
+   {
+    "letter": "D",
+    "html": "60 °C",
+    "trap": "60 °C seria a média simples, que ignora massas e calores específicos."
+   },
+   {
+    "letter": "E",
+    "html": "80 °C"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>Calor cedido = calor recebido: 0,5·450·(100 − T) = 1·4 186·(T − 20).</p><p>22 500 − 225T = 4 186T − 83 720 ⇒ T ≈ 24 °C. 60 °C seria a média simples, que ignora massas e calores específicos.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Corpo A: ferro, 0,50 kg, 100 °C. Corpo B: água, 1,00 kg, 20 °C. Leia a temperatura de equilíbrio.</p><span class=\"lab-ref\">calorimetria?matA=ferro&amp;mA=0.5&amp;TA0=100&amp;matB=agua&amp;mB=1&amp;TB0=20</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-calorimetria-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Termologia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Para preparar um chá, aquecem-se 2,0 kg de água de 20 °C até 70 °C. O calor específico da água é cerca de 4,2 kJ/(kg·°C).</p>",
+  "stemHtml": "A quantidade de calor necessária é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "42 kJ"
+   },
+   {
+    "letter": "B",
+    "html": "210 kJ",
+    "trap": "210 kJ esquece uma das massas."
+   },
+   {
+    "letter": "C",
+    "html": "420 kJ"
+   },
+   {
+    "letter": "D",
+    "html": "840 kJ",
+    "trap": "840 kJ usaria ΔT = 100 °C."
+   },
+   {
+    "letter": "E",
+    "html": "4 200 kJ"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>Q = m·c·ΔT = 2,0·4,2·50 = 420 kJ.</p><p>840 kJ usaria ΔT = 100 °C; 210 kJ esquece uma das massas.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Corpo A: água, 1,0 kg, 20 °C. Corpo B: água, 2,0 kg, 95 °C. O equilíbrio é 70 °C e o cartão “Calor trocado” mostra ≈ 210 kJ: o dobro da massa de A exigiria 420 kJ.</p><span class=\"lab-ref\">calorimetria?matA=agua&amp;mA=1&amp;TA0=20&amp;matB=agua&amp;mB=2&amp;TB0=95</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-calorimetria-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Termologia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um bloco de alumínio e um de chumbo, ambos de 1 kg, recebem a mesma quantidade de calor. Os calores específicos são 900 J/(kg·°C) para o alumínio e 128 J/(kg·°C) para o chumbo.</p>",
+  "stemHtml": "A razão entre a variação de temperatura do chumbo e a do alumínio é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,14"
+   },
+   {
+    "letter": "B",
+    "html": "1,0"
+   },
+   {
+    "letter": "C",
+    "html": "2,3"
+   },
+   {
+    "letter": "D",
+    "html": "7,0"
+   },
+   {
+    "letter": "E",
+    "html": "9,0"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>Com Q e m iguais, ΔT = Q/(m·c) é inversamente proporcional ao calor específico.</p><p>ΔT_Pb/ΔT_Al = 900/128 ≈ 7: o chumbo esquenta cerca de 7 vezes mais. 0,14 é a razão invertida.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Com o corpo B fixo (água), faça uma rodada com 1 kg de alumínio e outra com 1 kg de chumbo no corpo A e compare, para o calor trocado de cada uma, quanto o metal variou de temperatura.</p><span class=\"lab-ref\">calorimetria?matA=aluminio&amp;mA=1&amp;matB=agua</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-gases-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Termologia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em uma seringa vedada, o volume de um gás é reduzido de 10 mL para 5 mL lentamente, sem variação de temperatura.</p>",
+  "stemHtml": "A pressão do gás, em relação à inicial,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "cai a um quarto"
+   },
+   {
+    "letter": "B",
+    "html": "cai pela metade"
+   },
+   {
+    "letter": "C",
+    "html": "não muda"
+   },
+   {
+    "letter": "D",
+    "html": "dobra"
+   },
+   {
+    "letter": "E",
+    "html": "quadruplica"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>Lei de Boyle: a temperatura constante, p·V é constante.</p><p>Volume pela metade ⇒ pressão dobrada: as partículas batem com a mesma rapidez, mas com o dobro da frequência em cada parede.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Mantenha T fixa e reduza a largura da caixa de 10 nm para 5 nm: a pressão medida dobra.</p><span class=\"lab-ref\">gases?Lx=10</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-gases-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Termologia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma amostra de gás ocupa 3,0 L a 300 K e 2,0 atm. Ela é levada a 400 K e 4,0 atm.</p>",
+  "stemHtml": "O novo volume da amostra é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1,1 L"
+   },
+   {
+    "letter": "B",
+    "html": "1,5 L",
+    "trap": "1,5 L considera só a pressão e ignora o aquecimento."
+   },
+   {
+    "letter": "C",
+    "html": "4,5 L"
+   },
+   {
+    "letter": "D",
+    "html": "3,0 L"
+   },
+   {
+    "letter": "E",
+    "html": "2,0 L"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>p₁V₁/T₁ = p₂V₂/T₂ ⇒ V₂ = 2·3·400/(300·4) = 2,0 L.</p><p>As temperaturas precisam estar em kelvin. 1,5 L considera só a pressão e ignora o aquecimento.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Registre p a 300 K com a caixa em 15 nm; aqueça a 400 K e estreite a caixa até a pressão dobrar (10 nm, ou 2/3 do volume).</p><span class=\"lab-ref\">gases?T=300&amp;Lx=15</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-gases-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Física",
+  "topic": "Termologia",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Na mesma temperatura, as moléculas de dois gases têm a mesma energia cinética média. Compare o hélio (massa molar 4 g/mol) com o oxigênio (32 g/mol).</p>",
+  "stemHtml": "A razão entre a velocidade quadrática média das moléculas de hélio e a das de oxigênio é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,35"
+   },
+   {
+    "letter": "B",
+    "html": "1,0"
+   },
+   {
+    "letter": "C",
+    "html": "2,8"
+   },
+   {
+    "letter": "D",
+    "html": "8,0"
+   },
+   {
+    "letter": "E",
+    "html": "64"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>mv²/2 igual para os dois ⇒ v ∝ 1/√M.</p><p>v_He/v_O₂ = √(32/4) = √8 ≈ 2,8. 8,0 esquece a raiz; 1,0 confunde energia igual com velocidade igual.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Na mesma temperatura, compare as distribuições de velocidade do hélio e do oxigênio: o pico do hélio fica bem mais à direita.</p><span class=\"lab-ref\">gases?gasId=He</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-ph-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Soluções",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um produto de limpeza é uma solução de hidróxido de sódio (NaOH) 0,010 mol/L, a 25 °C.</p>",
+  "stemHtml": "O pH dessa solução é",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "2"
+   },
+   {
+    "letter": "B",
+    "html": "7"
+   },
+   {
+    "letter": "C",
+    "html": "10"
+   },
+   {
+    "letter": "D",
+    "html": "12"
+   },
+   {
+    "letter": "E",
+    "html": "14"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>Base forte: [OH⁻] = 0,010 = 10⁻² mol/L ⇒ pOH = 2.</p><p>pH = 14 − pOH = 12. pH 2 é o pOH confundido com o pH.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Escolha NaOH 0,010 mol/L como analito e leia o pH antes de adicionar o ácido.</p><span class=\"lab-ref\">ph?anId=NaOH&amp;Ca=0.01</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-ph-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Soluções",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>O vinagre contém ácido acético, um ácido fraco com Ka = 1,8 × 10⁻⁵. Considere uma solução de ácido acético 0,10 mol/L, a 25 °C (log 1,34 ≈ 0,13).</p>",
+  "stemHtml": "O pH dessa solução é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1,0"
+   },
+   {
+    "letter": "B",
+    "html": "2,9"
+   },
+   {
+    "letter": "C",
+    "html": "4,7"
+   },
+   {
+    "letter": "D",
+    "html": "7,0"
+   },
+   {
+    "letter": "E",
+    "html": "8,7"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>Ácido fraco: [H⁺] ≈ √(Ka·C) = √(1,8 × 10⁻⁶) ≈ 1,34 × 10⁻³ mol/L.</p><p>pH ≈ 2,9. pH 1,0 trataria o ácido como forte; 4,7 é o pKa.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Escolha ácido acético 0,10 mol/L e leia o pH inicial; o painel compara o valor exato com a fórmula aproximada.</p><span class=\"lab-ref\">ph?anId=CH3COOH&amp;Ca=0.1</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-ph-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Soluções",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Na titulação de 25 mL de ácido acético 0,10 mol/L (pKa = 4,74) com NaOH 0,10 mol/L, adicionam-se 12,5 mL da base, metade do necessário para a equivalência.</p>",
+  "stemHtml": "Nesse ponto, o pH da solução é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "2,9"
+   },
+   {
+    "letter": "B",
+    "html": "4,7"
+   },
+   {
+    "letter": "C",
+    "html": "7,0"
+   },
+   {
+    "letter": "D",
+    "html": "8,7"
+   },
+   {
+    "letter": "E",
+    "html": "12,0"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>Na meia-equivalência há quantidades iguais de ácido acético e de acetato: uma solução-tampão.</p><p>Henderson–Hasselbalch: pH = pKa + log([A⁻]/[HA]) = pKa = 4,74. pH 7,0 seria o da equivalência de ácido forte com base forte.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ácido acético 0,10 mol/L, 25 mL, NaOH 0,10 mol/L: adicione 12,5 mL e confira o pH no patamar da curva.</p><span class=\"lab-ref\">ph?anId=CH3COOH&amp;Ca=0.1&amp;Va=25&amp;Ct=0.1</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estequiometria-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Estequiometria",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Na síntese da amônia, N₂ + 3 H₂ → 2 NH₃, reagem 28 g de N₂ com 10 g de H₂. Massas molares: N₂ = 28 g/mol, H₂ = 2 g/mol e NH₃ = 17 g/mol.</p>",
+  "stemHtml": "A massa máxima de amônia que pode ser obtida é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "17 g"
+   },
+   {
+    "letter": "B",
+    "html": "28 g"
+   },
+   {
+    "letter": "C",
+    "html": "34 g"
+   },
+   {
+    "letter": "D",
+    "html": "38 g",
+    "trap": "38 g somaria todas as massas, incluindo o H₂ que sobra."
+   },
+   {
+    "letter": "E",
+    "html": "57 g"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>28 g de N₂ = 1 mol, que exige 3 mol (6 g) de H₂. Há 10 g (5 mol): o H₂ está em excesso e o N₂ é o limitante.</p><p>1 mol de N₂ forma 2 mol de NH₃ = 34 g. 38 g somaria todas as massas, incluindo o H₂ que sobra.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Síntese da amônia com 28 g de N₂ e 10 g de H₂ e rendimento 100%: leia a massa de NH₃.</p><span class=\"lab-ref\">estequiometria?reacao=amonia&amp;g0=28&amp;g1=10&amp;yieldPct=100</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estequiometria-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Estequiometria",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Na mesma síntese da amônia (N₂ + 3 H₂ → 2 NH₃), com 28 g de N₂ e 10 g de H₂, a reação vai até o fim. Massas molares: N₂ = 28 g/mol e H₂ = 2 g/mol.</p>",
+  "stemHtml": "A massa de H₂ que sobra sem reagir é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "4 g"
+   },
+   {
+    "letter": "B",
+    "html": "2 g"
+   },
+   {
+    "letter": "C",
+    "html": "0 g"
+   },
+   {
+    "letter": "D",
+    "html": "6 g"
+   },
+   {
+    "letter": "E",
+    "html": "7 g"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>O N₂ (1 mol) consome 3 mol de H₂ = 6 g.</p><p>Sobram 10 − 6 = 4 g de H₂. 6 g é a massa que reage, não a que sobra.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Na síntese da amônia com 28 g de N₂ e 10 g de H₂, a barra de H₂ não chega a zero: leia o excesso.</p><span class=\"lab-ref\">estequiometria?reacao=amonia&amp;g0=28&amp;g1=10</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estequiometria-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Estequiometria",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>A combustão completa do etanol é C₂H₅OH + 3 O₂ → 2 CO₂ + 3 H₂O. Queimam-se 46 g de etanol com oxigênio em excesso, e o rendimento da reação é de 80%. Massas molares: etanol = 46 g/mol e CO₂ = 44 g/mol.</p>",
+  "stemHtml": "A massa de CO₂ obtida é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "35 g",
+    "trap": "35 g esquece o coeficiente 2."
+   },
+   {
+    "letter": "B",
+    "html": "44 g"
+   },
+   {
+    "letter": "C",
+    "html": "70 g"
+   },
+   {
+    "letter": "D",
+    "html": "88 g"
+   },
+   {
+    "letter": "E",
+    "html": "110 g",
+    "trap": "110 g divide por 0,8 em vez de multiplicar."
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>1 mol de etanol forma 2 mol de CO₂ = 88 g (rendimento teórico).</p><p>80% de 88 g ≈ 70 g. 35 g esquece o coeficiente 2; 110 g divide por 0,8 em vez de multiplicar.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Combustão do etanol com 46 g de etanol, 200 g de O₂ e rendimento 80%: leia a massa de CO₂.</p><span class=\"lab-ref\">estequiometria?reacao=etanol&amp;g0=46&amp;g1=200&amp;yieldPct=80</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-pilhas-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Eletroquímica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma pilha é montada com um eletrodo de cobre em solução de Cu²⁺ e um de prata em solução de Ag⁺, ambas a 1 mol/L. Potenciais padrão de redução: Cu²⁺/Cu = +0,34 V e Ag⁺/Ag = +0,80 V.</p>",
+  "stemHtml": "A diferença de potencial dessa pilha é",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,34 V"
+   },
+   {
+    "letter": "B",
+    "html": "0,46 V"
+   },
+   {
+    "letter": "C",
+    "html": "0,80 V"
+   },
+   {
+    "letter": "D",
+    "html": "1,14 V"
+   },
+   {
+    "letter": "E",
+    "html": "1,26 V"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>Quem tem maior potencial de redução (prata) é o cátodo: ΔE = E_cátodo − E_ânodo = 0,80 − 0,34 = 0,46 V.</p><p>Multiplicar a semirreação da prata por 2 não muda o potencial; 1,26 V cometeria esse erro.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Monte Cu | Cu²⁺ ‖ Ag⁺ | Ag com concentrações de 1 mol/L e leia a ddp.</p><span class=\"lab-ref\">pilhas?idA=Cu&amp;idB=Ag&amp;cA=1&amp;cB=1&amp;U=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-pilhas-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Eletroquímica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Na pilha de Daniell, uma placa de zinco fica em solução de ZnSO₄ e uma de cobre em solução de CuSO₄, ligadas por um fio e por uma ponte salina.</p>",
+  "stemHtml": "Durante o funcionamento da pilha,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "o cobre se oxida e a placa de cobre se desgasta"
+   },
+   {
+    "letter": "B",
+    "html": "os elétrons vão do cobre para o zinco pelo fio"
+   },
+   {
+    "letter": "C",
+    "html": "a solução de CuSO₄ fica mais azul"
+   },
+   {
+    "letter": "D",
+    "html": "o zinco é o ânodo: ele se oxida e sua placa perde massa"
+   },
+   {
+    "letter": "E",
+    "html": "a ponte salina conduz os elétrons entre as soluções"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>O zinco, de menor potencial de redução, oxida (Zn → Zn²⁺ + 2e⁻) e é o ânodo; os elétrons vão pelo fio até o cobre.</p><p>No cátodo, Cu²⁺ se reduz e deposita cobre, então a solução fica menos azul. A ponte salina conduz íons, não elétrons.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Na pilha Zn/Cu, acompanhe os gráficos de massa dos eletrodos e a cor da solução de cobre.</p><span class=\"lab-ref\">pilhas?idA=Zn&amp;idB=Cu</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-pilhas-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Eletroquímica",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Na pilha Zn | Zn²⁺ (1 mol/L) ‖ Cu²⁺ (0,01 mol/L) | Cu, a 25 °C, a ddp padrão é 1,10 V. Pela equação de Nernst, ΔE = ΔE° − (0,059/n)·log([Zn²⁺]/[Cu²⁺]), com n = 2.</p>",
+  "stemHtml": "A ddp dessa pilha é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,98 V"
+   },
+   {
+    "letter": "B",
+    "html": "1,04 V"
+   },
+   {
+    "letter": "C",
+    "html": "1,10 V"
+   },
+   {
+    "letter": "D",
+    "html": "1,16 V",
+    "trap": "1,16 V erra o sinal da correção."
+   },
+   {
+    "letter": "E",
+    "html": "1,22 V"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>log(1/0,01) = 2 ⇒ ΔE = 1,10 − (0,059/2)·2 = 1,10 − 0,059 ≈ 1,04 V.</p><p>Com menos Cu²⁺ para ser reduzido, a pilha fica com ddp menor. 1,16 V erra o sinal da correção.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Monte Zn/Cu com Zn²⁺ a 1 mol/L e Cu²⁺ a 0,01 mol/L e leia a ddp inicial.</p><span class=\"lab-ref\">pilhas?idA=Zn&amp;idB=Cu&amp;cA=1&amp;cB=0.01&amp;U=0</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estufa-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Química Ambiental",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>A potência irradiada por um corpo negro é proporcional à quarta potência de sua temperatura absoluta (P = σ·A·T⁴).</p>",
+  "stemHtml": "Se a temperatura absoluta de uma superfície dobra, a potência que ela irradia fica multiplicada por",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "2"
+   },
+   {
+    "letter": "B",
+    "html": "4"
+   },
+   {
+    "letter": "C",
+    "html": "8"
+   },
+   {
+    "letter": "D",
+    "html": "16"
+   },
+   {
+    "letter": "E",
+    "html": "32"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>P ∝ T⁴ ⇒ (2T)⁴ = 16·T⁴.</p><p>Por isso pequenas variações de temperatura mudam muito a energia emitida para o espaço, e esse é o principal \"freio\" do aquecimento.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Aumente o CO₂ e acompanhe o gráfico “Balanço no topo”: a emissão cresce com a temperatura até voltar a igualar a energia absorvida.</p><span class=\"lab-ref\">estufa</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estufa-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Química Ambiental",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em uma hipótese de \"Terra bola de neve\", o gelo cobre o planeta e o albedo sobe de 0,30 para 0,60. Considere a constante solar de 1 361 W/m², σ = 5,67 × 10⁻⁸ W/(m²·K⁴) e ignore o efeito estufa.</p>",
+  "stemHtml": "A temperatura de equilíbrio radiativo do planeta seria de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "−18 °C"
+   },
+   {
+    "letter": "B",
+    "html": "−30 °C"
+   },
+   {
+    "letter": "C",
+    "html": "−100 °C"
+   },
+   {
+    "letter": "D",
+    "html": "−80 °C"
+   },
+   {
+    "letter": "E",
+    "html": "−52 °C"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>Absorvido por m²: S(1 − α)/4 = 1 361·0,4/4 ≈ 136 W/m².</p><p>T = (136/σ)^¼ ≈ 221 K ≈ −52 °C. −18 °C é o valor atual, com albedo 0,30.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Ajuste o albedo para 0,60: o cartão \"Sem efeito estufa\" mostra a temperatura de equilíbrio radiativo.</p><span class=\"lab-ref\">estufa?albedo=0.6</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estufa-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Química",
+  "topic": "Química Ambiental",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>O efeito estufa natural mantém a temperatura média da Terra cerca de 33 °C acima do que seria sem atmosfera.</p>",
+  "stemHtml": "Esse aquecimento ocorre porque gases como CO₂ e vapor-d’água",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "bloqueiam a entrada da luz visível do Sol"
+   },
+   {
+    "letter": "B",
+    "html": "destroem a camada de ozônio, deixando entrar mais radiação ultravioleta"
+   },
+   {
+    "letter": "C",
+    "html": "são transparentes à luz solar, mas absorvem o infravermelho emitido pela superfície e reemitem parte dele de volta"
+   },
+   {
+    "letter": "D",
+    "html": "refletem a luz solar de volta para o espaço"
+   },
+   {
+    "letter": "E",
+    "html": "produzem calor por reações químicas na atmosfera"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>A superfície, aquecida pelo Sol, emite infravermelho. Os gases-estufa absorvem essa radiação e reemitem em todas as direções, inclusive de volta ao solo.</p><p>O buraco na camada de ozônio é outro problema ambiental, ligado ao ultravioleta.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Aumente a concentração de CO₂ e observe, na cena, o fluxo de infravermelho que a atmosfera devolve à superfície ficar mais largo.</p><span class=\"lab-ref\">estufa</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-selecao-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Biologia",
+  "topic": "Evolução",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Na Inglaterra do século XIX, a fuligem das fábricas escureceu os troncos das árvores. Em poucas décadas, mariposas da espécie Biston betularia de cor escura, antes raras, tornaram-se a maioria nas regiões industriais.</p>",
+  "stemHtml": "A explicação evolutiva para essa mudança é que",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "as mariposas escureceram ao longo da vida para se camuflar, e passaram essa característica aos descendentes"
+   },
+   {
+    "letter": "B",
+    "html": "a fuligem provocou mutações que tornaram as mariposas escuras"
+   },
+   {
+    "letter": "C",
+    "html": "as mariposas claras migraram para regiões não poluídas, deixando apenas as escuras"
+   },
+   {
+    "letter": "D",
+    "html": "as mariposas escuras eram mais fortes e venciam as claras na disputa por alimento"
+   },
+   {
+    "letter": "E",
+    "html": "as mariposas escuras, já existentes, eram menos vistas pelos pássaros e deixavam mais descendentes"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>A variação (claras e escuras) já existia. O ambiente apenas mudou qual variante sobrevivia mais: seleção natural por predação.</p><p>A alternativa A é lamarckista (herança de caracteres adquiridos); o ambiente não cria a mutação.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Comece com casca escura, frequência inicial de C = 0,05 e predação 0,3. Depois mude para casca clara e veja a tendência se inverter.</p><span class=\"lab-ref\">selecao?env=escura&amp;pC0=0.05&amp;s=0.3</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-selecao-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Biologia",
+  "topic": "Evolução",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em uma população em equilíbrio de Hardy–Weinberg, 16% dos indivíduos apresentam o fenótipo recessivo, determinado pelo genótipo cc.</p>",
+  "stemHtml": "A porcentagem esperada de indivíduos heterozigotos (Cc) nessa população é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "24%"
+   },
+   {
+    "letter": "B",
+    "html": "36%"
+   },
+   {
+    "letter": "C",
+    "html": "48%"
+   },
+   {
+    "letter": "D",
+    "html": "52%"
+   },
+   {
+    "letter": "E",
+    "html": "84%"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>q² = 0,16 ⇒ q = 0,4 e p = 0,6.</p><p>2pq = 2·0,6·0,4 = 0,48 = 48%. 84% é a fração com fenótipo dominante (CC + Cc).</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Zere a predação e a mutação, use frequência inicial de C = 0,6 e população grande: a fração de Cc fica perto de 48%.</p><span class=\"lab-ref\">selecao?s=0&amp;mu=0&amp;pC0=0.6&amp;N=3000</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-genetica-1",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Biologia",
+  "topic": "Genética",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>O albinismo é uma condição autossômica recessiva. Um casal de pigmentação normal, ambos heterozigotos (Aa), planeja ter um filho.</p>",
+  "stemHtml": "A probabilidade de que essa criança seja uma menina albina é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "12,5%"
+   },
+   {
+    "letter": "B",
+    "html": "25%"
+   },
+   {
+    "letter": "C",
+    "html": "37,5%"
+   },
+   {
+    "letter": "D",
+    "html": "50%"
+   },
+   {
+    "letter": "E",
+    "html": "75%"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>P(aa) = 1/4 (quadro de Punnett de Aa × Aa).</p><p>P(menina) = 1/2. Eventos independentes: 1/4·1/2 = 1/8 = 12,5%. 25% esquece o sexo.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Monoibridismo, Aa × Aa: a proporção esperada de verdes (aa) é 25%; multiplique por 1/2 para o sexo.</p><span class=\"lab-ref\">genetica?mid=mono&amp;p1=Aa&amp;p2=Aa</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-genetica-2",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Biologia",
+  "topic": "Genética",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma mulher de visão normal, cujo pai era daltônico, casa-se com um homem de visão normal. O daltonismo é recessivo e ligado ao cromossomo X.</p>",
+  "stemHtml": "A probabilidade de que um filho homem desse casal seja daltônico é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0%"
+   },
+   {
+    "letter": "B",
+    "html": "25%"
+   },
+   {
+    "letter": "C",
+    "html": "50%"
+   },
+   {
+    "letter": "D",
+    "html": "75%"
+   },
+   {
+    "letter": "E",
+    "html": "100%"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>A mulher recebeu o Xᵈ do pai, então é portadora (XᴰXᵈ). O homem é XᴰY.</p><p>Filhos homens recebem o Y do pai e um dos X da mãe: metade recebe Xᵈ. Entre todos os filhos (meninos e meninas), seriam 25%.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Herança ligada ao X, mãe XᴰXᵈ × pai XᴰY: entre os meninos, metade é daltônica.</p><span class=\"lab-ref\">genetica?mid=x&amp;p1=XDXd&amp;p2=XDY</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-genetica-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Biologia",
+  "topic": "Genética",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um homem do grupo sanguíneo A, filho de mãe do grupo O, tem filhos com uma mulher do grupo B, filha de pai do grupo O.</p>",
+  "stemHtml": "A probabilidade de que um filho desse casal seja do grupo O é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "25%"
+   },
+   {
+    "letter": "B",
+    "html": "33%"
+   },
+   {
+    "letter": "C",
+    "html": "50%"
+   },
+   {
+    "letter": "D",
+    "html": "75%"
+   },
+   {
+    "letter": "E",
+    "html": "0%, pois nenhum dos pais é do grupo O"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>Cada um recebeu um alelo i do genitor O: o homem é Iᴬi e a mulher é Iᴮi.</p><p>P(ii) = 1/2·1/2 = 1/4 = 25%. Os quatro grupos (A, B, AB, O) são igualmente prováveis.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Grupos ABO, Iᴬi × Iᴮi: o quadro de Punnett mostra 1/4 para cada tipo.</p><span class=\"lab-ref\">genetica?mid=abo&amp;p1=IAi&amp;p2=IBi</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-selecao-3",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Biologia",
+  "topic": "Evolução",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em uma população em equilíbrio de Hardy–Weinberg, a frequência do alelo recessivo c, que determina a cor clara, é 0,3.</p>",
+  "stemHtml": "A porcentagem esperada de indivíduos claros (cc) é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "3%"
+   },
+   {
+    "letter": "B",
+    "html": "9%"
+   },
+   {
+    "letter": "C",
+    "html": "21%"
+   },
+   {
+    "letter": "D",
+    "html": "30%"
+   },
+   {
+    "letter": "E",
+    "html": "42%"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>Os claros são homozigotos recessivos: q² = 0,3² = 0,09 = 9%.</p><p>30% é a frequência do alelo, não do genótipo; 42% é a dos heterozigotos (2pq).</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Zere a predação e a mutação, use frequência inicial de C = 0,7 e população grande: a fração de claras fica perto de 9%.</p><span class=\"lab-ref\">selecao?s=0&amp;mu=0&amp;pC0=0.7&amp;N=3000</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-selecao-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Biologia",
+  "topic": "Evolução",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em uma população de mariposas, os alelos C (escuro, dominante) e c (claro) têm frequências iguais, 0,5, e os genótipos estão em proporções de Hardy–Weinberg. Num bosque de troncos claros, metade das mariposas escuras é comida por pássaros antes de se reproduzir, e nenhuma clara.</p>",
+  "stemHtml": "Entre os sobreviventes, a frequência do alelo c passa a ser",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,50"
+   },
+   {
+    "letter": "B",
+    "html": "0,55"
+   },
+   {
+    "letter": "C",
+    "html": "0,60"
+   },
+   {
+    "letter": "D",
+    "html": "0,67"
+   },
+   {
+    "letter": "E",
+    "html": "0,75"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>Antes: 25% CC, 50% Cc e 25% cc. Sobrevivem 12,5 CC, 25 Cc e 25 cc (em 100), ou seja, 62,5 indivíduos.</p><p>Alelos c: 25 + 2·25 = 75 em 125 alelos ⇒ q = 0,60. 0,75 esqueceria que os heterozigotos escuros também carregam c.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Casca clara, predação s = 0,5, mutação zero e C inicial = 0,5: compare a curva do modelo determinístico na primeira geração.</p><span class=\"lab-ref\">selecao?env=clara&amp;s=0.5&amp;mu=0&amp;pC0=0.5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-selecao-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Biologia",
+  "topic": "Evolução",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Duas populações isoladas da mesma espécie vivem em ambientes iguais, sem seleção. Uma tem 50 indivíduos e a outra, 3 000.</p>",
+  "stemHtml": "Ao longo de muitas gerações, espera-se que",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "as frequências alélicas permaneçam idênticas nas duas"
+   },
+   {
+    "letter": "B",
+    "html": "a população pequena tenha frequências mais instáveis e possa perder um alelo por acaso"
+   },
+   {
+    "letter": "C",
+    "html": "a população grande perca alelos mais depressa"
+   },
+   {
+    "letter": "D",
+    "html": "só a população grande sofra mutações"
+   },
+   {
+    "letter": "E",
+    "html": "a população pequena se adapte melhor ao ambiente"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>A deriva genética é o efeito do acaso na reprodução. Ele é forte em populações pequenas, onde um alelo pode se fixar ou sumir sem vantagem alguma.</p><p>Em populações grandes as flutuações se diluem, e as frequências ficam perto do equilíbrio de Hardy–Weinberg.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Zere a predação e compare N = 50 com N = 3 000, repetindo algumas vezes: a curva de N = 50 oscila muito mais.</p><span class=\"lab-ref\">selecao?s=0&amp;N=50</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-genetica-4",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Biologia",
+  "topic": "Genética",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em ervilhas, a cor amarela (A) domina sobre a verde (a), e a semente lisa (B) domina sobre a rugosa (b). Os genes segregam independentemente. Cruzam-se duas plantas AaBb.</p>",
+  "stemHtml": "A proporção esperada de sementes verdes e rugosas é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1/16"
+   },
+   {
+    "letter": "B",
+    "html": "3/16"
+   },
+   {
+    "letter": "C",
+    "html": "1/4"
+   },
+   {
+    "letter": "D",
+    "html": "9/16"
+   },
+   {
+    "letter": "E",
+    "html": "1/2"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>Verde e rugosa é aabb. P(aa) = 1/4 e P(bb) = 1/4.</p><p>Pela regra do produto: 1/4·1/4 = 1/16. A proporção fenotípica completa é 9 : 3 : 3 : 1.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Diibridismo, AaBb × AaBb: o quadro 4 × 4 tem uma única casa aabb.</p><span class=\"lab-ref\">genetica?mid=di&amp;p1=AaBb&amp;p2=AaBb</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-genetica-5",
+  "source": "authored",
+  "area": "CN",
+  "discipline": "Biologia",
+  "topic": "Genética",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em boca-de-leão, flores vermelhas (VV) cruzadas com brancas (BB) dão plantas de flores rosas (VB). Duas plantas de flores rosas são cruzadas.</p>",
+  "stemHtml": "A proporção esperada de plantas com flores rosas na descendência é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "50%"
+   },
+   {
+    "letter": "B",
+    "html": "25%"
+   },
+   {
+    "letter": "C",
+    "html": "0%"
+   },
+   {
+    "letter": "D",
+    "html": "75%"
+   },
+   {
+    "letter": "E",
+    "html": "100%"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>VB × VB dá 1/4 VV, 1/2 VB e 1/4 BB.</p><p>Com dominância incompleta, genótipo e fenótipo coincidem: 1 vermelha : 2 rosas : 1 branca, ou seja, 50% rosas. 75% aplicaria a proporção 3 : 1 da dominância completa.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Dominância incompleta, VB × VB: compare as proporções esperadas com as sorteadas.</p><span class=\"lab-ref\">genetica?mid=incompleta&amp;p1=VB&amp;p2=VB</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-funcoes-1",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Função Quadrática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>O lucro mensal de uma pequena fábrica, em milhares de reais, é dado por L(x) = −0,5x² + 4x − 2, em que x é a quantidade produzida, em centenas de unidades.</p>",
+  "stemHtml": "O lucro máximo que a fábrica pode obter é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "6 mil reais"
+   },
+   {
+    "letter": "B",
+    "html": "4 mil reais"
+   },
+   {
+    "letter": "C",
+    "html": "2 mil reais"
+   },
+   {
+    "letter": "D",
+    "html": "8 mil reais"
+   },
+   {
+    "letter": "E",
+    "html": "14 mil reais"
+   }
+  ],
+  "answer": "A",
+  "solutionHtml": "<p>O máximo está no vértice: xᵥ = −b/(2a) = −4/(−1) = 4 (400 unidades).</p><p>L(4) = −0,5·16 + 16 − 2 = 6 mil reais. 4 mil confunde xᵥ com o lucro.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Função quadrática com a = −0,5, b = 4 e c = −2: leia o vértice no gráfico.</p><span class=\"lab-ref\">funcoes?kind=quadratica&amp;a=-0.5&amp;b=4&amp;c=-2</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-funcoes-2",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Função Exponencial",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma cultura de bactérias começa com 500 indivíduos e dobra a cada hora, de modo que sua população, em milhares, é P(t) = 0,5·2ᵗ, com t em horas.</p>",
+  "stemHtml": "A cultura atinge 4 mil bactérias após",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "2 horas"
+   },
+   {
+    "letter": "B",
+    "html": "3 horas"
+   },
+   {
+    "letter": "C",
+    "html": "4 horas"
+   },
+   {
+    "letter": "D",
+    "html": "6 horas"
+   },
+   {
+    "letter": "E",
+    "html": "8 horas",
+    "trap": "8 horas confunde o fator multiplicativo com o tempo."
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>0,5·2ᵗ = 4 ⇒ 2ᵗ = 8 ⇒ t = 3 horas.</p><p>8 horas confunde o fator multiplicativo com o tempo.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Função exponencial com base a = 2 e valor inicial c = 0,5: passe o mouse sobre o gráfico em f(x) = 4.</p><span class=\"lab-ref\">funcoes?kind=exponencial&amp;a=2&amp;c=0.5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estatistica-1",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Estatística",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>As notas de oito estudantes em uma avaliação foram: 5, 6, 6, 7, 8, 8, 8 e 9.</p>",
+  "stemHtml": "A mediana dessas notas é",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "6"
+   },
+   {
+    "letter": "B",
+    "html": "7"
+   },
+   {
+    "letter": "C",
+    "html": "7,125"
+   },
+   {
+    "letter": "D",
+    "html": "7,5"
+   },
+   {
+    "letter": "E",
+    "html": "8"
+   }
+  ],
+  "answer": "D",
+  "solutionHtml": "<p>Com 8 valores em ordem, a mediana é a média dos dois centrais (4º e 5º): (7 + 8)/2 = 7,5.</p><p>7,125 é a média aritmética e 8 é a moda.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> No tabuleiro, o painel mostra média, mediana e moda do histograma; a regra dos termos centrais é a mesma.</p><span class=\"lab-ref\">estatistica</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estatistica-2",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Probabilidade",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma moeda honesta é lançada quatro vezes.</p>",
+  "stemHtml": "A probabilidade de se obterem exatamente duas caras é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "6,25%"
+   },
+   {
+    "letter": "B",
+    "html": "25%"
+   },
+   {
+    "letter": "C",
+    "html": "37,5%"
+   },
+   {
+    "letter": "D",
+    "html": "50%"
+   },
+   {
+    "letter": "E",
+    "html": "62,5%"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>P = C(4,2)·(1/2)²·(1/2)² = 6/16 = 37,5%.</p><p>50% é a intuição errada de que \"metade dá cara\"; 6,25% esquece as 6 ordens possíveis.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Tabuleiro com n = 4 fileiras e p = 0,5: a caixa k = 2 recebe cerca de 37,5% das bolinhas.</p><span class=\"lab-ref\">estatistica?n=4&amp;p=0.5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-juros-1",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Matemática Financeira",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um capital de R$ 1 000,00 é aplicado a juros compostos de 10% ao mês.</p>",
+  "stemHtml": "Ao final de 3 meses, o montante será de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "R$ 1 030,00"
+   },
+   {
+    "letter": "B",
+    "html": "R$ 1 100,00"
+   },
+   {
+    "letter": "C",
+    "html": "R$ 1 210,00"
+   },
+   {
+    "letter": "D",
+    "html": "R$ 1 300,00",
+    "trap": "R$ 1 300,00 é o montante a juros simples (sem juros sobre juros)."
+   },
+   {
+    "letter": "E",
+    "html": "R$ 1 331,00"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>M = C·(1 + i)ⁿ = 1 000·1,1³ = 1 331.</p><p>R$ 1 300,00 é o montante a juros simples (sem juros sobre juros).</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Aplicação: capital R$ 1 000, aporte zero, taxa 10% a.m. e prazo 3 meses.</p><span class=\"lab-ref\">juros?mode=aplicacao&amp;C=1000&amp;A=0&amp;rate=10&amp;n=3</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-juros-2",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Matemática Financeira",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um financiamento de R$ 12 000,00 será pago em 12 parcelas mensais pelo Sistema de Amortização Constante (SAC), com juros de 1% ao mês sobre o saldo devedor.</p>",
+  "stemHtml": "O valor da primeira parcela é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "R$ 1 000,00"
+   },
+   {
+    "letter": "B",
+    "html": "R$ 1 066,19",
+    "trap": "R$ 1 066,19 é a parcela fixa da tabela Price."
+   },
+   {
+    "letter": "C",
+    "html": "R$ 1 100,00"
+   },
+   {
+    "letter": "D",
+    "html": "R$ 1 110,00"
+   },
+   {
+    "letter": "E",
+    "html": "R$ 1 120,00"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>No SAC a amortização é fixa: 12 000/12 = R$ 1 000,00.</p><p>Juros do 1º mês: 1% de 12 000 = R$ 120,00. Parcela: R$ 1 120,00. R$ 1 066,19 é a parcela fixa da tabela Price.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Financiamento: valor R$ 12 000, taxa 1% a.m., prazo 12 meses. Avance um mês e leia a parcela SAC.</p><span class=\"lab-ref\">juros?mode=financiamento&amp;PV=12000&amp;rate=1&amp;n=12</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-funcoes-3",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Função Afim",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em uma cidade, a corrida de táxi custa R$ 5,00 de bandeirada mais R$ 2,50 por quilômetro rodado.</p>",
+  "stemHtml": "Uma corrida de 12 km custa",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "R$ 17,50"
+   },
+   {
+    "letter": "B",
+    "html": "R$ 30,00",
+    "trap": "R$ 30,00 esquece a bandeirada."
+   },
+   {
+    "letter": "C",
+    "html": "R$ 35,00"
+   },
+   {
+    "letter": "D",
+    "html": "R$ 60,00"
+   },
+   {
+    "letter": "E",
+    "html": "R$ 90,00",
+    "trap": "R$ 90,00 multiplica a bandeirada também."
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>P(x) = 2,5x + 5 ⇒ P(12) = 30 + 5 = R$ 35,00.</p><p>R$ 30,00 esquece a bandeirada; R$ 90,00 multiplica a bandeirada também.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Função afim com a = 2,5 e b = 5: leia f(12) (amplie a janela, se preciso, ou leia f(4) = 15 e estenda).</p><span class=\"lab-ref\">funcoes?kind=afim&amp;a=2.5&amp;b=5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-funcoes-4",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Função Quadrática",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>O lucro de uma empresa, em milhares de reais, é L(x) = −x² + 8x − 7, em que x é o número de lotes vendidos.</p>",
+  "stemHtml": "A empresa tem lucro positivo quando x está entre 1 e",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "4"
+   },
+   {
+    "letter": "B",
+    "html": "6"
+   },
+   {
+    "letter": "C",
+    "html": "9"
+   },
+   {
+    "letter": "D",
+    "html": "8"
+   },
+   {
+    "letter": "E",
+    "html": "7"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>Raízes: Δ = 64 − 28 = 36 ⇒ x = (−8 ± 6)/(−2) ⇒ x = 1 ou x = 7.</p><p>Com a &lt; 0 a parábola é positiva entre as raízes. 4 é o vértice, onde o lucro é máximo.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Função quadrática com a = −1, b = 8 e c = −7: o painel mostra as raízes por Bhaskara e por busca numérica.</p><span class=\"lab-ref\">funcoes?kind=quadratica&amp;a=-1&amp;b=8&amp;c=-7</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-funcoes-5",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Função Exponencial",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um medicamento tem meia-vida de 1 hora no organismo. Um paciente recebe uma dose de 4 mg, e a quantidade restante é Q(t) = 4·(0,5)ᵗ, com t em horas.</p>",
+  "stemHtml": "Após 3 horas, restam no organismo",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "0,25 mg"
+   },
+   {
+    "letter": "B",
+    "html": "0,5 mg"
+   },
+   {
+    "letter": "C",
+    "html": "1,0 mg"
+   },
+   {
+    "letter": "D",
+    "html": "1,33 mg",
+    "trap": "1,33 mg dividiria 4 por 3, como se o decaimento fosse linear."
+   },
+   {
+    "letter": "E",
+    "html": "2,0 mg"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>Q(3) = 4·0,5³ = 4/8 = 0,5 mg.</p><p>1,33 mg dividiria 4 por 3, como se o decaimento fosse linear.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Função exponencial com base a = 0,5 e valor inicial c = 4: leia f(3).</p><span class=\"lab-ref\">funcoes?kind=exponencial&amp;a=0.5&amp;c=4</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estatistica-3",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Estatística",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Em cinco dias, uma loja vendeu 2, 3, 3, 5 e 7 bicicletas.</p>",
+  "stemHtml": "A média diária de vendas foi de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "3"
+   },
+   {
+    "letter": "B",
+    "html": "3,5"
+   },
+   {
+    "letter": "C",
+    "html": "4"
+   },
+   {
+    "letter": "D",
+    "html": "5"
+   },
+   {
+    "letter": "E",
+    "html": "20"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>Média = (2 + 3 + 3 + 5 + 7)/5 = 20/5 = 4.</p><p>3 é a moda e também a mediana; 20 é a soma.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> O painel do tabuleiro calcula média, mediana e moda a partir das contagens de cada caixa; o cálculo é o mesmo.</p><span class=\"lab-ref\">estatistica</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estatistica-4",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Probabilidade",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma moeda honesta é lançada 20 vezes. O número de caras segue uma distribuição binomial, com média np e variância np(1 − p).</p>",
+  "stemHtml": "O desvio padrão do número de caras é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1,6"
+   },
+   {
+    "letter": "B",
+    "html": "2,2"
+   },
+   {
+    "letter": "C",
+    "html": "4,5"
+   },
+   {
+    "letter": "D",
+    "html": "5,0"
+   },
+   {
+    "letter": "E",
+    "html": "10"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>Variância = 20·0,5·0,5 = 5. Desvio padrão = √5 ≈ 2,2.</p><p>5,0 é a variância; 10 é a média.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Tabuleiro com n = 20 fileiras e p = 0,5: o painel mostra o desvio padrão teórico e o medido.</p><span class=\"lab-ref\">estatistica?n=20&amp;p=0.5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-estatistica-5",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Probabilidade",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Três moedas honestas são lançadas ao mesmo tempo.</p>",
+  "stemHtml": "A probabilidade de sair pelo menos uma cara é de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "12,5%"
+   },
+   {
+    "letter": "B",
+    "html": "37,5%"
+   },
+   {
+    "letter": "C",
+    "html": "50%"
+   },
+   {
+    "letter": "D",
+    "html": "75%"
+   },
+   {
+    "letter": "E",
+    "html": "87,5%"
+   }
+  ],
+  "answer": "E",
+  "solutionHtml": "<p>É mais fácil calcular o complemento: P(nenhuma cara) = (1/2)³ = 1/8.</p><p>P(pelo menos uma) = 1 − 1/8 = 7/8 = 87,5%. 37,5% é a probabilidade de exatamente uma cara.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Tabuleiro com n = 3 e p = 0,5: some as caixas k = 1, 2 e 3 (ou subtraia a caixa k = 0 do total).</p><span class=\"lab-ref\">estatistica?n=3&amp;p=0.5</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-juros-3",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Matemática Financeira",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um capital de R$ 2 000,00 é aplicado a juros simples de 3% ao mês.</p>",
+  "stemHtml": "Após 6 meses, o montante será de",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "R$ 2 060,00"
+   },
+   {
+    "letter": "B",
+    "html": "R$ 2 180,00"
+   },
+   {
+    "letter": "C",
+    "html": "R$ 2 360,00"
+   },
+   {
+    "letter": "D",
+    "html": "R$ 2 388,10",
+    "trap": "R$ 2 388,10 seria o montante a juros compostos."
+   },
+   {
+    "letter": "E",
+    "html": "R$ 2 600,00"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>J = C·i·t = 2 000·0,03·6 = R$ 360,00. M = 2 000 + 360 = R$ 2 360,00.</p><p>R$ 2 388,10 seria o montante a juros compostos.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Aplicação: capital R$ 2 000, aporte zero, taxa 3% a.m. e prazo 6 meses; compare as curvas simples e composta.</p><span class=\"lab-ref\">juros?mode=aplicacao&amp;C=2000&amp;A=0&amp;rate=3&amp;n=6</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-juros-4",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Matemática Financeira",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Uma aplicação rende 1% ao mês, a juros compostos.</p>",
+  "stemHtml": "A taxa anual equivalente é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "1%"
+   },
+   {
+    "letter": "B",
+    "html": "12%"
+   },
+   {
+    "letter": "C",
+    "html": "12,7%"
+   },
+   {
+    "letter": "D",
+    "html": "13,5%"
+   },
+   {
+    "letter": "E",
+    "html": "120%"
+   }
+  ],
+  "answer": "C",
+  "solutionHtml": "<p>(1 + i_a) = (1,01)¹² ≈ 1,1268 ⇒ i_a ≈ 12,7% ao ano.</p><p>12% é a taxa proporcional, que só vale para juros simples.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Capital R$ 1 000, taxa 1% a.m., prazo 12 meses: o painel mostra a taxa equivalente.</p><span class=\"lab-ref\">juros?mode=aplicacao&amp;C=1000&amp;A=0&amp;rate=1&amp;n=12</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ },
+ {
+  "externalId": "lab-juros-5",
+  "source": "authored",
+  "area": "MT",
+  "discipline": "Matemática",
+  "topic": "Matemática Financeira",
+  "application": "Laboratório Virtual",
+  "contextHtml": "<p>Um financiamento de R$ 10 000,00 será pago em 12 parcelas mensais iguais (tabela Price), com juros de 2% ao mês. Use (1,02)⁻¹² ≈ 0,7885.</p>",
+  "stemHtml": "O valor de cada parcela é de, aproximadamente,",
+  "alternatives": [
+   {
+    "letter": "A",
+    "html": "R$ 833,33",
+    "trap": "R$ 833,33 ignora os juros."
+   },
+   {
+    "letter": "B",
+    "html": "R$ 945,60"
+   },
+   {
+    "letter": "C",
+    "html": "R$ 1 000,00"
+   },
+   {
+    "letter": "D",
+    "html": "R$ 1 033,33",
+    "trap": "R$ 1 033,33 é a primeira parcela do SAC."
+   },
+   {
+    "letter": "E",
+    "html": "R$ 1 200,00"
+   }
+  ],
+  "answer": "B",
+  "solutionHtml": "<p>PMT = PV·i/(1 − (1 + i)⁻ⁿ) = 10 000·0,02/(1 − 0,7885) ≈ 200/0,2115 ≈ R$ 945,60.</p><p>R$ 833,33 ignora os juros; R$ 1 033,33 é a primeira parcela do SAC.</p><div class=\"lab-roteiro\"><p><strong>Confira no simulador.</strong> Financiamento: R$ 10 000, taxa 2% a.m., 12 meses: leia a parcela Price e compare com a primeira do SAC.</p><span class=\"lab-ref\">juros?mode=financiamento&amp;PV=10000&amp;rate=2&amp;n=12</span></div>",
+  "prerequisites": [],
+  "rightsCleared": true,
+  "rightsNote": "Questão autoral do Laboratório Virtual (apps/lab). Direitos confirmados por Charly (confirmado no chat) em 18/11/2026."
+ }
+]

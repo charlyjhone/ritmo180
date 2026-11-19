@@ -1,6 +1,7 @@
-// Tarefa periódica sobre as respostas de todas as escolas. Grava só agregados, sem dado pessoal.
+// Tarefa periódica sobre as respostas de todas as escolas, menos visitantes. Grava só agregados, sem dado pessoal.
 import { calibrateItem, estimateTheta, MIN_RESPONSES_TO_CALIBRATE, type IrtParams } from "@ritmo/engine";
 import type { Database, Tx } from "../../platform/db.ts";
+import { NOT_GUEST_ATTEMPT } from "../identity/index.ts";
 import { refreshSnapshot } from "../practice/index.ts";
 
 const MIN_RESPONSES_TO_FLAG = 30;
@@ -15,7 +16,7 @@ async function refreshStats(tx: Tx): Promise<void> {
     SELECT item_id,
       percentile_cont(0.5) WITHIN GROUP (ORDER BY total_ms) FILTER (WHERE correct AND valid),
       count(*) FILTER (WHERE correct AND valid), count(*), now()
-    FROM attempts GROUP BY item_id
+    FROM attempts a WHERE ${NOT_GUEST_ATTEMPT} GROUP BY item_id
     ON CONFLICT (item_id) DO UPDATE SET median_correct_ms = excluded.median_correct_ms,
       correct_samples = excluded.correct_samples, responses = excluded.responses, updated_at = now()`);
 }
@@ -25,7 +26,7 @@ async function anchoredThetas(tx: Tx): Promise<Map<string, number>> {
   const rows = await tx.query(`
     SELECT a.student_id, a.area, a.correct, i.irt_a, i.irt_b, i.irt_c
     FROM attempts a JOIN items i ON i.id = a.item_id
-    WHERE a.valid AND a.mode <> 'guided' AND i.calibration IN ('official','calibrated') AND i.irt_a IS NOT NULL`);
+    WHERE a.valid AND ${NOT_GUEST_ATTEMPT} AND a.mode <> 'guided' AND i.calibration IN ('official','calibrated') AND i.irt_a IS NOT NULL`);
   const grouped = new Map<string, { params: IrtParams; correct: boolean }[]>();
   for (const r of rows) {
     const key = `${r.student_id}|${r.area}`;
@@ -47,7 +48,7 @@ export async function runCalibration(db: Database, now: number) {
     const thetas = await anchoredThetas(tx);
     const rows = await tx.query(`
       SELECT a.item_id, a.student_id, a.area, a.correct, i.calibration
-      FROM attempts a JOIN items i ON i.id = a.item_id WHERE a.valid AND i.status = 'published'`);
+      FROM attempts a JOIN items i ON i.id = a.item_id WHERE a.valid AND ${NOT_GUEST_ATTEMPT} AND i.status = 'published'`);
     const byItem = new Map<string, { theta: number; correct: boolean }[]>();
     const calibrationOf = new Map<string, string>();
     for (const r of rows) {
@@ -83,7 +84,7 @@ export async function runCalibration(db: Database, now: number) {
     }
 
     const slow = await tx.query(`
-      SELECT a.item_id FROM attempts a WHERE a.valid GROUP BY a.item_id
+      SELECT a.item_id FROM attempts a WHERE a.valid AND ${NOT_GUEST_ATTEMPT} GROUP BY a.item_id
       HAVING count(*) >= ${MIN_RESPONSES_TO_FLAG} AND percentile_cont(0.5) WITHIN GROUP (ORDER BY a.total_ms) > ${SLOW_FACTOR} * avg(a.target_ms)`);
     for (const r of slow) await flagItem(tx, r.item_id, FLAG_SLOW);
 

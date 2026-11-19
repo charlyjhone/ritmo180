@@ -1,0 +1,20 @@
+import { createContext, useCallback, useContext, useRef, useState, type ReactNode } from "react";
+
+const ToastContext = createContext<(message: string) => void>(() => {});
+export const useToast = () => useContext(ToastContext);
+
+export function ToastProvider({ children }: { children: ReactNode }) {
+  const [message, setMessage] = useState<string | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const show = useCallback((text: string) => {
+    setMessage(text);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setMessage(null), 3200);
+  }, []);
+  return (
+    <ToastContext.Provider value={show}>
+      {children}
+      <div aria-live="polite">{message ? <div className="toast" role="status">{message}</div> : null}</div>
+    </ToastContext.Provider>
+  );
+}

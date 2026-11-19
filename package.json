@@ -9,14 +9,22 @@
   "scripts": {
     "dev:api": "node --watch apps/api/src/main.ts",
     "dev:web": "npm run dev -w @ritmo/web",
-    "build": "npm run build -w @ritmo/web",
+    "dev:lab": "npm run dev -w @ritmo/lab",
+    "build": "npm run build -w @ritmo/web && npm run build -w @ritmo/lab",
     "start": "node apps/api/src/main.ts",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p apps/lab/tsconfig.json",
     "check": "npm run typecheck && npm test",
     "db:seed": "node apps/api/src/cli/seed.ts",
     "db:calibrate": "node apps/api/src/cli/calibrate.ts",
-    "ingest": "node apps/api/src/cli/ingest.ts"
+    "ingest": "node apps/api/src/cli/ingest.ts",
+    "content:liberar": "node apps/api/src/cli/release.ts",
+    "content:completar": "node apps/api/src/cli/complete.ts",
+    "content:laboratorio": "LAB_EXPORTAR=1 vitest run apps/lab/src/questoes/exportar.test.ts",
+    "conta:admin": "node apps/api/src/cli/account.ts admin",
+    "conta:senha": "node apps/api/src/cli/account.ts senha",
+    "conta:coordenacao": "node apps/api/src/cli/account.ts coordenacao",
+    "turma": "sh scripts/abrir-para-turma.sh"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

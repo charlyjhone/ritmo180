@@ -1,7 +1,7 @@
 // Painel do aluno e resumo da família. Tudo vem das tentativas, sem número fixo.
 import { AREAS, type FamilyChild, type StudentDashboard } from "@ritmo/contracts";
 import {
-  bestStreak, DEFAULT_SECONDS_PER_QUESTION, diagnoseTime, PHASE_LABEL, ritmoSummary, STAGES, trainingStreak, weeklyRitmo,
+  bestStreak, DEFAULT_SECONDS_PER_QUESTION, diagnoseTime, nextEnem, PHASE_LABEL, ritmoSummary, STAGES, trainingStreak, weeklyRitmo,
   type Phase,
 } from "@ritmo/engine";
 import type { Tx } from "../../platform/db.ts";
@@ -11,6 +11,7 @@ import { computeSnapshot, extraMinutesOf, irtFor, loadAttempts, pendingDiagnosti
 import { readingHistory } from "../reading/index.ts";
 
 const WEEKS = 6;
+const DEFAULT_WEEKLY_QUESTIONS = 35;
 const RECENT_FOR_GAPS = 200;
 
 async function gapsOf(tx: Tx, attempts: readonly StoredAttempt[]) {
@@ -39,6 +40,8 @@ export async function studentDashboard(tx: Tx, student: { id: string; name: stri
   const timestamps = attempts.map((a) => a.answeredAt);
   const items = await loadItems(tx, attempts.map((a) => a.itemId));
   const disciplineOf = new Map([...items.values()].map((i) => [i.topic, i.discipline]));
+  const scores = AREAS.map((area) => scoreViewOf(area, snapshot.thetas[area]));
+  const measured = new Set(scores.filter((s) => s.score !== null).map((s) => s.area));
   return {
     student: { name: student.name, grade: student.grade, className: klass?.name ?? null },
     ritmo: {
@@ -54,15 +57,30 @@ export async function studentDashboard(tx: Tx, student: { id: string; name: stri
       diagnosis: diagnosis?.message ?? null,
       bottleneck: diagnosis?.bottleneck ? PHASE_LABEL[diagnosis.bottleneck as Phase] : null,
     },
-    scores: AREAS.map((area) => scoreViewOf(area, snapshot.thetas[area])),
+    scores,
     streak: { current: trainingStreak(timestamps, now), best: bestStreak(timestamps) },
     skills: Object.entries(snapshot.mastery)
       .map(([topic, m]) => ({ topic, discipline: disciplineOf.get(topic) ?? "", stage: m.stage, stageName: STAGES[m.stage - 1]!, mastery: Math.round(m.mastery * 100), attempts: m.attempts }))
       .sort((x, y) => x.mastery - y.mastery),
     gaps: await gapsOf(tx, attempts),
     plan: await previewPlan(tx, student.id, now),
-    diagnosticPending: await pendingDiagnostics(tx, student),
+    diagnosticPending: (await pendingDiagnostics(tx, student)).filter((area) => !measured.has(area)),
     syncedAttempts: attempts.length,
+    enem: nextEnem(now),
+    goal: await weeklyGoal(tx, student.id, timestamps, now),
+  };
+}
+
+/** A semana começa na segunda-feira, no horário de Brasília. */
+async function weeklyGoal(tx: Tx, studentId: string, timestamps: readonly number[], now: number): Promise<StudentDashboard["goal"]> {
+  const local = new Date(now - TIME_ZONE_MS);
+  const today = Date.UTC(local.getUTCFullYear(), local.getUTCMonth(), local.getUTCDate()) + TIME_ZONE_MS;
+  const monday = today - ((local.getUTCDay() + 6) % 7) * DAY_MS;
+  const row = (await tx.query(`SELECT questions_per_week FROM student_goals WHERE student_id = $1`, [studentId]))[0];
+  return {
+    target: row?.questions_per_week ?? DEFAULT_WEEKLY_QUESTIONS,
+    done: timestamps.filter((t) => t >= monday).length,
+    trainedToday: timestamps.some((t) => t >= today),
   };
 }
 

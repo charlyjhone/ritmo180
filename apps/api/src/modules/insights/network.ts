@@ -56,7 +56,7 @@ export async function networkDashboard(tx: Tx, now: number): Promise<NetworkDash
 
   const headline = released.length === 0
     ? "Nenhuma escola liberada ainda"
-    : `${released.length} escola(s) no ar, ${attempts.active} alunos ativos e ${items.published} questões publicadas`;
+    : `${released.length} ${released.length === 1 ? "escola" : "escolas"} no ar, ${attempts.active} alunos ativos e ${items.published} questões publicadas`;
   return {
     headline,
     metrics: {

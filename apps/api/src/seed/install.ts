@@ -30,6 +30,19 @@ export async function importBanco(db: Database, entries: readonly BancoEntry[], 
   });
 }
 
+/** Publica as questões oficiais em revisão. Só deve rodar depois que alguém confirmar os direitos de uso. */
+export async function releaseOfficialItems(db: Database, confirmedBy: string): Promise<number> {
+  return db.system(async (tx) => {
+    const released = await tx.query(
+      `UPDATE items SET status = 'published', rights_cleared = true, rights_note = coalesce(rights_note, '') || $1, updated_at = now()
+       WHERE source = 'inep_official' AND status = 'review' AND stem_html IS NOT NULL AND alternatives IS NOT NULL AND answer IS NOT NULL RETURNING id`,
+      [` Direitos confirmados por ${confirmedBy}.`],
+    );
+    await setTopicWeights(tx);
+    return released.length;
+  });
+}
+
 export async function installBaseContent(db: Database): Promise<void> {
   await db.system(async (tx) => {
     for (const p of PREREQUISITES) {

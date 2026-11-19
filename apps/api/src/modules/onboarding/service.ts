@@ -97,7 +97,7 @@ export async function commitRoster(tx: Tx, schoolId: string, filename: string, c
     const password = temporaryPassword();
     const { hash, salt } = await hashPassword(password);
     const id = randomUUID();
-    await tx.query(`INSERT INTO users (id, school_id, email, name, role, pass_hash, pass_salt, grade) VALUES ($1,$2,$3,$4,'student',$5,$6,$7)`, [id, schoolId, r.email, r.name, hash, salt, r.grade]);
+    await tx.query(`INSERT INTO users (id, school_id, email, name, role, pass_hash, pass_salt, grade, must_change_password) VALUES ($1,$2,$3,$4,'student',$5,$6,$7,true)`, [id, schoolId, r.email, r.name, hash, salt, r.grade]);
     await tx.query(`INSERT INTO class_students (class_id, student_id, school_id) VALUES ($1,$2,$3)`, [classId, id, schoolId]);
     await tx.query(`INSERT INTO guardian_contacts (student_id, school_id, guardian_email, consent_at) VALUES ($1,$2,$3,$4)`, [id, schoolId, r.guardian, r.consent ? new Date() : null]);
     credentials.push(`"${r.name.replace(/"/g, '""')}",${r.email},${password}`);
@@ -122,6 +122,11 @@ export async function onboardingState(tx: Tx, schoolId: string): Promise<Onboard
      WHERE a.school_id = $1 ORDER BY u.name`,
     [schoolId],
   );
+  const students = await tx.query(
+    `SELECT u.id, u.name, c.name AS class_name FROM users u LEFT JOIN class_students cs ON cs.student_id = u.id LEFT JOIN classes c ON c.id = cs.class_id
+     WHERE u.role = 'student' AND u.school_id = $1 ORDER BY u.name LIMIT 2000`,
+    [schoolId],
+  );
   const blockers: string[] = [];
   if (!s.dpa_signed) blockers.push("Assinar o acordo de tratamento de dados");
   if (!s.dpo_contact) blockers.push("Informar o contato do encarregado de dados");
@@ -137,6 +142,7 @@ export async function onboardingState(tx: Tx, schoolId: string): Promise<Onboard
       id: a.id, student: a.name, className: a.class_name ?? "—", kind: a.kind, extraMinutes: a.extra_minutes,
       targetSeconds: Math.round(DEFAULT_SECONDS_PER_QUESTION * accommodationFactor(a.extra_minutes)), resources: a.resources,
     })),
+    students: students.map((u) => ({ id: u.id, name: u.name, className: u.class_name ?? "—" })),
     diagnostic: { date: s.diagnostic_date ? new Date(s.diagnostic_date).toISOString().slice(0, 10) : null, scope: s.diagnostic_scope },
     released: !!s.released_at,
     blockers,
