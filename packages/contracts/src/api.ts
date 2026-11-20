@@ -140,6 +140,13 @@ export const MISS_REASON_LABELS: Record<MissReason, string> = { content: "Não s
 export const MissReasonInput = z.object({ attemptId: z.string().uuid(), itemId: z.string().uuid(), reason: z.enum(MISS_REASONS) });
 export type MissReasonInput = z.infer<typeof MissReasonInput>;
 
+/** O aluno avisa que a questão parece ter erro; vira um item na fila de revisão do professor. */
+export const ITEM_PROBLEMS = ["answer", "statement", "image", "other"] as const;
+export type ItemProblem = (typeof ITEM_PROBLEMS)[number];
+export const ITEM_PROBLEM_LABELS: Record<ItemProblem, string> = { answer: "O gabarito parece errado", statement: "O enunciado está confuso ou incompleto", image: "Falta imagem, gráfico ou tabela", other: "Outro problema" };
+export const ItemReportInput = z.object({ itemId: z.string().uuid(), problem: z.enum(ITEM_PROBLEMS) });
+export type ItemReportInput = z.infer<typeof ItemReportInput>;
+
 /** Pede uma questão parecida com a que o aluno acabou de errar. */
 export const SiblingRequest = z.object({ sessionId: z.string().uuid(), itemId: z.string().uuid(), exclude: z.array(z.string().uuid()).max(200).default([]) });
 
@@ -440,6 +447,19 @@ export interface SchoolDashboard {
   classes: { name: string; students: number; active: number; ritmo: number | null; avgSeconds: number | null; delta: number | null }[];
   messages: { id: string; from: string; student: string; body: string; at: number; read: boolean }[];
   dataNotice: string | null;
+  /** Uso da plataforma: onde os alunos param e o que usam, para acompanhar o piloto. */
+  usage: SchoolUsage;
+}
+
+export interface SchoolUsage {
+  /** Do cadastro ao hábito, cada etapa contada em alunos. */
+  funnel: { label: string; students: number; note: string }[];
+  /** Alunos que usaram cada ferramenta nos últimos 7 dias. */
+  tools: { label: string; students: number }[];
+  /** Já treinaram, mas não nos últimos 7 dias. */
+  stalled: number;
+  /** Alunos com conta ativa que já fizeram o diagnóstico de alguma área. */
+  diagnostic: number;
 }
 
 export interface FamilyChild {
@@ -466,6 +486,8 @@ export interface NetworkDashboard {
   bank: { area: Area; name: string; official: number; calibrated: number; calibrating: number; catalogOnly: number }[];
   calibration: { model: string; calibrated: number; calibrating: number; reclassified: number; discarded: number };
   integrity: { share: number; tooFast: number; awayThenPerfect: number; guessStreak: number; responses: number };
+  /** Assuntos com poucas questões publicadas: onde o próximo lote de conteúdo rende mais. */
+  thinTopics: { threshold: number; total: number; topics: { discipline: string; topic: string; items: number; hasLesson: boolean }[] };
 }
 
 export const CreateSchool = z.object({

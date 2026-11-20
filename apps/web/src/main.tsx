@@ -1,4 +1,4 @@
-import { StrictMode, useEffect, useRef, useState } from "react";
+import { lazy, StrictMode, Suspense, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, NavLink, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -16,26 +16,33 @@ import "@fontsource/source-serif-4/600.css";
 import "./styles.css";
 import { onQueueChange, pendingCount, startSync } from "./lib/offline.ts";
 import { AccountPage } from "./features/account.tsx";
-import { DiagnosticPage } from "./features/diagnostic.tsx";
-import { ExamList, ResultPage, SittingPage } from "./features/exam.tsx";
-import { FamilyHome } from "./features/family.tsx";
-import { NetworkHome } from "./features/network.tsx";
-import { OnboardingPage } from "./features/onboarding.tsx";
 import { MistakesPage } from "./features/mistakes.tsx";
 import { CardsPage } from "./features/cards.tsx";
 import { applyTextSize, loadTextSize } from "./ui/a11y.tsx";
 import { LessonPage, LessonsIndexPage } from "./features/lessons.tsx";
-import { PeoplePage } from "./features/people.tsx";
 import { PlanPage } from "./features/plan.tsx";
 import { PracticePage } from "./features/practice.tsx";
-import { PrivacyPolicy } from "./features/privacy-policy.tsx";
-import { ReadingPage } from "./features/reading.tsx";
-import { SchoolHome } from "./features/school.tsx";
 import { guestDate, logout, NAV, navLinks, SessionGate, useMe, type NavLinkItem } from "./features/session.tsx";
 import { StudentHome } from "./features/student.tsx";
-import { TeacherHome } from "./features/teacher.tsx";
 import { Pill } from "./ui/kit.tsx";
 import { ToastProvider } from "./ui/toast.tsx";
+import { listenForInstall } from "./lib/habit.ts";
+
+// Telas da equipe e da família ficam em arquivos separados: o celular do aluno não baixa o que não usa.
+const FamilyHome = lazy(() => import("./features/family.tsx").then((m) => ({ default: m.FamilyHome })));
+const NetworkHome = lazy(() => import("./features/network.tsx").then((m) => ({ default: m.NetworkHome })));
+const OnboardingPage = lazy(() => import("./features/onboarding.tsx").then((m) => ({ default: m.OnboardingPage })));
+const PeoplePage = lazy(() => import("./features/people.tsx").then((m) => ({ default: m.PeoplePage })));
+const SchoolHome = lazy(() => import("./features/school.tsx").then((m) => ({ default: m.SchoolHome })));
+const TeacherHome = lazy(() => import("./features/teacher.tsx").then((m) => ({ default: m.TeacherHome })));
+// O que só funciona com internet também vem sob demanda.
+const DiagnosticPage = lazy(() => import("./features/diagnostic.tsx").then((m) => ({ default: m.DiagnosticPage })));
+const ExamList = lazy(() => import("./features/exam.tsx").then((m) => ({ default: m.ExamList })));
+const SittingPage = lazy(() => import("./features/exam.tsx").then((m) => ({ default: m.SittingPage })));
+const ResultPage = lazy(() => import("./features/exam.tsx").then((m) => ({ default: m.ResultPage })));
+const ReadingPage = lazy(() => import("./features/reading.tsx").then((m) => ({ default: m.ReadingPage })));
+const PrivacyPolicy = lazy(() => import("./features/privacy-policy.tsx").then((m) => ({ default: m.PrivacyPolicy })));
+const Loading = () => <div className="state" role="status">Carregando…</div>;
 
 const client = new QueryClient({ defaultOptions: { queries: { retry: 1, staleTime: 30_000 } } });
 
@@ -100,7 +107,7 @@ function Shell() {
           </div>
         </div>
       </header>
-      <main id="main" ref={main} tabIndex={-1}><Outlet /></main>
+      <main id="main" ref={main} tabIndex={-1}><Suspense fallback={<Loading />}><Outlet /></Suspense></main>
     </>
   );
 }
@@ -115,7 +122,7 @@ function Home() {
 
 function Router() {
   const { role } = useMe();
-  if (role === "guardian") return <Routes><Route path="conta" element={<AccountPage />} /><Route path="*" element={<FamilyHome />} /></Routes>;
+  if (role === "guardian") return <Suspense fallback={<Loading />}><Routes><Route path="conta" element={<AccountPage />} /><Route path="*" element={<FamilyHome />} /></Routes></Suspense>;
   return (
     <Routes>
       <Route element={<Shell />}>
@@ -159,6 +166,7 @@ function Router() {
 }
 
 startSync();
+listenForInstall();
 applyTextSize(loadTextSize());
 if (import.meta.env.PROD && "serviceWorker" in navigator) void navigator.serviceWorker.register("/sw.js");
 
@@ -168,7 +176,7 @@ createRoot(document.getElementById("root")!).render(
       <ToastProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="privacidade" element={<PrivacyPolicy />} />
+            <Route path="privacidade" element={<Suspense fallback={<Loading />}><PrivacyPolicy /></Suspense>} />
             <Route path="*" element={<SessionGate><Router /></SessionGate>} />
           </Routes>
         </BrowserRouter>

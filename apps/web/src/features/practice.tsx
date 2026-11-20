@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { CONFIDENCE_LABELS, CONFIDENCES, MISS_REASON_LABELS, MISS_REASONS, type Confidence, type HintResponse, type Letter, type MissReason, type PhaseTimes, type PracticeSessionPack } from "@ritmo/contracts";
+import { CONFIDENCE_LABELS, CONFIDENCES, ITEM_PROBLEM_LABELS, ITEM_PROBLEMS, MISS_REASON_LABELS, MISS_REASONS, type ItemProblem, type Confidence, type HintResponse, type Letter, type MissReason, type PhaseTimes, type PracticeSessionPack } from "@ritmo/contracts";
 import { strategyReport, type StrategyAnswer, type StrategyReport } from "@ritmo/engine";
 import { api, ApiError } from "../lib/api.ts";
 import { clearPack, flushQueue, loadPack, queueAttempt, queueMissReason, savePack } from "../lib/offline.ts";
@@ -49,6 +49,38 @@ function AfterMiss({ attemptId, item, onSibling }: { attemptId: string; item: It
       </div>
       {sibling === "none" ? <p className="note" role="status">Não há outra questão inédita deste assunto agora. Ela fica no caderno de erros para você refazer.</p> : null}
       {sibling === "offline" ? <p className="note" role="status">A questão parecida precisa de internet. Tente de novo quando a conexão voltar.</p> : null}
+    </div>
+  );
+}
+
+/** "Encontrei um erro nesta questão": vai para a fila de revisão do professor, sem o nome do aluno. */
+function ReportProblem({ itemId }: { itemId: string }) {
+  const me = useMe();
+  const [open, setOpen] = useState(false);
+  const [state, setState] = useState<"idle" | "busy" | "sent" | "failed">("idle");
+  if (me.guestUntil) return null;
+  async function send(problem: ItemProblem) {
+    setState("busy");
+    try {
+      await api.post("/api/study/item-report", { itemId, problem });
+      setState("sent");
+    } catch {
+      setState("failed");
+    }
+  }
+  if (state === "sent") return <p className="note report-done" role="status">Obrigado. A questão foi para a revisão dos professores e sai do banco se o erro for confirmado.</p>;
+  return (
+    <div className="report">
+      {open ? (
+        <div role="group" aria-labelledby={`report-${itemId}`}>
+          <div className="label-caps" id={`report-${itemId}`}>QUAL É O PROBLEMA?</div>
+          <div className="btn-row">
+            {ITEM_PROBLEMS.map((p) => <button key={p} className="btn soft slim" type="button" disabled={state === "busy"} onClick={() => void send(p)}>{ITEM_PROBLEM_LABELS[p]}</button>)}
+            <button className="btn later slim" type="button" onClick={() => setOpen(false)}>Cancelar</button>
+          </div>
+          {state === "failed" ? <p className="note" role="alert">Não foi possível enviar agora. Confira a internet e tente de novo.</p> : null}
+        </div>
+      ) : <button className="linkish" type="button" onClick={() => setOpen(true)}>Encontrei um erro nesta questão</button>}
     </div>
   );
 }
@@ -202,6 +234,7 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext, 
             <div className="btn-row">
               <button ref={focusRef} className="btn" type="button" onClick={onNext}>{position + 1 < total ? "Próxima questão" : "Concluir treino"}</button>
             </div>
+            <ReportProblem itemId={item.id} />
           </>
         ) : null}
       </section>

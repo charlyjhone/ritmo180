@@ -551,6 +551,28 @@ describe("ferramentas de estudo", () => {
     expect((await other.post("/api/practice/sibling", { sessionId: pack.sessionId, itemId: items[0]!.id })).statusCode).toBe(404);
   });
 
+  it("o relato de erro na questão vai para a fila de revisão sem o nome do aluno", async () => {
+    const student = as(await login(a.students[5]!));
+    const pack = json<Pack>(await student.post("/api/practice/sessions", { mode: "guided", minutes: 15, discipline: "Física" }));
+    const item = pack.items[0]!;
+    expect((await student.post("/api/study/item-report", { itemId: item.id, problem: "achei feio" })).statusCode).toBe(400);
+    expect((await student.post("/api/study/item-report", { itemId: randomUUID(), problem: "answer" })).statusCode).toBe(404);
+    expect((await student.post("/api/study/item-report", { itemId: item.id, problem: "answer" })).statusCode).toBe(200);
+    // Repetir não duplica nem o relato nem o item da fila.
+    expect((await student.post("/api/study/item-report", { itemId: item.id, problem: "answer" })).statusCode).toBe(200);
+    const rows = await db.system(async (tx) => ({
+      reports: await tx.query(`SELECT problem FROM item_reports WHERE item_id = $1`, [item.id]),
+      flags: await tx.query(`SELECT reason, status FROM item_flags WHERE item_id = $1 AND reason LIKE 'Aluno relatou%'`, [item.id]),
+    }));
+    expect(rows.reports).toHaveLength(1);
+    expect(rows.flags).toEqual([{ reason: "Aluno relatou: o gabarito parece errado", status: "open" }]);
+    const copy = json<{ relatos_de_questao: unknown[] }>(await student.get("/api/privacy/my-data"));
+    expect(copy.relatos_de_questao).toHaveLength(1);
+
+    const teacher = as(await login(a.teacher));
+    expect((await teacher.post("/api/study/item-report", { itemId: item.id, problem: "answer" })).statusCode).toBe(403);
+  });
+
   it("os cartões saem das aulas publicadas e a resposta tira o cartão da fila de hoje", async () => {
     const topic = await physicsTopic();
     await importLessons(db, [{
@@ -859,6 +881,8 @@ describe("visitante", () => {
     const pack = json<PracticeSessionPack>(await visitor.post("/api/practice/sessions", { minutes: 15 }));
     expect(pack.items.length).toBeGreaterThan(0);
     expect((await visitor.get("/api/insights/student")).statusCode).toBe(200);
+    // Relato de erro em questão é só para contas da escola, para a fila de revisão não virar alvo de abuso.
+    expect((await visitor.post("/api/study/item-report", { itemId: pack.items[0]!.id, problem: "answer" })).statusCode).toBe(403);
   });
 
   it("não entra na estatística das questões", async () => {
@@ -938,6 +962,26 @@ describe("privacidade", () => {
   });
 });
 
+describe("privacidade pela escola", () => {
+  it("a direção tira a cópia e registra o pedido que chegou por fora; outra escola não alcança", async () => {
+    const email = a.students.at(-3)!;
+    const id = await db.system(async (tx) => (await tx.query(`SELECT id FROM users WHERE email = $1`, [email]))[0]!.id as string);
+    const coordinator = as(await login(a.coordinator));
+    const copy = json<any>(await coordinator.get(`/api/school/people/${id}/data`));
+    expect(copy.pessoa.email).toBe(email);
+    expect((await coordinator.post(`/api/school/people/${id}/deletion-request`)).statusCode).toBe(200);
+    expect((await coordinator.post(`/api/school/people/${id}/deletion-request`)).statusCode).toBe(409);
+    const open = json<DeletionRequestView[]>(await coordinator.get("/api/school/deletion-requests"));
+    expect(open.map((r) => r.requester)).toContain("Marta Coordenadora");
+    expect((await coordinator.get(`/api/school/people/${randomUUID()}/data`)).statusCode).toBe(404);
+    expect((await as(await login(a.teacher)).get(`/api/school/people/${id}/data`)).statusCode).toBe(403);
+    const audited = await db.system((tx) => tx.query(`SELECT action FROM audit_log WHERE target = $1 ORDER BY at`, [id]));
+    expect(audited.map((r) => r.action)).toEqual(expect.arrayContaining(["privacy.copy", "privacy.deletion_requested"]));
+    // Recusa para não deixar o pedido aberto para os próximos testes.
+    for (const r of open) await coordinator.post(`/api/school/deletion-requests/${r.id}`, { approved: false });
+  });
+});
+
 describe("simulado do professor", () => {
   it("publica com foco, respeita a turma e mostra quem entregou", async () => {
     const teacher = as(await login(a.teacher));
@@ -1009,6 +1053,50 @@ describe("laboratório virtual", () => {
       expect((await site.inject({ url: "/treino" })).body).toContain("ritmo");
     } finally {
       await site.close();
+    }
+  });
+});
+
+describe("estatística das questões", () => {
+  it("marca para revisão a questão que quase ninguém acerta", async () => {
+    const itemId = await db.system(async (tx) => {
+      const [base] = await tx.query(`SELECT a.id, a.item_id FROM attempts a JOIN items i ON i.id = a.item_id JOIN users u ON u.id = a.student_id
+        WHERE a.valid AND i.status = 'published' AND u.guest_expires_at IS NULL ORDER BY a.item_id LIMIT 1`);
+      await tx.exec(`CREATE TEMP TABLE copia AS SELECT * FROM attempts WHERE id = '${base!.id}'`);
+      for (let i = 0; i < 40; i++) {
+        await tx.exec(`UPDATE copia SET id = gen_random_uuid(), correct = false; INSERT INTO attempts SELECT * FROM copia`);
+      }
+      await tx.exec(`DROP TABLE copia`);
+      await tx.query(`UPDATE attempts SET correct = false WHERE item_id = $1`, [base!.item_id]);
+      return base!.item_id as string;
+    });
+    await runCalibration(db, NOW);
+    const flags = await db.system((tx) => tx.query(`SELECT reason FROM item_flags WHERE item_id = $1`, [itemId]));
+    expect(flags.map((f) => f.reason)).toContain("Quase ninguém acerta, menos que no chute: confira o gabarito");
+  });
+});
+
+describe("painéis do piloto", () => {
+  it("a direção vê onde os alunos param e o que usam", async () => {
+    const coordinator = as(await login(a.coordinator));
+    const { usage } = json<any>(await coordinator.get("/api/insights/school"));
+    const [enrolled, started, week, steady] = usage.funnel.map((s: { students: number }) => s.students);
+    expect(enrolled).toBeGreaterThan(0);
+    expect(started).toBeLessThanOrEqual(enrolled);
+    expect(steady).toBeLessThanOrEqual(week);
+    expect(usage.stalled).toBe(started - week);
+    expect(usage.diagnostic).toBeLessThanOrEqual(enrolled);
+    expect(usage.tools.map((t: { label: string }) => t.label)).toContain("Cartões de memorização");
+  });
+
+  it("a rede vê os assuntos com poucas questões, sem as línguas estrangeiras", async () => {
+    const network = as(await login(a.network));
+    const { thinTopics } = json<any>(await network.get("/api/insights/network"));
+    expect(thinTopics.threshold).toBe(15);
+    expect(thinTopics.topics.length).toBeLessThanOrEqual(15);
+    for (const t of thinTopics.topics) {
+      expect(t.items).toBeLessThan(15);
+      expect(["Inglês", "Espanhol"]).not.toContain(t.discipline);
     }
   });
 });

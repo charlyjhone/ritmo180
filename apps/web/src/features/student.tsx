@@ -8,6 +8,8 @@ import { api } from "../lib/api.ts";
 import { trainingLink } from "./focus-picker.tsx";
 import { lessonLink } from "./lessons.tsx";
 import { cardsLink } from "./cards.tsx";
+import { HabitTools } from "./habit.tsx";
+import { recall, remember, SAW_PLAN, WELCOME_CLOSED } from "../lib/habit.ts";
 import { Async, Bar, clock, clockOrDash, Empty, LineChart, Metric, Metrics, PageHead, ScoreMetric, points, TimeStrip } from "../ui/kit.tsx";
 
 const GOAL_CHOICES = [20, 35, 50, 70, 100, 150];
@@ -60,7 +62,7 @@ function Assignments({ list }: { list: StudentDashboard["assignments"] }) {
                 <div className="row-sub">{a.teacher} · {a.done} de {a.questions} questões de {a.topic}{a.dueOn ? ` · até ${dueLabel(a.dueOn)}` : ""}</div>
                 <div style={{ marginTop: 6 }}><Bar pct={(a.done / a.questions) * 100} tone={finished ? "ok" : ""} size="h6" /></div>
               </div>
-              {finished ? <span className="pill good">Feita</span> : a.discipline ? <Link className="btn soft slim" to={trainingLink({ discipline: a.discipline, topic: a.topic })}>Fazer</Link> : null}
+              {finished ? <span className="pill good">Feita</span> : a.discipline ? <Link className="btn soft slim" to={trainingLink({ discipline: a.discipline, topic: a.topic })} aria-label={`Fazer a tarefa ${a.title}`}>Fazer</Link> : null}
             </div>
           );
         })}
@@ -90,9 +92,9 @@ function FinalStretch({ f }: { f: NonNullable<StudentDashboard["finalStretch"]> 
           {f.topics.map((t) => (
             <div className="row-box" key={`${t.discipline}${t.topic}`}>
               <div className="grow"><div className="row-title">{t.topic}</div><div className="row-sub">{t.discipline} · {t.mastery}% de domínio</div></div>
-              <Link className="btn soft slim" to={lessonLink(t)}>Aula</Link>
-              <Link className="btn soft slim" to={cardsLink(t)}>Cartões</Link>
-              <Link className="btn soft slim" to={trainingLink(t)}>Treinar</Link>
+              <Link className="btn soft slim" to={lessonLink(t)} aria-label={`Aula de ${t.topic}`}>Aula</Link>
+              <Link className="btn soft slim" to={cardsLink(t)} aria-label={`Cartões de ${t.topic}`}>Cartões</Link>
+              <Link className="btn soft slim" to={trainingLink(t)} aria-label={`Treinar ${t.topic}`}>Treinar</Link>
             </div>
           ))}
         </div>
@@ -162,6 +164,47 @@ function Today({ d }: { d: StudentDashboard }) {
   );
 }
 
+
+/** Primeiro acesso: três passos que fazem o motor conhecer o aluno, e o lembrete para voltar amanhã. */
+function Welcome({ d }: { d: StudentDashboard }) {
+  const [closed, setClosed] = useState(() => recall(WELCOME_CLOSED) === "1");
+  const steps = [
+    { done: d.diagnosticPending.length === 0, title: "Faça o diagnóstico", detail: "Algumas questões por área mostram onde você está. O plano e o treino se ajustam a isso.", to: d.diagnosticPending[0] ? `/diagnostico/${d.diagnosticPending[0]}` : "/", action: "Começar diagnóstico" },
+    { done: recall(SAW_PLAN) === "1", title: "Conheça seu plano", detail: "Um foco por dia até o ENEM, escolhido pelas suas lacunas.", to: "/plano", action: "Ver o plano" },
+    { done: d.goal.done > 0 || d.skills.length > 0, title: "Faça o primeiro treino", detail: "Cerca de 15 minutos. O motor mede o seu tempo em cada etapa da questão.", to: "/treino", action: "Treinar" },
+  ];
+  const left = steps.filter((s) => !s.done).length;
+  if (closed || d.streak.best > 2 || left === 0) return null;
+  const next = steps.findIndex((s) => !s.done);
+  return (
+    <section className="card welcome" aria-labelledby="welcome-title">
+      <div className="card-head">
+        <div>
+          <div className="kicker">Primeiro acesso</div>
+          <h2 id="welcome-title" className="lg">Comece por aqui: {left === 1 ? "falta 1 passo" : `faltam ${left} passos`}</h2>
+        </div>
+        <button className="btn later slim" type="button" onClick={() => { remember(WELCOME_CLOSED); setClosed(true); }}>Já conheço</button>
+      </div>
+      <ol className="welcome-steps">
+        {steps.map((s, i) => (
+          <li key={s.title} className={s.done ? "done" : i === next ? "next" : ""}>
+            <span className="queue-n mono" aria-hidden="true">{s.done ? "✓" : i + 1}</span>
+            <div className="grow">
+              <div className="row-title">{s.title}{s.done ? <span className="sr-only"> (feito)</span> : null}</div>
+              <div className="row-sub">{s.detail}</div>
+            </div>
+            {s.done ? null : <Link className={`btn slim ${i === next ? "ritmo" : "outline"}`} to={s.to}>{s.action}</Link>}
+          </li>
+        ))}
+      </ol>
+      <div className="welcome-habit">
+        <div className="row-title">Para não perder o ritmo</div>
+        <HabitTools compact />
+      </div>
+    </section>
+  );
+}
+
 function Dashboard({ d }: { d: StudentDashboard }) {
   const first = d.student.name.split(" ")[0];
   const { time, ritmo } = d;
@@ -179,6 +222,7 @@ function Dashboard({ d }: { d: StudentDashboard }) {
         title={`Olá, ${first}. ${time.bottleneck ? `Hoje o foco é ${time.bottleneck.toLowerCase()}.` : "Vamos ao treino de hoje."}`}
         actions={<div className="page-actions"><Link className="btn outline" to="/treino">Escolher disciplina e assunto</Link><Link className="btn ritmo" to="/treino">Começar treino do dia{planMinutes ? ` · ${planMinutes} min` : ""}</Link></div>}
       />
+      <Welcome d={d} />
       <Today d={d} />
       {d.finalStretch ? <FinalStretch f={d.finalStretch} /> : null}
       <div className="grid-2">

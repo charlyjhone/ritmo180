@@ -1,5 +1,5 @@
 // Plano até o ENEM: um foco por dia, escolhido pelas lacunas do aluno.
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AREA_NAMES, type CourseGoalView, type Milestone, type StudyPlan } from "@ritmo/contracts";
@@ -9,6 +9,7 @@ import { trainingLink } from "./focus-picker.tsx";
 import { labModule, labUrl } from "@ritmo/contracts";
 import { labIdsFor } from "./lab-links.tsx";
 import { lessonLink } from "./lessons.tsx";
+import { remember, SAW_PLAN } from "../lib/habit.ts";
 
 type Day = StudyPlan["days"][number];
 
@@ -154,6 +155,7 @@ function Plan({ plan }: { plan: StudyPlan }) {
 
 export function PlanPage() {
   const query = useQuery({ queryKey: ["plan"], queryFn: () => api.get<StudyPlan>("/api/practice/plan") });
+  useEffect(() => remember(SAW_PLAN), []);
   return (
     <div className="page">
       <PageHead kicker="Plano até o ENEM" title="O que estudar em cada dia" />
