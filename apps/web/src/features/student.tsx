@@ -101,6 +101,67 @@ function FinalStretch({ f }: { f: NonNullable<StudentDashboard["finalStretch"]> 
   );
 }
 
+interface TodayItem { key: string; title: string; detail: string; action: { label: string; to: string }; tone?: "warn" | "ok" }
+
+/** O que fazer hoje, na ordem que mais rende: diagnóstico, revisões vencidas, tarefas, cartões e o treino. */
+function todayItems(d: StudentDashboard): TodayItem[] {
+  const items: TodayItem[] = [];
+  if (d.diagnosticPending.length > 0) {
+    items.push({ key: "diag", title: `Diagnóstico de ${d.diagnosticPending.map((a) => AREA_NAMES[a]).join(", ")}`, detail: "Posiciona a sua nota e ajusta o plano.", action: { label: "Começar diagnóstico", to: `/diagnostico/${d.diagnosticPending[0]}` }, tone: "warn" });
+  }
+  if (d.reviews.due > 0) {
+    items.push({ key: "rev", title: d.reviews.due === 1 ? "1 questão para rever" : `${d.reviews.due} questões para rever`, detail: `Cerca de ${Math.max(2, Math.round(d.reviews.due * 2))} minutos. Rever no dia certo faz o conteúdo ficar até o ENEM.`, action: { label: "Rever agora", to: trainingLink({ mistakes: true }) } });
+  }
+  const open = d.assignments.filter((a) => a.done < a.questions && a.discipline);
+  if (open[0]) {
+    const a = open[0];
+    items.push({ key: "task", title: open.length === 1 ? `Tarefa: ${a.title}` : `${open.length} tarefas do professor`, detail: `${a.done} de ${a.questions} questões de ${a.topic}${a.dueOn ? ` · até ${dueLabel(a.dueOn)}` : ""}`, action: { label: "Fazer", to: trainingLink({ discipline: a.discipline!, topic: a.topic }) } });
+  }
+  if (d.cards.due > 0) {
+    items.push({ key: "cards", title: d.cards.due === 1 ? "1 cartão de memorização" : `${d.cards.due} cartões de memorização`, detail: "Poucos minutos para fixar fórmulas e conceitos.", action: { label: "Rever cartões", to: cardsLink() } });
+  }
+  if (!d.goal.trainedToday) {
+    items.push({ key: "train", title: "Treino de hoje", detail: "Você ainda não treinou hoje. O motor já escolheu as questões.", action: { label: "Começar agora", to: "/treino" } });
+  }
+  return items;
+}
+
+function Today({ d }: { d: StudentDashboard }) {
+  const items = todayItems(d);
+  return (
+    <section className={`today ${d.enem ? "" : "solo"}`} aria-label="Hoje">
+      {d.enem ? (
+        <div className="card hero">
+          <div className="kicker">Contagem para o ENEM {d.enem.year}</div>
+          {d.enem.daysLeft === 0 ? <div className="hero-big">Hoje é dia de ENEM</div> : <div className="hero-big mono">{d.enem.daysLeft}<small>{d.enem.daysLeft === 1 ? "dia" : "dias"}</small></div>}
+          <p>{d.enem.daysLeft === 0 ? "Boa prova. Confie no que você treinou." : `${d.enem.daysLeft === 1 ? "Falta 1 dia" : `Faltam ${d.enem.daysLeft} dias`} para a próxima prova${d.enem.estimated ? ", em data estimada" : ""}.`}</p>
+          <div className="btn-row"><Link className="btn on-dark" to="/plano">Ver seu plano</Link></div>
+        </div>
+      ) : null}
+      <div className="card queue">
+        <div className="card-head"><h2>{items.length ? `Para hoje · ${items.length} ${items.length === 1 ? "passo" : "passos"}` : "Tudo em dia hoje"}</h2></div>
+        {items.length ? (
+          <ol className="queue-list">
+            {items.map((item, i) => (
+              <li key={item.key} className={`queue-item ${item.tone ?? ""}`}>
+                <span className="queue-n mono" aria-hidden="true">{i + 1}</span>
+                <div className="grow"><div className="row-title">{item.title}</div><div className="row-sub">{item.detail}</div></div>
+                <Link className={`btn slim ${i === 0 ? "ritmo" : "outline"}`} to={item.action.to}>{item.action.label}</Link>
+              </li>
+            ))}
+          </ol>
+        ) : <p className="sub">Você já treinou, revisou e não tem pendências. Se quiser ir além, faça um simulado ou adiante um assunto.</p>}
+        {d.missAdvice ? (
+          <div className="advice-line">
+            <b>Por que você erra:</b> {d.missAdvice.advice} ({d.missAdvice.share}% dos {d.missAdvice.total} erros que você explicou.){" "}
+            <Link to={d.missAdvice.action.to}>{d.missAdvice.action.label}</Link>
+          </div>
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
 function Dashboard({ d }: { d: StudentDashboard }) {
   const first = d.student.name.split(" ")[0];
   const { time, ritmo } = d;
@@ -116,36 +177,15 @@ function Dashboard({ d }: { d: StudentDashboard }) {
         size="t34"
         kicker={kicker}
         title={`Olá, ${first}. ${time.bottleneck ? `Hoje o foco é ${time.bottleneck.toLowerCase()}.` : "Vamos ao treino de hoje."}`}
-        actions={<><Link className="btn" to="/treino">Começar treino do dia{planMinutes ? ` · ${planMinutes} min` : ""}</Link><Link className="btn soft" to="/treino">Escolher disciplina e assunto</Link></>}
+        actions={<div className="page-actions"><Link className="btn outline" to="/treino">Escolher disciplina e assunto</Link><Link className="btn ritmo" to="/treino">Começar treino do dia{planMinutes ? ` · ${planMinutes} min` : ""}</Link></div>}
       />
-      {d.enem ? <div className="notice">{d.enem.daysLeft === 0 ? `Hoje é dia de ENEM ${d.enem.year}.` : `${d.enem.daysLeft === 1 ? "Falta 1 dia" : `Faltam ${d.enem.daysLeft} dias`} para a próxima prova do ENEM ${d.enem.year}${d.enem.estimated ? ", em data estimada" : ""}.`}{" "}<Link to="/plano">Ver seu plano</Link></div> : null}
-      {d.diagnosticPending.length > 0 ? (
-        <div className="notice">
-          Faça o diagnóstico de {d.diagnosticPending.map((a) => AREA_NAMES[a]).join(", ")} para posicionar sua nota.{" "}
-          <Link to={`/diagnostico/${d.diagnosticPending[0]}`}>Começar diagnóstico</Link>
-        </div>
-      ) : null}
-      {d.reviews.due > 0 ? (
-        <div className="notice">
-          {d.reviews.due === 1 ? "1 questão para rever hoje" : `${d.reviews.due} questões para rever hoje`}, cerca de {Math.max(2, Math.round(d.reviews.due * 2))} minutos. Rever no dia certo é o que faz o conteúdo ficar até o ENEM.{" "}
-          <Link to={trainingLink({ mistakes: true })}>Rever agora</Link>
-        </div>
-      ) : null}
-      {d.cards.due > 0 ? (
-        <div className="notice">
-          {d.cards.due === 1 ? "1 cartão de memorização para rever hoje" : `${d.cards.due} cartões de memorização para rever hoje`}. <Link to={cardsLink()}>Rever cartões</Link>
-        </div>
-      ) : null}
-      {d.missAdvice ? (
-        <div className="notice">
-          <b>Por que você erra:</b> {d.missAdvice.advice} ({d.missAdvice.share}% dos {d.missAdvice.total} erros que você explicou.){" "}
-          <Link to={d.missAdvice.action.to}>{d.missAdvice.action.label}</Link>
-        </div>
-      ) : null}
+      <Today d={d} />
       {d.finalStretch ? <FinalStretch f={d.finalStretch} /> : null}
-      <WeeklyGoal goal={d.goal} />
+      <div className="grid-2">
+        <WeeklyGoal goal={d.goal} />
+        {d.challenge ? <Challenge c={d.challenge} /> : null}
+      </div>
       <Assignments list={d.assignments} />
-      {d.challenge ? <Challenge c={d.challenge} /> : null}
       <Metrics label="Indicadores principais">
         <Metric xl label="Índice Ritmo" value={ritmo.index === null ? "—" : `${ritmo.index}%`} note={ritmo.weekDelta === null ? `${ritmo.samples} questões válidas` : `${points(ritmo.weekDelta)} nesta semana`} tone={ritmo.weekDelta === null ? "" : ritmo.weekDelta >= 0 ? "up" : "down"} hint="Questões certas dentro do tempo-alvo" />
         <Metric xl label="Tempo médio por questão" value={clockOrDash(time.avgSeconds)} valueTone={time.avgSeconds !== null && time.avgSeconds > time.goalSeconds ? "amber" : "ok"} note={`Meta: ${clock(time.goalSeconds)}`} extra={time.avgSeconds !== null ? <div style={{ marginTop: 12 }}><Bar pct={(time.goalSeconds / time.avgSeconds) * 100} tone={time.avgSeconds > time.goalSeconds ? "amber" : ""} /></div> : null} />

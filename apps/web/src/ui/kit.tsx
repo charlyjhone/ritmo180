@@ -79,15 +79,15 @@ export function LineChart({ values, labels, label, width = 600, goal }: { values
     <svg className="chart" viewBox={`0 0 ${width} 220`} role="img" aria-label={label}>
       {[hi, Math.round((hi + lo) / 2), lo].map((tick) => (
         <g key={tick}>
-          <line x1="40" y1={y(tick)} x2={width - 20} y2={y(tick)} stroke="#EEF0F4" />
-          <text x="32" y={y(tick) + 4} textAnchor="end" fontSize="12" fill="#5B6474">{tick}%</text>
+          <line x1="40" y1={y(tick)} x2={width - 20} y2={y(tick)} stroke="#EEECE4" />
+          <text x="32" y={y(tick) + 4} textAnchor="end" fontSize="12" fill="#5E6B63">{tick}%</text>
         </g>
       ))}
-      {goal !== undefined ? <line x1="40" y1={y(goal)} x2={width - 20} y2={y(goal)} stroke="#0F7A4A" strokeDasharray="5 5" /> : null}
-      <polyline points={points.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke="#2447D6" strokeWidth="3" strokeLinejoin="round" />
-      {points.map((p) => <circle key={p.x} cx={p.x} cy={p.y} r="5" fill="#FFFFFF" stroke="#2447D6" strokeWidth="3" />)}
-      {values.map((_, i) => <text key={i} x={x(i)} y="190" textAnchor="middle" fontSize="12" fill="#5B6474">{labels[i]}</text>)}
-      <text x={last.x} y={Math.max(14, last.y - 12)} textAnchor="middle" fontSize="14" fontWeight="800" fill="#2447D6">{last.v}%</text>
+      {goal !== undefined ? <line x1="40" y1={y(goal)} x2={width - 20} y2={y(goal)} stroke="#0B7A53" strokeDasharray="5 5" /> : null}
+      <polyline points={points.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke="#1F5A3D" strokeWidth="3" strokeLinejoin="round" />
+      {points.map((p) => <circle key={p.x} cx={p.x} cy={p.y} r="5" fill="#FFFFFF" stroke="#1F5A3D" strokeWidth="3" />)}
+      {values.map((_, i) => <text key={i} x={x(i)} y="190" textAnchor="middle" fontSize="12" fill="#5E6B63">{labels[i]}</text>)}
+      <text x={last.x} y={Math.max(14, last.y - 12)} textAnchor="middle" fontSize="14" fontWeight="800" fill="#1F5A3D">{last.v}%</text>
     </svg>
   );
 }

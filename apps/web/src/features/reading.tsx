@@ -46,7 +46,7 @@ function Exercise({ next, onAgain }: { next: ReadingNext; onAgain: () => void })
           <>
             <h1 id="headline" style={{ marginTop: 24, fontSize: 28, letterSpacing: 0 }}>Leia no seu ritmo natural. Depois, 4 perguntas sem o texto.</h1>
             <p className="lead">A velocidade só conta se você entender. Sua leitura vale quando acerta pelo menos 3 das 4 perguntas.</p>
-            <button className="btn" type="button" style={{ marginTop: 24 }} autoFocus onClick={() => { setT0(Date.now()); setPhase(1); }}>Começar a leitura</button>
+            <button className="btn ritmo" type="button" style={{ marginTop: 24 }} autoFocus onClick={() => { setT0(Date.now()); setPhase(1); }}>Começar a leitura</button>
           </>
         ) : null}
         {phase === 1 ? (

@@ -18,9 +18,9 @@ function Evolution({ child }: { child: FamilyChild }) {
     <section className="pcard" aria-label="Evolução">
       <div className="pcard-title">{e.title}</div>
       <svg className="chart" style={{ marginTop: 10 }} viewBox="0 0 340 120" role="img" aria-label={e.title}>
-        <line x1="0" y1="100" x2="340" y2="100" stroke="#E2E5EC" />
-        <polyline points={dots.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke="#2447D6" strokeWidth="3" strokeLinejoin="round" />
-        {dots.map((p) => <circle key={p.x} cx={p.x} cy={p.y} r="4" fill="#FFFFFF" stroke="#2447D6" strokeWidth="3" />)}
+        <line x1="0" y1="100" x2="340" y2="100" stroke="#E2DFD5" />
+        <polyline points={dots.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke="#1F5A3D" strokeWidth="3" strokeLinejoin="round" />
+        {dots.map((p) => <circle key={p.x} cx={p.x} cy={p.y} r="4" fill="#FFFFFF" stroke="#1F5A3D" strokeWidth="3" />)}
       </svg>
       <div className="fam-axis">{e.points.map((p) => <span key={p.label}>{p.label}</span>)}</div>
     </section>

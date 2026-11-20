@@ -84,7 +84,7 @@ export function ExamList() {
               <div className="row-box" key={e.id}>
                 <div className="grow"><div className="row-title">{e.title}</div><div className="row-sub">{e.questions} questões · {e.durationMinutes} minutos{e.mine ? " · criado por você" : " · da sua turma"}</div></div>
                 {e.sitting?.finished ? <Link className="btn outline" to={`/simulado/${e.sitting.id}/resultado`}>Ver resultado</Link>
-                  : <button className="btn" type="button" onClick={() => void start(e.id)}>{e.sitting ? "Continuar" : "Começar"}</button>}
+                  : <button className="btn ritmo" type="button" onClick={() => void start(e.id)}>{e.sitting ? "Continuar" : "Começar"}</button>}
               </div>
             ))}
           </div>
