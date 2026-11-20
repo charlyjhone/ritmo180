@@ -9,6 +9,12 @@ const SLOW_FACTOR = 1.6;
 
 export const FLAG_INVERTED = "Quem tem nota alta acerta menos que quem tem nota baixa";
 export const FLAG_SLOW = "Leva muito mais tempo que o previsto para esta questão";
+/** Abaixo do chute (1 em 5): quase sempre é gabarito trocado. */
+export const FLAG_TOO_HARD = "Quase ninguém acerta, menos que no chute: confira o gabarito";
+/** Quase todos acertam: a resposta pode estar entregue no enunciado ou nas alternativas. */
+export const FLAG_TOO_EASY = "Quase todos acertam: confira se o enunciado não entrega a resposta";
+const TOO_HARD_RATE = 0.1;
+const TOO_EASY_RATE = 0.97;
 
 async function refreshStats(tx: Tx): Promise<void> {
   await tx.exec(`
@@ -87,6 +93,14 @@ export async function runCalibration(db: Database, now: number) {
       SELECT a.item_id FROM attempts a WHERE a.valid AND ${NOT_GUEST_ATTEMPT} GROUP BY a.item_id
       HAVING count(*) >= ${MIN_RESPONSES_TO_FLAG} AND percentile_cont(0.5) WITHIN GROUP (ORDER BY a.total_ms) > ${SLOW_FACTOR} * avg(a.target_ms)`);
     for (const r of slow) await flagItem(tx, r.item_id, FLAG_SLOW);
+
+    const extremes = await tx.query(`
+      SELECT a.item_id, avg(CASE WHEN a.correct THEN 1 ELSE 0 END)::float AS rate FROM attempts a JOIN items i ON i.id = a.item_id
+      WHERE a.valid AND ${NOT_GUEST_ATTEMPT} AND i.status = 'published' GROUP BY a.item_id HAVING count(*) >= ${MIN_RESPONSES_TO_FLAG}`);
+    for (const r of extremes) {
+      if (r.rate < TOO_HARD_RATE) await flagItem(tx, r.item_id, FLAG_TOO_HARD);
+      else if (r.rate > TOO_EASY_RATE) await flagItem(tx, r.item_id, FLAG_TOO_EASY);
+    }
 
     await tx.query(`INSERT INTO calibration_runs (examined, calibrated, discarded) VALUES ($1,$2,$3)`, [examined, calibrated, discarded]);
     if (calibrated + discarded > 0) {

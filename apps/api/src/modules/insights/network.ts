@@ -1,6 +1,11 @@
 // Painel da rede: operação da plataforma. Só agregados por escola, nunca alunos individuais.
 import { AREA_NAMES, AREAS, type NetworkDashboard } from "@ritmo/contracts";
 import type { Tx } from "../../platform/db.ts";
+
+/** Menos que isso não dá para treinar o assunto por uma semana sem repetir questão. */
+const THIN_TOPIC = 15;
+/** Fora do escopo do Ritmo 180. */
+const OUT_OF_SCOPE = ["Inglês", "Espanhol"];
 import { rounded } from "./teacher.ts";
 
 const WEEK_MS = 7 * 86_400_000;
@@ -52,12 +57,20 @@ export async function networkDashboard(tx: Tx, now: number): Promise<NetworkDash
        count(*) FILTER (WHERE status = 'published' AND calibration = 'provisional')::int AS calibrating,
        count(*) FILTER (WHERE status = 'catalog')::int AS catalog FROM items GROUP BY area`,
   );
+  const thin = await tx.query(
+    `SELECT i.discipline, i.topic, count(*)::int AS items,
+       EXISTS (SELECT 1 FROM lessons l WHERE l.discipline = i.discipline AND l.topic = i.topic AND l.status = 'published') AS has_lesson
+     FROM items i WHERE i.status = 'published' AND i.discipline <> ALL($1::text[])
+     GROUP BY i.discipline, i.topic HAVING count(*) < $2 ORDER BY count(*), i.discipline, i.topic`,
+    [OUT_OF_SCOPE, THIN_TOPIC],
+  );
   const reclassified = (await tx.query(`SELECT count(*)::int AS n FROM item_flags WHERE status = 'retired'`))[0]!.n;
 
   const headline = released.length === 0
     ? "Nenhuma escola liberada ainda"
     : `${released.length} ${released.length === 1 ? "escola" : "escolas"} no ar, ${attempts.active} alunos ativos e ${items.published} questões publicadas`;
   return {
+    thinTopics: { threshold: THIN_TOPIC, total: thin.length, topics: thin.slice(0, 15).map((t) => ({ discipline: t.discipline, topic: t.topic, items: t.items, hasLesson: t.has_lesson })) },
     headline,
     metrics: {
       schools: released.length,

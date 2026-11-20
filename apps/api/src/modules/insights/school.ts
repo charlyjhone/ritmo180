@@ -1,5 +1,5 @@
 // Painel da direção: visão por série, área e turma.
-import { AREA_NAMES, AREAS, GRADES, type Area, type SchoolDashboard } from "@ritmo/contracts";
+import { AREA_NAMES, AREAS, GRADES, type Area, type SchoolDashboard, type SchoolUsage } from "@ritmo/contracts";
 import { SCALES } from "@ritmo/engine";
 import type { Tx } from "../../platform/db.ts";
 import { loadSnapshots, scoreViewOf } from "../practice/index.ts";
@@ -7,6 +7,42 @@ import { mean, rounded } from "./teacher.ts";
 
 const WEEK_MS = 7 * 86_400_000;
 const HIGH_SCHOOL = new Set(["1ª série", "2ª série", "3ª série"]);
+
+/** Funil do piloto: cadastro, primeiro treino, treino na semana e hábito (3 dias ou mais). Cada etapa contém a seguinte. */
+export async function schoolUsage(tx: Tx, schoolId: string, now: number): Promise<SchoolUsage> {
+  const since = new Date(now - WEEK_MS);
+  const [f] = await tx.query(
+    `WITH alunos AS (SELECT id FROM users WHERE school_id = $1 AND role = 'student' AND deactivated_at IS NULL AND anonymized_at IS NULL),
+     respostas AS (SELECT a.student_id, a.mode, a.answered_at FROM attempts a JOIN alunos s ON s.id = a.student_id)
+     SELECT (SELECT count(*) FROM alunos)::int AS enrolled,
+       (SELECT count(DISTINCT student_id) FROM respostas)::int AS started,
+       (SELECT count(DISTINCT student_id) FROM respostas WHERE mode = 'diagnostic')::int AS diagnostic,
+       (SELECT count(DISTINCT student_id) FROM respostas WHERE answered_at >= $2)::int AS week,
+       (SELECT count(*) FROM (SELECT student_id FROM respostas WHERE answered_at >= $2 GROUP BY student_id HAVING count(DISTINCT answered_at::date) >= 3) x)::int AS steady`,
+    [schoolId, since],
+  );
+  const count = async (sql: string) => Number((await tx.query(sql, [schoolId, since]))[0]?.n ?? 0);
+  const tools = [
+    { label: "Treino guiado", students: await count(`SELECT count(DISTINCT student_id) AS n FROM attempts WHERE school_id = $1 AND answered_at >= $2 AND mode = 'guided'`) },
+    { label: "Treino no modo prova", students: await count(`SELECT count(DISTINCT student_id) AS n FROM attempts WHERE school_id = $1 AND answered_at >= $2 AND mode = 'exam'`) },
+    { label: "Cartões de memorização", students: await count(`SELECT count(DISTINCT student_id) AS n FROM card_reviews WHERE school_id = $1 AND at >= $2`) },
+    { label: "Leitura", students: await count(`SELECT count(DISTINCT student_id) AS n FROM reading_attempts WHERE school_id = $1 AND at >= $2`) },
+    { label: "Simulado", students: await count(`SELECT count(DISTINCT student_id) AS n FROM exam_sittings WHERE school_id = $1 AND started_at >= $2`) },
+    { label: "Motivo dos erros", students: await count(`SELECT count(DISTINCT student_id) AS n FROM miss_reasons WHERE school_id = $1 AND at >= $2`) },
+  ].sort((x, y) => y.students - x.students);
+  const share = (n: number, of: number) => (of ? `${Math.round((n / of) * 100)}% de quem tem conta` : "sem alunos ainda");
+  return {
+    funnel: [
+      { label: "Com conta ativa", students: f!.enrolled, note: "alunos cadastrados pela escola" },
+      { label: "Fizeram o primeiro treino", students: f!.started, note: share(f!.started, f!.enrolled) },
+      { label: "Treinaram nesta semana", students: f!.week, note: share(f!.week, f!.enrolled) },
+      { label: "Treinaram em 3 dias ou mais", students: f!.steady, note: "o hábito que faz a nota subir" },
+    ],
+    tools,
+    stalled: Math.max(0, f!.started - f!.week),
+    diagnostic: f!.diagnostic,
+  };
+}
 
 export async function schoolDashboard(tx: Tx, schoolId: string, now: number): Promise<SchoolDashboard> {
   const school = (await tx.query(`SELECT name, is_demo FROM schools WHERE id = $1`, [schoolId]))[0]!;
@@ -110,5 +146,6 @@ export async function schoolDashboard(tx: Tx, schoolId: string, now: number): Pr
     classes,
     messages: messages.map((m) => ({ id: m.id, from: m.author, student: m.student, body: m.body, at: new Date(m.created_at).getTime(), read: !!m.read_at })),
     dataNotice: school.is_demo ? "Escola de demonstração: alunos e respostas foram simulados pelo próprio motor." : null,
+    usage: await schoolUsage(tx, schoolId, now),
   };
 }

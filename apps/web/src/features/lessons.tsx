@@ -199,7 +199,7 @@ export function LessonsIndexPage() {
                         </div>
                       </div>
                       {t.hasLesson ? <Pill tone="brand">Aula pronta</Pill> : <Pill>Em preparo</Pill>}
-                      <Link className="btn soft slim" to={lessonLink({ discipline: d.discipline, topic: t.topic })}>Abrir</Link>
+                      <Link className="btn soft slim" to={lessonLink({ discipline: d.discipline, topic: t.topic })} aria-label={`Abrir a aula de ${t.topic}`}>Abrir</Link>
                     </div>
                   ))}
                 </div>

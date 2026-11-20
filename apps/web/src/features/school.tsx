@@ -8,6 +8,48 @@ import { Async, Bar, clockOrDash, Empty, Metric, Metrics, PageHead, Pill, points
 const pct = (v: number | null) => (v === null ? "—" : `${v}%`);
 const dash = (v: number | null) => (v === null ? "—" : v);
 
+/** Uso da plataforma: onde os alunos param e quais ferramentas usam. É o painel do piloto. */
+function Usage({ u }: { u: SchoolDashboard["usage"] }) {
+  const top = u.funnel[0]?.students || 1;
+  const maxTool = Math.max(1, ...u.tools.map((t) => t.students));
+  const drop = u.funnel.slice(1).reduce<{ label: string; lost: number } | null>((worst, step, i) => {
+    const lost = u.funnel[i]!.students - step.students;
+    return !worst || lost > worst.lost ? { label: step.label.toLowerCase(), lost } : worst;
+  }, null);
+  return (
+    <section className="card" aria-labelledby="uso-title">
+      <h2 className="lg" id="uso-title">Uso da plataforma</h2>
+      <p className="sub">{drop && drop.lost > 0 ? `A maior perda está em “${drop.label}”: ${drop.lost} ${drop.lost === 1 ? "aluno não chegou" : "alunos não chegaram"} a essa etapa.` : "Do cadastro ao hábito de estudo, etapa por etapa."}{u.stalled && drop?.label !== "treinaram nesta semana" ? ` ${u.stalled} já treinaram, mas não voltaram nos últimos 7 dias.` : drop?.label === "treinaram nesta semana" ? " São alunos que já treinaram e pararam: vale um recado do professor." : ""}</p>
+      <div className="usage">
+        <ol className="funnel">
+          {u.funnel.map((step) => (
+            <li key={step.label}>
+              <div className="row-head"><span className="row-title">{step.label}</span><span className="mono b">{step.students}</span></div>
+              <Bar pct={(step.students / top) * 100} size="h10" />
+              <div className="note">{step.note}</div>
+            </li>
+          ))}
+          <li className="funnel-aside">
+            <div className="row-head"><span className="row-title">Fizeram o diagnóstico</span><span className="mono b">{u.diagnostic}</span></div>
+            <div className="note">{u.funnel[0]?.students ? `${Math.round((u.diagnostic / u.funnel[0].students) * 100)}% de quem tem conta. Sem ele, o plano começa sem conhecer o aluno.` : "sem alunos ainda"}</div>
+          </li>
+        </ol>
+        <div>
+          <div className="label-caps">O QUE USARAM NOS ÚLTIMOS 7 DIAS</div>
+          <div className="stack" style={{ gap: 10, marginTop: 10 }}>
+            {u.tools.map((t) => (
+              <div key={t.label}>
+                <div className="row-head"><span>{t.label}</span><span className="mono">{t.students} {t.students === 1 ? "aluno" : "alunos"}</span></div>
+                <Bar pct={(t.students / maxTool) * 100} tone={t.students ? "" : "amber"} size="h6" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Board({ d }: { d: SchoolDashboard }) {
   const client = useQueryClient();
   const m = d.metrics;
@@ -33,8 +75,9 @@ function Board({ d }: { d: SchoolDashboard }) {
         <Metric label="Alunos ativos na semana" value={m.activeWeek} note={`${m.enrolled ? Math.round((m.activeWeek / m.enrolled) * 100) : 0}% dos ${m.enrolled} matriculados`} />
         <Metric label="Índice Ritmo · Ensino Médio" value={pct(m.ritmoHigh)} note={m.ritmoDelta === null ? undefined : `${points(m.ritmoDelta)} na semana`} tone={(m.ritmoDelta ?? 0) >= 0 ? "up" : "down"} />
         <Metric label="Pré-requisitos dominados · 9º ano" value={pct(m.prereqNinth)} note="Meta para entrar no EM: 80%" />
-        <Metric label="Questões em revisão pelos professores" value={m.flagsOpen} note="sinalizadas pela estatística de uso" />
+        <Metric label="Questões em revisão pelos professores" value={m.flagsOpen} note="sinalizadas pela estatística ou por alunos" />
       </Metrics>
+      <Usage u={d.usage} />
       <section className="card" aria-labelledby="trilha-title">
         <h2 className="lg" id="trilha-title">Trilha vertical por série</h2>
         <p className="sub">Leitura medida em palavras por minuto, só com leituras válidas. Interpretação é a média de acertos nas perguntas de leitura.</p>

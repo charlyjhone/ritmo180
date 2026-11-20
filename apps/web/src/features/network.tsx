@@ -279,6 +279,26 @@ function Board({ d }: { d: NetworkDashboard }) {
           <p className="note" style={{ margin: "10px 0 0", color: "var(--body)", lineHeight: 1.5 }}>Um item só é calibrado com 200 respostas ou mais, comparadas a questões-âncora.</p>
         </section>
       </div>
+      <section className="card" aria-labelledby="thin-title">
+        <h2 id="thin-title">{d.thinTopics.total ? `${d.thinTopics.total} ${d.thinTopics.total === 1 ? "assunto tem" : "assuntos têm"} menos de ${d.thinTopics.threshold} questões` : "Assuntos com poucas questões"}</h2>
+        <p className="sub">Com poucas questões, o aluno repete exercício em poucos dias. É onde o próximo lote de conteúdo rende mais.</p>
+        {d.thinTopics.topics.length === 0 ? <Empty icon="done" title={`Todos os assuntos têm ${d.thinTopics.threshold} questões ou mais`} /> : (
+          <div className="table-wrap" style={{ marginTop: 12 }}>
+            <table className="tbl">
+              <thead><tr><th scope="col">Assunto</th><th scope="col">Disciplina</th><th scope="col">Questões</th><th scope="col">Aula</th></tr></thead>
+              <tbody>
+                {d.thinTopics.topics.map((t) => (
+                  <tr key={`${t.discipline}${t.topic}`}>
+                    <td className="b">{t.topic}</td><td>{t.discipline}</td><td className="mono b">{t.items}</td>
+                    <td>{t.hasLesson ? <Pill tone="good tight">Tem aula</Pill> : <Pill tone="warn tight">Sem aula</Pill>}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {d.thinTopics.total > d.thinTopics.topics.length ? <p className="note" style={{ marginTop: 10 }}>Mostrando os {d.thinTopics.topics.length} com menos questões.</p> : null}
+      </section>
       <section className="card" aria-labelledby="int-title">
         <h2 id="int-title">Integridade dos dados: {i.share.toString().replace(".", ",")}% das respostas ficaram fora da calibração</h2>
         <p className="sub">Respostas com padrão incompatível com resolução real não entram no Índice Ritmo nem na calibração. Não há punição automática.</p>

@@ -57,8 +57,12 @@ function NewAssignment({ d, onCreated }: { d: TeacherDashboard; onCreated: () =>
   );
 }
 
+/** Os primeiros da lista já mostram as prioridades; o resto abre sob pedido para não esticar a página. */
+const ALERTS_SHOWN = 5;
+
 function Board({ d, refresh }: { d: TeacherDashboard; refresh: () => void }) {
   const toast = useToast();
+  const [allAlerts, setAllAlerts] = useState(false);
   const weakest = d.heat.topics[0];
   const m = d.metrics;
 
@@ -150,7 +154,7 @@ function Board({ d, refresh }: { d: TeacherDashboard; refresh: () => void }) {
           <h2 id="alert-title">Alunos que precisam de atenção agora</h2>
           <div className="stack" style={{ gap: 10 }}>
             {d.alerts.length === 0 ? <Empty icon="done" title="Nenhum aluno em risco nesta turma">Quando alguém parar de treinar ou cair no acerto, o alerta aparece aqui com uma sugestão de conversa.</Empty> : null}
-            {d.alerts.map((a) => (
+            {(allAlerts ? d.alerts : d.alerts.slice(0, ALERTS_SHOWN)).map((a) => (
               <div className="row-box" style={{ padding: "12px 14px" }} key={a.studentId}>
                 <div className="avatar" aria-hidden="true" style={{ fontSize: 13, margin: 0 }}>{initials(a.name)}</div>
                 <div className="grow">
@@ -161,12 +165,18 @@ function Board({ d, refresh }: { d: TeacherDashboard; refresh: () => void }) {
                 <button className="btn soft slim" type="button" onClick={() => void alertAction(a)}>{ACTION_LABEL[a.action]}</button>
               </div>
             ))}
+            {d.alerts.length > ALERTS_SHOWN ? (
+              <button className="btn outline slim" type="button" aria-expanded={allAlerts} onClick={() => setAllAlerts(!allAlerts)}>
+                {allAlerts ? "Mostrar só os primeiros" : `Ver todos os ${d.alerts.length} alunos`}
+              </button>
+            ) : null}
           </div>
         </section>
         <section className="card" aria-labelledby="rev-title">
           <h2 id="rev-title">Questões sinalizadas para sua revisão: {d.flags.length}</h2>
-          <p className="sub">Só chegam aqui as questões que a estatística de uso sinalizou.</p>
+          <p className="sub">Chegam aqui as questões que a estatística de uso sinalizou e as que os alunos relataram com erro.</p>
           <div className="stack" style={{ gap: 10 }}>
+            {d.flags.length === 0 ? <Empty icon="done" title="Nenhuma questão para revisar">Aparecem aqui as questões que a estatística de uso marcou como suspeitas e as que os alunos relataram com erro.</Empty> : null}
             {d.flags.map((f) => (
               <div className="flag" key={f.id}>
                 <div className="flag-head mono">{f.label}<span>{f.area}</span></div>

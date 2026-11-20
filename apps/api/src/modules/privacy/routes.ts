@@ -36,6 +36,33 @@ export const privacyRoutes: ModuleRoutes = (app, { db, now }) => {
     });
   });
 
+  // Pedidos que chegam à escola por fora (telefone, papel): a direção tira a cópia e registra a exclusão.
+  const studentOfSchool = async (tx: Tx, studentId: string) => {
+    const row = (await tx.query(`SELECT 1 FROM users WHERE id = $1 AND role = 'student' AND anonymized_at IS NULL`, [studentId]))[0];
+    if (!row) throw new HttpError(404, "not_found", "Aluno não encontrado nesta escola.");
+  };
+
+  app.get<{ Params: { id: string } }>("/api/school/people/:id/data", async (request) => {
+    const actor = requireActor(request, "coordinator");
+    return db.tenant(tenantOf(actor), async (tx) => {
+      await studentOfSchool(tx, request.params.id);
+      await audit(tx, actor, actor.schoolId!, "privacy.copy", request.params.id);
+      return studentDataCopy(tx, request.params.id);
+    });
+  });
+
+  app.post<{ Params: { id: string } }>("/api/school/people/:id/deletion-request", async (request) => {
+    const actor = requireActor(request, "coordinator");
+    return db.tenant(tenantOf(actor), async (tx) => {
+      await studentOfSchool(tx, request.params.id);
+      const open = await tx.query(`SELECT 1 FROM privacy_requests WHERE student_id = $1 AND status = 'open'`, [request.params.id]);
+      if (open[0]) throw new HttpError(409, "already_open", "Já existe um pedido aberto para este aluno.");
+      await tx.query(`INSERT INTO privacy_requests (school_id, student_id, requested_by) VALUES ($1,$2,$3)`, [actor.schoolId, request.params.id, actor.id]);
+      await audit(tx, actor, actor.schoolId!, "privacy.deletion_requested", request.params.id);
+      return { ok: true };
+    });
+  });
+
   app.get("/api/school/deletion-requests", async (request): Promise<DeletionRequestView[]> => {
     const actor = requireActor(request, "coordinator");
     const rows = await db.tenant(tenantOf(actor), (tx) => tx.query(

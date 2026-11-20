@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { GRADES, type CreatedPerson, type DeletionRequestView, type Person, type Role, type SchoolClass } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
-import { Async, Empty, PageHead, Pill } from "../ui/kit.tsx";
+import { Async, Empty, PageHead, Pill, saveFile } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
 import { useMe } from "./session.tsx";
 
@@ -269,6 +269,40 @@ function ActiveControl({ person }: { person: Person }) {
   ) : <button className="btn soft slim" type="button" onClick={() => setConfirming(true)}>Desativar</button>;
 }
 
+/** Direitos do titular quando o pedido chega por fora: cópia dos dados e registro do pedido de exclusão. */
+function PrivacyControl({ person }: { person: Person }) {
+  const client = useQueryClient();
+  const toast = useToast();
+  const [open, setOpen] = useState(false);
+  async function copy() {
+    try {
+      const data = await api.get<unknown>(`/api/school/people/${person.id}/data`);
+      saveFile(`dados-${person.name.toLowerCase().replace(/\s+/g, "-")}.json`, JSON.stringify(data, null, 2), "application/json;charset=utf-8");
+      toast("Cópia dos dados baixada. Entregue só ao aluno ou ao responsável.");
+    } catch (error) {
+      toast(failure(error));
+    }
+  }
+  async function request() {
+    try {
+      await api.post(`/api/school/people/${person.id}/deletion-request`);
+      toast("Pedido registrado. Aprove em “Pedidos de exclusão de dados”, no fim da página.");
+      await client.invalidateQueries({ queryKey: ["deletion-requests"] });
+    } catch (error) {
+      toast(failure(error));
+    } finally {
+      setOpen(false);
+    }
+  }
+  return open ? (
+    <div className="btn-row" style={{ margin: 0 }}>
+      <button className="btn soft slim" type="button" onClick={() => void copy()}>Baixar cópia dos dados</button>
+      <button className="btn outline slim" type="button" onClick={() => void request()}>Registrar pedido de exclusão</button>
+      <button className="btn later slim" type="button" onClick={() => setOpen(false)}>Fechar</button>
+    </div>
+  ) : <button className="btn soft slim" type="button" aria-label={`Dados pessoais de ${person.name} (LGPD)`} onClick={() => setOpen(true)}>Dados (LGPD)</button>;
+}
+
 function PersonRow({ person, isMe }: { person: Person; isMe: boolean }) {
   const toast = useToast();
   const [temporary, setTemporary] = useState<string | null>(null);
@@ -291,6 +325,7 @@ function PersonRow({ person, isMe }: { person: Person; isMe: boolean }) {
         <div className="row-sub">{ROLE_LABEL[person.role]}{links.length > 0 ? ` · ${links.join(", ")}` : person.role === "teacher" ? " · sem turma" : ""}{person.email ? ` · ${person.email}` : ""}</div>
       </div>
       {person.role === "student" && person.active ? <ConsentControl person={person} /> : null}
+      {person.role === "student" && !isMe ? <PrivacyControl person={person} /> : null}
       {person.active && !editing && !isMe ? <button className="btn soft slim" type="button" onClick={() => setEditing(true)}>Editar</button> : null}
       {!person.active || isMe || temporary ? null : confirming ? (
         <div className="btn-row" style={{ margin: 0 }}>

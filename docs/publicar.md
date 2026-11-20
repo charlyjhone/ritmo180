@@ -60,13 +60,31 @@ DATABASE_URL=... npm run ingest -- content/laboratorio.json
 
 ## 5. Backup
 
-Agende uma vez por dia, em uma máquina com `pg_dump`. O script confere a cópia e mantém as 14 mais recentes.
+No plano gratuito do Supabase não há backup para baixar. Rode, no terminal onde a `DATABASE_URL` está configurada:
 
 ```bash
-DATABASE_URL=... scripts/backup-postgres.sh /caminho/dos/backups
+npm run backup
 ```
 
-Guarde os backups fora do serviço do banco. Teste a restauração antes do lançamento e depois de tempos em tempos.
+O comando copia todas as tabelas (menos as sessões de login) num instante só, grava em `~/Ritmo180-copias/` e restaura a cópia num banco vazio na memória para provar que ela volta inteira. Sai `COPIA_RITMO ok` quando deu certo. Para conferir de novo uma cópia antiga:
+
+```bash
+npm run backup -- conferir ~/Ritmo180-copias/NOME-DO-ARQUIVO.json.gz
+```
+
+O arquivo tem dados pessoais de alunos. Fica só no seu computador, legível só pelo seu usuário; não mande por e-mail nem suba para a nuvem sem criptografia. Faça uma cópia por semana durante o piloto e uma por dia com alunos usando.
+
+Numa máquina com `pg_dump`, `DATABASE_URL=... scripts/backup-postgres.sh /caminho/dos/backups` faz a cópia no formato do Postgres e mantém as 14 mais recentes. No plano Pro do Supabase o backup diário passa a ser automático.
+
+## 6. Aula nova para revisão
+
+Aulas escritas em `content/aulas/` entram na fila de revisão da rede, sem publicar:
+
+```bash
+npm run content:aulas:importar
+```
+
+Depois, no painel da rede, leia e aprove cada uma.
 
 ## Antes de receber alunos
 

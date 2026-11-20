@@ -7,6 +7,7 @@ import { api, ApiError } from "../lib/api.ts";
 import { PageHead, saveFile } from "../ui/kit.tsx";
 import { TextSizeSetting } from "../ui/a11y.tsx";
 import { useToast } from "../ui/toast.tsx";
+import { HabitTools } from "./habit.tsx";
 import { guestDate, logout, PasswordForm, useMe } from "./session.tsx";
 
 function StudentData({ studentId, name }: { studentId?: string; name?: string }) {
@@ -80,6 +81,10 @@ export function AccountPage() {
       <div className="page" style={{ maxWidth: 640 }}>
         <PageHead kicker={me.name} title="Minha conta" />
         <GuestAccount until={me.guestUntil} />
+        <section className="card" aria-labelledby="habito-title">
+          <h2 id="habito-title">Lembrete e aplicativo</h2>
+          <HabitTools />
+        </section>
       </div>
     );
   }
@@ -93,6 +98,12 @@ export function AccountPage() {
         <p className="sub">Aumente o texto de todas as telas neste aparelho. Nas questões, nas aulas e nos cartões, o botão «Ouvir» lê o texto em voz alta.</p>
         <TextSizeSetting />
       </section>
+      {me.role === "student" ? (
+        <section className="card" aria-labelledby="habito-title">
+          <h2 id="habito-title">Lembrete e aplicativo</h2>
+          <HabitTools />
+        </section>
+      ) : null}
       <section className="card" aria-labelledby="senha-title">
         <h2 id="senha-title">Trocar senha</h2>
         <PasswordForm onDone={() => toast("Senha alterada.")} />

@@ -6,6 +6,7 @@ import type { FamilyChild } from "@ritmo/contracts";
 import { api } from "../lib/api.ts";
 import { Async, Tabs } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
+import { downloadReminder, FAMILY_REMINDER, shareText } from "../lib/habit.ts";
 import { logout, useMe } from "./session.tsx";
 
 function Evolution({ child }: { child: FamilyChild }) {
@@ -51,6 +52,36 @@ function Contact({ child }: { child: FamilyChild }) {
   );
 }
 
+/** Texto curto da semana, para mandar ao outro responsável pelo WhatsApp ou guardar. */
+export function weekSummary(child: FamilyChild): string {
+  const trained = child.week.filter((d) => d.trained).length;
+  const stats = child.stats.map((s) => `${s.label}: ${s.value}${s.delta ? ` (${s.delta})` : ""}`).join("\n");
+  return [`Semana de ${child.name} no Ritmo 180`, child.headline, `Treinou ${trained} de 7 dias (meta: ${child.goalDays}).`, stats, `Como ajudar: ${child.help}`].filter(Boolean).join("\n");
+}
+
+function WeeklyHabit({ child }: { child: FamilyChild }) {
+  const toast = useToast();
+  const [time, setTime] = useState("19:00");
+  async function share() {
+    const result = await shareText(`Semana de ${child.name}`, weekSummary(child));
+    if (result === "copied") toast("Resumo copiado. Cole no WhatsApp ou onde quiser.");
+    if (result === "failed") toast("Não foi possível compartilhar neste aparelho.");
+  }
+  return (
+    <section className="pcard" aria-label="Resumo toda semana">
+      <div className="pcard-title">Acompanhe sem precisar lembrar</div>
+      <p className="fam-text" style={{ margin: "6px 0 10px", lineHeight: 1.55 }}>Um lembrete na agenda do celular todo domingo, para ver como foi a semana. Ou mande este resumo para outro responsável.</p>
+      <div className="btn-row fam-habit">
+        <label className="field-sm">Domingo, às
+          <input type="time" value={time} onChange={(e) => setTime(e.target.value || "19:00")} />
+        </label>
+        <button className="btn soft slim" type="button" onClick={() => { downloadReminder(FAMILY_REMINDER(time)); toast("Abra o arquivo baixado e confirme “Adicionar” na agenda."); }}>Pôr na agenda</button>
+        <button className="btn soft slim" type="button" onClick={() => void share()}>Compartilhar resumo</button>
+      </div>
+    </section>
+  );
+}
+
 function Child({ child }: { child: FamilyChild }) {
   const trained = child.week.filter((d) => d.trained).length;
   return (
@@ -91,6 +122,7 @@ function Child({ child }: { child: FamilyChild }) {
           </div>
         </section>
       ) : null}
+      <WeeklyHabit child={child} />
       <Contact child={child} />
       <div className="fam-foot">A família só vê os dados dos próprios filhos.</div>
     </div>
@@ -103,6 +135,7 @@ function Portal({ kids }: { kids: FamilyChild[] }) {
   const child = kids.find((c) => c.id === active);
   return (
     <main className="fam" id="main" tabIndex={-1}>
+      <h1 className="sr-only">Portal da família{child ? `: ${child.name}` : ""}</h1>
       <div className="fam-head">
         <div className="fam-top">
           <div className="fam-brand">
