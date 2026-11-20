@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AREA_NAMES, type ClassRef, type TeacherDashboard } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
 import { ClassExams } from "./class-exams.tsx";
-import { Async, Bar, clock, clockOrDash, Metric, Metrics, PageHead, Pill, saveFile, points, TimeStrip } from "../ui/kit.tsx";
+import { Async, Bar, clock, clockOrDash, Empty, Metric, Metrics, PageHead, Pill, points, saveFile, TimeStrip } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
 
 const initials = (name: string) => name.split(/\s+/).map((p) => p[0]).join("").slice(0, 2).toUpperCase();
@@ -128,13 +128,13 @@ function Board({ d, refresh }: { d: TeacherDashboard; refresh: () => void }) {
       <div className="grid-2">
         <section className="card" aria-labelledby="gar-title">
           <h2 id="gar-title">{d.time ? `Raio-X da turma: ${clock(d.time.readMs / 1000)} por questão só na leitura` : "Raio-X da turma"}</h2>
-          {d.time ? <TimeStrip small read={d.time.readMs} path={d.time.pathMs} calc={d.time.calcMs} check={d.time.checkMs} /> : <p className="sub">Sem treinos guiados no período.</p>}
+          {d.time ? <TimeStrip small read={d.time.readMs} path={d.time.pathMs} calc={d.time.calcMs} check={d.time.checkMs} /> : <Empty icon="chart" title="Sem treinos guiados no período">O Raio-X da turma aparece quando os alunos treinarem no modo guiado.</Empty>}
           {d.suggestion ? <p className="sub" style={{ marginTop: 14, lineHeight: 1.55 }}>{d.suggestion}</p> : null}
         </section>
         <section className="card" aria-labelledby="peg-title">
           <h2 id="peg-title">Pegadinhas que mais pegam a turma</h2>
           <div className="stack" style={{ gap: 14 }}>
-            {d.traps.length === 0 ? <p className="sub">Sem dados suficientes.</p> : null}
+            {d.traps.length === 0 ? <Empty icon="search" title="Ainda sem dados suficientes">As pegadinhas que mais derrubam a turma aparecem com mais respostas.</Empty> : null}
             {d.traps.map((t) => (
               <div key={t.name}>
                 <div className="row-head"><span>{t.name}</span><span className="mono">{t.share}%</span></div>
@@ -149,7 +149,7 @@ function Board({ d, refresh }: { d: TeacherDashboard; refresh: () => void }) {
         <section className="card" aria-labelledby="alert-title">
           <h2 id="alert-title">Alunos que precisam de atenção agora</h2>
           <div className="stack" style={{ gap: 10 }}>
-            {d.alerts.length === 0 ? <p className="sub">Nenhum alerta nesta turma.</p> : null}
+            {d.alerts.length === 0 ? <Empty icon="done" title="Nenhum aluno em risco nesta turma">Quando alguém parar de treinar ou cair no acerto, o alerta aparece aqui com uma sugestão de conversa.</Empty> : null}
             {d.alerts.map((a) => (
               <div className="row-box" style={{ padding: "12px 14px" }} key={a.studentId}>
                 <div className="avatar" aria-hidden="true" style={{ fontSize: 13, margin: 0 }}>{initials(a.name)}</div>
@@ -185,7 +185,7 @@ function Board({ d, refresh }: { d: TeacherDashboard; refresh: () => void }) {
           <h2 id="hab-title">Habilidades do ENEM em que a turma mais erra</h2>
           <p className="sub">Pela Matriz de Referência do INEP, no último mês. Só entram habilidades com pelo menos 10 respostas.</p>
           <div className="stack" style={{ gap: 12 }}>
-            {d.skills.length === 0 ? <p className="sub">Ainda não há respostas suficientes em questões com habilidade identificada.</p> : null}
+            {d.skills.length === 0 ? <Empty icon="chart" title="As habilidades aparecem com mais respostas">Ainda não há respostas suficientes em questões com habilidade identificada.</Empty> : null}
             {d.skills.map((k) => (
               <div key={`${k.area}${k.skill}`}>
                 <div className="row-head"><span><b>{k.skill}</b> de {AREA_NAMES[k.area]}</span><span className="mono">{k.accuracy}% de acerto</span></div>
@@ -207,7 +207,7 @@ function Board({ d, refresh }: { d: TeacherDashboard; refresh: () => void }) {
           <NewAssignment d={d} onCreated={refresh} />
         </div>
         <div className="stack" style={{ marginTop: 12 }}>
-          {d.assignments.length === 0 ? <p className="sub">Nenhuma tarefa nos últimos 30 dias. A tarefa aparece no painel do aluno e o assunto sobe no treino dele.</p> : null}
+          {d.assignments.length === 0 ? <Empty icon="list" title="Nenhuma tarefa nos últimos 30 dias">A tarefa aparece no painel do aluno e o assunto sobe no treino dele.</Empty> : null}
           {d.assignments.map((a) => (
             <div className="row-box" key={a.id}>
               <div className="grow">

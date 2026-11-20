@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { GRADES, type CreatedPerson, type DeletionRequestView, type Person, type Role, type SchoolClass } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
-import { Async, PageHead, Pill } from "../ui/kit.tsx";
+import { Async, Empty, PageHead, Pill } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
 import { useMe } from "./session.tsx";
 
@@ -24,7 +24,7 @@ function ClassPicker({ value, onChange }: { value: string[]; onChange: (ids: str
     <fieldset className="field" style={{ border: 0, padding: 0, margin: 0 }}>
       <legend style={{ padding: 0, marginBottom: 6 }}>Turmas</legend>
       <Async query={query}>
-        {(classes) => classes.length === 0 ? <p className="sub">Nenhuma turma ainda. Cadastre um aluno com a turma ou importe a planilha na Implantação.</p> : (
+        {(classes) => classes.length === 0 ? <Empty icon="people" title="Nenhuma turma ainda">Cadastre um aluno com a turma ou importe a planilha na Implantação.</Empty> : (
           <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 18px" }}>
             {classes.map((c) => (
               <label className="chk" key={c.id} style={{ border: 0, padding: "6px 0" }}>
@@ -58,7 +58,7 @@ function StudentPicker({ value, onChange }: { value: { id: string; name: string 
       ) : null}
       <input className="input" placeholder="Busque o aluno pelo nome ou e-mail" aria-label="Buscar aluno" value={search} maxLength={120} onChange={(e) => setSearch(e.target.value)} />
       {search.trim().length >= 2 && query.data ? (
-        query.data.length === 0 ? <p className="sub">Nenhum aluno encontrado.</p> : (
+        query.data.length === 0 ? <Empty icon="search" title="Nenhum aluno encontrado">Confira o nome ou a turma digitados.</Empty> : (
           <div className="stack">
             {query.data.filter((p) => !chosen.has(p.id)).slice(0, 6).map((p) => (
               <button key={p.id} className="btn outline slim" type="button" style={{ justifyContent: "flex-start" }} onClick={() => { onChange([...value, { id: p.id, name: p.name }]); setSearch(""); }}>
@@ -325,7 +325,7 @@ function DeletionRequests() {
     <section className="card" aria-labelledby="exclusao-title">
       <h2 id="exclusao-title">Pedidos de exclusão de dados</h2>
       <Async query={query}>
-        {(requests) => requests.length === 0 ? <p className="sub">Nenhum pedido em aberto.</p> : (
+        {(requests) => requests.length === 0 ? <Empty icon="done" title="Nenhum pedido em aberto" /> : (
           <div className="stack">
             {requests.map((r) => (
               <div className="row-box" style={{ flexWrap: "wrap" }} key={r.id}>

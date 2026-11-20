@@ -3,7 +3,7 @@ import { useState, type FormEvent } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ClassExamReport } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
-import { Async, Pill, saveFile } from "../ui/kit.tsx";
+import { Async, Empty, Pill, saveFile } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
 import { FocusPicker, parseScope } from "./focus-picker.tsx";
 
@@ -92,7 +92,7 @@ export function ClassExams({ classId, className }: { classId: string; className:
       <NewExam classId={classId} className={className} />
       <div className="stack" style={{ marginTop: 20 }}>
         <Async query={query}>
-          {(exams) => exams.length === 0 ? <p className="sub">Nenhum simulado publicado para esta turma.</p> : exams.map((exam) => <Report key={exam.id} exam={exam} />)}
+          {(exams) => exams.length === 0 ? <Empty icon="list" title="Nenhum simulado publicado para esta turma" /> : exams.map((exam) => <Report key={exam.id} exam={exam} />)}
         </Async>
       </div>
     </section>
