@@ -44,12 +44,12 @@ export async function recordAttempts(
     const targetMs = targetSeconds(toCandidate(item), extra) * 1000;
     const rows = await tx.query(
       `INSERT INTO attempts (id, school_id, student_id, session_id, item_id, area, discipline, topic, mode, choice, correct, total_ms, target_ms,
-         read_ms, path_ms, calc_ms, check_ms, used_hint, hidden_ms, position, valid, flags, answered_at)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23)
+         read_ms, path_ms, calc_ms, check_ms, used_hint, hidden_ms, position, valid, flags, answered_at, confidence)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24)
        ON CONFLICT (id) DO NOTHING RETURNING id`,
       [a.id, student.schoolId, student.id, a.sessionId, a.itemId, item.area, item.discipline, item.topic, a.mode, a.choice, correct, a.totalMs, targetMs,
        a.phases?.readMs ?? null, a.phases?.pathMs ?? null, a.phases?.calcMs ?? null, a.phases?.checkMs ?? null, a.usedHint, a.hiddenMs, a.position,
-       flags.length === 0, flags, new Date(Math.min(a.answeredAt, now + MAX_CLOCK_SKEW_MS))],
+       flags.length === 0, flags, new Date(Math.min(a.answeredAt, now + MAX_CLOCK_SKEW_MS)), a.confidence ?? null],
     );
     (rows.length > 0 ? result.accepted : result.duplicates).push(a.id);
   }

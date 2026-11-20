@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import type { HintResponse, Letter, PhaseTimes, PracticeSessionPack } from "@ritmo/contracts";
+import { CONFIDENCE_LABELS, CONFIDENCES, type Confidence, type HintResponse, type Letter, type PhaseTimes, type PracticeSessionPack } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
 import { clearPack, flushQueue, loadPack, queueAttempt, savePack } from "../lib/offline.ts";
 import { Bar, clock, Html, Pill, useInterval } from "../ui/kit.tsx";
@@ -22,6 +22,7 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext }
   const [marks, setMarks] = useState<number[]>([performance.now()]);
   const [choice, setChoice] = useState<Letter | null>(null);
   const [finalChoice, setFinalChoice] = useState<Letter | null>(null);
+  const [confidence, setConfidence] = useState<Confidence | null>(null);
   const [hint, setHint] = useState<HintResponse | null>(null);
   const [, redraw] = useState(0);
   const hidden = useRef({ since: null as number | null, total: 0 });
@@ -59,18 +60,19 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext }
     }
   }
 
-  async function confirm(letter: Letter) {
+  async function confirm(letter: Letter, sure: Confidence) {
     const end = performance.now();
     const all = guided ? [...marks, end] : [marks[0]!, end];
     setMarks(guided ? all : [marks[0]!, marks[0]!, marks[0]!, marks[0]!, end]);
     setFinalChoice(letter);
+    setConfidence(sure);
     setStage(4);
     const phases: PhaseTimes | null = guided
       ? { readMs: Math.round(all[1]! - all[0]!), pathMs: Math.round(all[2]! - all[1]!), calcMs: Math.round(all[3]! - all[2]!), checkMs: Math.round(all[4]! - all[3]!) }
       : null;
     await queueAttempt({
       id: crypto.randomUUID(), sessionId, itemId: item.id, mode, choice: letter, totalMs: Math.round(end - marks[0]!), phases,
-      usedHint: hint !== null, hiddenMs: Math.round(hidden.current.total), position, answeredAt: Date.now(),
+      usedHint: hint !== null, hiddenMs: Math.round(hidden.current.total), position, answeredAt: Date.now(), confidence: sure,
     });
     onAnswered();
   }
@@ -89,6 +91,11 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext }
   const time = clock(seconds);
   const title = !right ? `Pegadinha: alternativa ${finalChoice}` : over ? `Certo, mas ${time} passou do tempo-alvo` : `Certo e dentro do tempo-alvo: ${time}`;
   const text = !right ? (trap ?? "Compare sua resposta com a resolução abaixo.") : over ? "O acerto conta, mas a meta é chegar lá mais rápido. Veja no Raio-X qual fase pesou." : "Questão dentro do Índice Ritmo.";
+  // A certeza decide o que entra na revisão espaçada: o aviso explica por que a questão vai voltar.
+  const review = !right && confidence === "sure"
+    ? "Você tinha certeza e errou: este é o erro mais importante de rever. A questão foi para o topo do seu caderno de erros."
+    : !right ? "A questão foi para o seu caderno de erros. Depois de refazer, ela volta em 2, 7 e 21 dias para fixar."
+    : confidence === "guess" ? "Você acertou no chute, então ela vai para o caderno de erros para você rever com calma." : null;
 
   return (
     <div className="split">
@@ -128,13 +135,21 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext }
           </div>
         ) : null}
         {stage >= 2 && !answered && choice ? (
-          <div className="btn-row"><button ref={guided ? focusRef : undefined} className="btn" type="button" onClick={() => void confirm(choice)}>Confirmar alternativa {choice}</button></div>
+          <div className="confidence" role="group" aria-labelledby="confidence-label">
+            <div className="label-caps" id="confidence-label">CONFIRMAR A ALTERNATIVA {choice}: QUANTA CERTEZA VOCÊ TEM?</div>
+            <div className="btn-row">
+              {CONFIDENCES.map((level, i) => (
+                <button key={level} ref={guided && i === 0 ? focusRef : undefined} className={`btn ${i === 0 ? "" : "soft"}`} type="button" onClick={() => void confirm(choice, level)}>{CONFIDENCE_LABELS[level]}</button>
+              ))}
+            </div>
+          </div>
         ) : null}
         {answered ? (
           <>
             <div className={`feedback ${right ? "good" : ""}`}>
               <b>{title}</b>
               <p>{text}</p>
+              {review ? <p className="note" role="status">{review}</p> : null}
               {item.key.solutionHtml ? <><p className="solution"><strong>Resolução:</strong></p><Html className="solution-html" html={item.key.solutionHtml} /></> : null}
             </div>
             <LabLinks discipline={item.discipline} topic={item.topic} text={`${item.contextHtml} ${item.stemHtml}`} solutionHtml={item.key.solutionHtml} />

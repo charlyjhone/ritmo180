@@ -65,6 +65,12 @@ function Dashboard({ d }: { d: StudentDashboard }) {
           <Link to={`/diagnostico/${d.diagnosticPending[0]}`}>Começar diagnóstico</Link>
         </div>
       ) : null}
+      {d.reviews.due > 0 ? (
+        <div className="notice">
+          {d.reviews.due === 1 ? "1 questão para rever hoje" : `${d.reviews.due} questões para rever hoje`}, cerca de {Math.max(2, Math.round(d.reviews.due * 2))} minutos. Rever no dia certo é o que faz o conteúdo ficar até o ENEM.{" "}
+          <Link to={trainingLink({ mistakes: true })}>Rever agora</Link>
+        </div>
+      ) : null}
       <WeeklyGoal goal={d.goal} />
       <Metrics label="Indicadores principais">
         <Metric xl label="Índice Ritmo" value={ritmo.index === null ? "—" : `${ritmo.index}%`} note={ritmo.weekDelta === null ? `${ritmo.samples} questões válidas` : `${points(ritmo.weekDelta)} nesta semana`} tone={ritmo.weekDelta === null ? "" : ritmo.weekDelta >= 0 ? "up" : "down"} hint="Questões certas dentro do tempo-alvo" />

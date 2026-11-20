@@ -118,7 +118,35 @@ describe("caderno de erros e plano", () => {
     expect(redo.items.map((i) => i.id)).toContain(item.id);
     expect(redo.items.every((i) => book.questions.some((q) => q.itemId === i.id) || book.total > book.questions.length)).toBe(true);
     await student.post("/api/practice/sync", { attempts: [attempt(item.key.answer, redo.sessionId, NOW)] });
-    expect(json<MistakeBook>(await student.get("/api/practice/mistakes")).questions.map((q) => q.itemId)).not.toContain(item.id);
+    const after = json<MistakeBook>(await student.get("/api/practice/mistakes"));
+    expect(after.questions.map((q) => q.itemId)).not.toContain(item.id);
+    expect(after.upcoming.count).toBeGreaterThanOrEqual(1);
+    expect(after.upcoming.nextDueAt).toBeGreaterThan(NOW);
+  });
+
+  it("acerto no chute entra no caderno e erro com certeza vem primeiro", async () => {
+    const student = as(await login(a.students.at(-1)!));
+    const pack = json<PracticeSessionPack>(await student.post("/api/practice/sessions", { minutes: 15 }));
+    const [guessItem, sureItem] = pack.items;
+    const wrong = sureItem!.alternatives.find((x) => x.letter !== sureItem!.key.answer)!.letter;
+    const attempt = (itemId: string, choice: string, confidence: string, answeredAt: number) => ({
+      id: randomUUID(), sessionId: pack.sessionId, itemId, mode: "exam", choice, totalMs: 100_000, phases: null,
+      usedHint: false, hiddenMs: 0, position: 0, answeredAt, confidence,
+    });
+    const synced = json<SyncResult>(await student.post("/api/practice/sync", { attempts: [
+      attempt(guessItem!.id, guessItem!.key.answer, "guess", NOW - 120_000),
+      attempt(sureItem!.id, wrong, "sure", NOW - 60_000),
+    ] }));
+    expect(synced.accepted).toHaveLength(2);
+    expect((await student.post("/api/practice/sync", { attempts: [{ ...attempt(sureItem!.id, wrong, "talvez", NOW), id: randomUUID() }] })).statusCode).toBe(400);
+
+    const book = json<MistakeBook>(await student.get("/api/practice/mistakes"));
+    expect(book.questions[0]).toMatchObject({ itemId: sureItem!.id, kind: "redo", sureMiss: true });
+    expect(book.questions.find((q) => q.itemId === guessItem!.id)).toMatchObject({ kind: "redo", guessed: true });
+    expect(json<StudentDashboard>(await student.get("/api/insights/student")).reviews.due).toBe(book.total);
+
+    const redo = json<PracticeSessionPack>(await student.post("/api/practice/sessions", { minutes: 90, mistakes: true }));
+    expect(redo.items.map((i) => i.id)).toEqual(expect.arrayContaining([guessItem!.id, sureItem!.id]));
   });
 
   it("mostra a contagem e o foco de cada dia até o ENEM", async () => {

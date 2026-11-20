@@ -4,7 +4,7 @@ import { diagnoseTime, estimateTheta, planSession, sumPhases, type LearnerSnapsh
 import type { Tx } from "../../platform/db.ts";
 import { loadCandidates, loadItems, toAnswerKey, toPracticeItem } from "../catalog/index.ts";
 import { createSessionRow } from "./attempts.ts";
-import { pendingMistakeIds } from "./mistakes.ts";
+import { dueReviews } from "./mistakes.ts";
 import { computeSnapshot, extraMinutesOf, irtFor, loadAttempts, scoreResponses } from "./progress.ts";
 
 const DAY_MS = 86_400_000;
@@ -27,8 +27,7 @@ interface Focus {
   mistakes?: boolean;
 }
 
-async function buildPlan(tx: Tx, studentId: string, minutes: number, now: number, focus: Focus = {}): Promise<PlannedBlock[]> {
-  const mistakes = focus.mistakes ? await pendingMistakeIds(tx, studentId) : null;
+async function buildPlan(tx: Tx, studentId: string, minutes: number, now: number, focus: Focus = {}, mistakes: Map<string, string> | null = null): Promise<PlannedBlock[]> {
   const items = (await loadCandidates(tx, focus)).filter((item) => !mistakes || mistakes.has(item.id));
   const attempts = await loadAttempts(tx, studentId);
   const irt = await irtFor(tx, attempts);
@@ -61,7 +60,8 @@ export async function createPracticeSession(
   input: { mode: "guided" | "exam"; minutes: number } & Focus,
   now: number,
 ): Promise<PracticeSessionPack> {
-  const blocks = await buildPlan(tx, student.id, input.minutes, now, input);
+  const due = input.mistakes ? await dueReviews(tx, student.id, now) : null;
+  const blocks = await buildPlan(tx, student.id, input.minutes, now, input, due);
   const views = blocks.map(blockView);
   const sessionId = await createSessionRow(tx, student, input.mode, views);
   const extra = await extraMinutesOf(tx, student.id);
@@ -69,11 +69,11 @@ export async function createPracticeSession(
   const items = await loadItems(tx, planned.map((p) => p.itemId));
   const chosen = planned.map((entry) => {
     const item = items.get(entry.itemId)!;
-    return { ...toPracticeItem(item, extra), key: toAnswerKey(item), reason: input.mistakes ? "Questão do seu caderno de erros" : entry.reason };
+    return { ...toPracticeItem(item, extra), key: toAnswerKey(item), reason: !due ? entry.reason : due.get(item.id) === "spaced" ? "Revisão espaçada: você acertou antes, veja se ainda lembra" : "Questão do seu caderno de erros" };
   });
   const wanted = Math.floor(input.minutes / 3);
   let notice: string | null = null;
-  if (chosen.length === 0 && input.mistakes) notice = "Não há questões para refazer nesta escolha. Seu caderno de erros está em dia.";
+  if (chosen.length === 0 && input.mistakes) notice = "Não há questões para rever hoje nesta escolha. Seu caderno de erros está em dia.";
   else if (chosen.length === 0) notice = input.discipline ? "Você já praticou todas as questões desta escolha nas últimas semanas. Escolha outro assunto ou volte em alguns dias." : "Você já praticou todas as questões disponíveis nas últimas semanas. Novas questões aparecem aqui assim que entrarem no banco.";
   else if (chosen.length < wanted) notice = `Só há ${chosen.length} ${chosen.length === 1 ? "questão inédita" : "questões inéditas"} para você agora; o restante do tempo fica para quando o banco crescer.`;
   return { sessionId, mode: input.mode, blocks: views, items: chosen, notice };

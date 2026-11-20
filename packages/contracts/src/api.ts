@@ -3,6 +3,9 @@ import { z } from "zod";
 import { AREAS, GRADES, type Area, type Role } from "./taxonomy.ts";
 import { LETTERS, type Letter, type PracticeAnswerKey, type PracticeItem } from "./item.ts";
 
+export const CONFIDENCES = ["sure", "think", "guess"] as const;
+export type Confidence = (typeof CONFIDENCES)[number];
+
 export const LoginInput = z.object({ email: z.string().email().max(160), password: z.string().min(8).max(200) });
 
 export interface Me {
@@ -126,8 +129,12 @@ export const AttemptInput = z.object({
   hiddenMs: z.number().int().min(0).max(14_400_000),
   position: z.number().int().min(0).max(500),
   answeredAt: z.number().int().positive(),
+  /** Quanta certeza o aluno tinha. Ausente nas tentativas guardadas no aparelho antes desta pergunta existir. */
+  confidence: z.enum(CONFIDENCES).nullish(),
 });
 export type AttemptInput = z.infer<typeof AttemptInput>;
+
+export const CONFIDENCE_LABELS: Record<Confidence, string> = { sure: "Tenho certeza", think: "Acho que sim", guess: "Chutei" };
 
 export const SyncInput = z.object({ attempts: z.array(AttemptInput).min(1).max(500) });
 export const NextSessionInput = z
@@ -199,6 +206,7 @@ export interface StudentDashboard {
   syncedAttempts: number;
   enem: StudyPlan["enem"];
   goal: { target: number; done: number; trainedToday: boolean };
+  reviews: { due: number; upcoming: number };
 }
 
 export const ReadingSubmit = z.object({
@@ -281,10 +289,25 @@ export interface ReviewedQuestion {
 }
 
 export interface MistakeBook {
+  /** Questões para rever hoje: erros a refazer e revisões espaçadas vencidas. */
   total: number;
   topics: { discipline: string; topic: string; count: number }[];
-  questions: (ReviewedQuestion & { itemId: string; times: number; lastWrongAt: number })[];
+  /** Questões que já foram refeitas e voltam numa data futura. */
+  upcoming: { count: number; nextDueAt: number | null };
+  questions: (ReviewedQuestion & {
+    itemId: string;
+    /** Quantas vezes errou. */
+    times: number;
+    lastWrongAt: number | null;
+    /** `redo`: refazer; `spaced`: revisão espaçada, a `step + 1` de REVIEW_STEPS. */
+    kind: "redo" | "spaced";
+    step: number;
+    sureMiss: boolean;
+    guessed: boolean;
+  })[];
 }
+
+export const REVIEW_STEPS = 3;
 
 export interface StudyPlan {
   /** `estimated` indica que o edital ainda não saiu. */
