@@ -51,6 +51,9 @@ export async function buildApp(deps: AppDeps, options: { webRoot?: string; labRo
     if (status === 429) return reply.status(429).send({ code: "too_many_requests", message: "Muitas tentativas. Aguarde um minuto." });
     if (status && status < 500) return reply.status(status).send({ code: "bad_request", message: "Requisição inválida." });
     request.log.error(error);
+    const route = `${request.method} ${request.routeOptions.url ?? "rota desconhecida"}`;
+    const name = error instanceof Error ? error.name : "Erro";
+    deps.alert?.(`500 ${route} ${name}`, `erro 500 em ${route}: ${name}: ${error instanceof Error ? error.message : String(error)}`);
     return reply.status(500).send({ code: "internal", message: "Algo deu errado do nosso lado." });
   });
 
