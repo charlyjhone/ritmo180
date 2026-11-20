@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ItemSuggestionView, LessonSuggestionView, Milestone, NetworkDashboard } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
-import { Async, Html, Metric, Metrics, number, PageHead, Pill } from "../ui/kit.tsx";
+import { Async, Empty, Html, Metric, Metrics, number, PageHead, Pill } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
 
 interface ReviewItem {
@@ -189,7 +189,7 @@ function EnemCalendar() {
       <Async query={query}>
         {(list) => (
           <div className="stack" style={{ marginTop: 12 }}>
-            {list.length === 0 ? <p className="sub">Nenhuma data cadastrada.</p> : null}
+            {list.length === 0 ? <Empty icon="calendar" title="Nenhuma data cadastrada">Cadastre as datas oficiais quando o INEP publicar o edital.</Empty> : null}
             {list.map((m) => (
               <div className="row-box" key={m.id}>
                 <div className="grow"><div className="row-title">{m.title}</div><div className="row-sub">{fullDate(m.startsOn)}{m.endsOn ? ` a ${fullDate(m.endsOn)}` : ""}{m.note ? ` · ${m.note}` : ""}</div></div>
@@ -224,7 +224,7 @@ function Board({ d }: { d: NetworkDashboard }) {
       <section className="card" aria-labelledby="funil-title">
         <h2 className="lg" id="funil-title">Validação das questões geradas por IA</h2>
         <p className="sub">Toda questão gerada passa por estas etapas e só é publicada depois da revisão de uma pessoa.</p>
-        {d.funnel[0]?.count === 0 ? <p className="sub">Nenhuma questão gerada até agora.</p> : (
+        {d.funnel[0]?.count === 0 ? <Empty icon="list" title="Nenhuma questão gerada até agora" /> : (
           <div className="funnel">
             {d.funnel.map((s) => (
               <div className="funnel-row" key={s.name}>

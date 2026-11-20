@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AREA_NAMES, type CourseGoalView, type Milestone, type StudyPlan } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
-import { Async, Bar, Metric, Metrics, PageHead, Pill } from "../ui/kit.tsx";
+import { Async, Bar, Empty, Metric, Metrics, PageHead, Pill } from "../ui/kit.tsx";
 import { trainingLink } from "./focus-picker.tsx";
 import { labModule, labUrl } from "@ritmo/contracts";
 import { labIdsFor } from "./lab-links.tsx";
@@ -103,7 +103,7 @@ function Calendar() {
               </div>
             ))}
           </div>
-        ) : <p className="sub">As datas de isenção, inscrição e provas aparecem aqui assim que o INEP publicar o edital. Fique de olho também no site do INEP.</p>}
+        ) : <Empty icon="calendar" title="O calendário sai com o edital">As datas de isenção, inscrição e provas aparecem aqui assim que o INEP publicar o edital. Fique de olho também no site do INEP.</Empty>}
       </Async>
     </section>
   );

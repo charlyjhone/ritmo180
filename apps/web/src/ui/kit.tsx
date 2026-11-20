@@ -66,9 +66,35 @@ export function TimeStrip({ read, path, calc, check, small }: { read: number; pa
   );
 }
 
+const EMPTY_ICONS = {
+  done: <path d="M7 12.5l3.2 3.2L17 9" />,
+  chart: <><path d="M4 19h16" /><path d="M6 15l4-4 3 3 5-6" /></>,
+  list: <><path d="M9 7h10M9 12h10M9 17h6" /><circle cx="5" cy="7" r="1" /><circle cx="5" cy="12" r="1" /><circle cx="5" cy="17" r="1" /></>,
+  calendar: <><rect x="4" y="5" width="16" height="15" rx="3" /><path d="M4 10h16M9 3v4M15 3v4" /></>,
+  search: <><circle cx="11" cy="11" r="6" /><path d="M20 20l-4.5-4.5" /></>,
+  people: <><circle cx="9" cy="9" r="3.2" /><path d="M3.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5" /><path d="M16 6.2a3 3 0 010 5.6M17.5 14.8c1.5.6 2.6 2 3 4.2" /></>,
+} as const;
+
+/**
+ * Bloco vazio: diz o que vai aparecer ali e, quando existe, o próximo passo.
+ * `done`: está vazio porque está tudo certo (sem lacunas, sem alertas). Os outros ícones: ainda não há dados.
+ */
+export function Empty({ icon = "list", title, children, action }: { icon?: keyof typeof EMPTY_ICONS; title: string; children?: ReactNode; action?: ReactNode }) {
+  return (
+    <div className={`empty ${icon === "done" ? "done" : ""}`}>
+      <span className="empty-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{EMPTY_ICONS[icon]}</svg>
+      </span>
+      <div className="empty-title">{title}</div>
+      {children ? <p className="empty-text">{children}</p> : null}
+      {action ? <div className="empty-action">{action}</div> : null}
+    </div>
+  );
+}
+
 export function LineChart({ values, labels, label, width = 600, goal }: { values: (number | null)[]; labels: string[]; label: string; width?: number; goal?: number }) {
   const known = values.flatMap((v) => (v === null ? [] : [v]));
-  if (known.length < 2) return <p className="sub">Ainda não há semanas suficientes para mostrar a evolução.</p>;
+  if (known.length < 2) return <Empty icon="chart" title="A evolução aparece com 2 semanas de treino">Cada semana com treino vira um ponto deste gráfico. Treine nesta e na próxima semana para ver a sua linha.</Empty>;
   const lo = Math.max(0, Math.floor(Math.min(...known, goal ?? 100) / 10) * 10 - 10);
   const hi = Math.min(100, Math.ceil(Math.max(...known, goal ?? 0) / 10) * 10 + 10);
   const y = (v: number) => Math.round(160 - ((v - lo) / (hi - lo)) * 140);

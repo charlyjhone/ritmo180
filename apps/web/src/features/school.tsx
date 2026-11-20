@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { SchoolDashboard } from "@ritmo/contracts";
 import { api } from "../lib/api.ts";
-import { Async, Bar, clockOrDash, Metric, Metrics, PageHead, Pill, points, saveFile } from "../ui/kit.tsx";
+import { Async, Bar, clockOrDash, Empty, Metric, Metrics, PageHead, Pill, points, saveFile } from "../ui/kit.tsx";
 
 const pct = (v: number | null) => (v === null ? "—" : `${v}%`);
 const dash = (v: number | null) => (v === null ? "—" : v);
@@ -67,7 +67,7 @@ function Board({ d }: { d: SchoolDashboard }) {
         <section className="card" aria-labelledby="tri-title">
           <h2 id="tri-title">Nota TRI estimada por área</h2>
           <div className="stack" style={{ gap: 16, marginTop: 18 }}>
-            {d.areas.length === 0 ? <p className="sub">Ainda não há alunos com medida confiável.</p> : null}
+            {d.areas.length === 0 ? <Empty icon="chart" title="Ainda não há alunos com medida confiável">A nota por área aparece quando os alunos fizerem o diagnóstico e os primeiros treinos.</Empty> : null}
             {d.areas.map((a) => (
               <div key={a.area}>
                 <div className="row-head" style={{ marginBottom: 6 }}><span>{a.name}{a.provisional ? " (escala provisória)" : ""}</span><span className="mono">{a.score}</span></div>
@@ -94,7 +94,7 @@ function Board({ d }: { d: SchoolDashboard }) {
       <section className="card" aria-labelledby="msg-title">
         <h2 id="msg-title">Mensagens das famílias</h2>
         <div className="stack">
-          {d.messages.length === 0 ? <p className="sub">Nenhuma mensagem.</p> : null}
+          {d.messages.length === 0 ? <Empty icon="done" title="Nenhuma mensagem" /> : null}
           {d.messages.map((msg) => (
             <div className="message" key={msg.id}>
               <small>{msg.from} · sobre {msg.student} · {new Date(msg.at).toLocaleDateString("pt-BR")}</small>

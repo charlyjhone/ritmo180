@@ -8,7 +8,7 @@ import { api } from "../lib/api.ts";
 import { trainingLink } from "./focus-picker.tsx";
 import { lessonLink } from "./lessons.tsx";
 import { cardsLink } from "./cards.tsx";
-import { Async, Bar, clock, clockOrDash, LineChart, Metric, Metrics, PageHead, ScoreMetric, points, TimeStrip } from "../ui/kit.tsx";
+import { Async, Bar, clock, clockOrDash, Empty, LineChart, Metric, Metrics, PageHead, ScoreMetric, points, TimeStrip } from "../ui/kit.tsx";
 
 const GOAL_CHOICES = [20, 35, 50, 70, 100, 150];
 
@@ -223,12 +223,12 @@ function Dashboard({ d }: { d: StudentDashboard }) {
         <section className="card" aria-labelledby="prox-title">
           <h2 id="prox-title">Próximos treinos escolhidos pelo motor</h2>
           <div className="stack">
-            {d.plan.length === 0 ? <p className="sub">Você já praticou todas as questões disponíveis nas últimas semanas.</p> : null}
+            {d.plan.length === 0 ? <Empty icon="done" title="Você praticou todas as questões disponíveis" action={<Link className="btn soft slim" to="/simulado">Fazer um simulado</Link>}>Nas últimas semanas não sobrou questão nova para o motor escolher. Um simulado mede como você está na prova inteira.</Empty> : null}
             {d.plan.map((t) => (
               <div className="row-box" key={t.kind}>
                 <div className="tag mono">{t.kind === "REVISAO" ? "REVISÃO" : t.kind}</div>
                 <div className="grow"><div className="row-title">{t.title} · {t.itemIds.length} questões</div><div className="row-sub">{t.reason}</div></div>
-                <div className="mono note b">{t.minutes} min</div>
+                <div className="row-meta mono">{t.minutes} min</div>
               </div>
             ))}
           </div>
@@ -238,9 +238,9 @@ function Dashboard({ d }: { d: StudentDashboard }) {
       <div className="grid-2">
         <section className="card" aria-labelledby="hab-title">
           <h2 id="hab-title">Seus assuntos no Método Ritmo</h2>
-          <div className="stages">{STAGES.map((s, i) => <span key={s}>{i + 1} {s}</span>)}</div>
-          <div style={{ marginTop: 12 }}>
-            {d.skills.length === 0 ? <p className="sub">Os assuntos aparecem depois dos primeiros treinos.</p> : null}
+          <ol className="stages" aria-label="Etapas do Método Ritmo">{STAGES.map((s, i) => <li key={s}><b>{i + 1}</b>{s}</li>)}</ol>
+          <div className="skills">
+            {d.skills.length === 0 ? <Empty icon="list" title="Seus assuntos aparecem aqui" action={<Link className="btn soft slim" to="/treino">Fazer o primeiro treino</Link>}>Depois dos primeiros treinos, cada assunto mostra em que etapa do método você está.</Empty> : null}
             {d.skills.map((s) => (
               <div className="skill" key={s.topic}>
                 <div className="skill-name">{s.topic}<small>{s.discipline} · {s.mastery}% de domínio · {s.attempts} {s.attempts === 1 ? "questão" : "questões"}</small></div>
@@ -255,7 +255,7 @@ function Dashboard({ d }: { d: StudentDashboard }) {
           <h2 id="pre-title">Pré-requisitos do Fundamental que ainda pesam</h2>
           <p className="sub">O motor rastreou seus erros até a habilidade de origem. Fechar estas lacunas acelera várias questões ao mesmo tempo.</p>
           <div className="stack">
-            {d.gaps.length === 0 ? <p className="sub">Nenhuma lacuna identificada ainda.</p> : null}
+            {d.gaps.length === 0 ? <Empty icon="done" title="Nenhuma lacuna por enquanto">Quando um erro seu vier de uma habilidade do Fundamental, ela aparece aqui com o quanto pesa.</Empty> : null}
             {d.gaps.map((g) => (
               <div className="gap-box" key={g.name}>
                 <div className="row-head"><span className="row-title">{g.name}</span><span className="pill warn tight">{g.grade}</span></div>

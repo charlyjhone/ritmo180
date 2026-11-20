@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ExamResultView, ExamSittingView, ExamSummary, Letter } from "@ritmo/contracts";
 import { paceBalance } from "@ritmo/engine";
 import { api, ApiError } from "../lib/api.ts";
-import { Async, Bar, clock, Html, Metric, Metrics, PageHead, Pill, ScoreMetric, signed, useInterval } from "../ui/kit.tsx";
+import { Async, Bar, clock, Empty, Html, Metric, Metrics, PageHead, Pill, ScoreMetric, signed, useInterval } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
 import { FocusPicker, parseScope, trainingLink } from "./focus-picker.tsx";
 import { QuestionReview } from "./question-review.tsx";
@@ -281,7 +281,7 @@ function Result({ r }: { r: ExamResultView }) {
         <section className="card" aria-labelledby="e-se-title">
           <h2 id="e-se-title">E se você tivesse feito diferente?</h2>
           <div className="stack">
-            {r.whatIf.length === 0 ? <p className="sub">Nenhuma mudança de estratégia teria alterado sua nota nesta prova.</p> : null}
+            {r.whatIf.length === 0 ? <Empty icon="done" title="Sua estratégia foi a melhor possível">Nenhuma mudança de estratégia teria alterado sua nota nesta prova.</Empty> : null}
             {r.whatIf.map((w) => (
               <div className="row-box" key={w.title}><div className="tag big mono">{signed(w.gain)}</div><div className="grow"><div className="row-title">{w.title}</div><div className="row-sub">{w.detail}</div></div></div>
             ))}
@@ -291,7 +291,7 @@ function Result({ r }: { r: ExamResultView }) {
       <section className="card" aria-labelledby="incoer-title">
         <h2 id="incoer-title">Questões que a TRI lê como incoerência</h2>
         <p className="sub">Errar questões fáceis enquanto acerta difíceis reduz a nota mais do que o número de acertos sugere.</p>
-        {r.incoherent.length === 0 ? <p className="sub">Nenhuma incoerência nesta prova.</p> : (
+        {r.incoherent.length === 0 ? <Empty icon="done" title="Nenhuma incoerência nesta prova" /> : (
           <div className="table-wrap">
             <table className="tbl min-640">
               <thead><tr><th scope="col">Questão</th><th scope="col">Dificuldade</th><th scope="col">Você</th><th scope="col">Tempo gasto</th><th scope="col">O que aconteceu</th></tr></thead>
