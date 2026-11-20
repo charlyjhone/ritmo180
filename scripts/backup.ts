@@ -9,7 +9,8 @@
 import { gunzipSync, gzipSync } from "node:zlib";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { openPglite } from "../apps/api/src/platform/db-pglite.ts";
 import { openPostgres } from "../apps/api/src/platform/db-postgres.ts";
 import { migrate } from "../apps/api/src/platform/migrate.ts";
@@ -113,4 +114,5 @@ function report(path: string, result: { tables: number; rows: number; problems: 
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) await main();
+// Comparar como URL: o caminho do projeto tem espaços, que viram %20 em import.meta.url.
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) await main();
