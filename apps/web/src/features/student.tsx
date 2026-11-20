@@ -6,6 +6,7 @@ import { AREA_NAMES, type StudentDashboard } from "@ritmo/contracts";
 import { STAGES } from "@ritmo/engine";
 import { api } from "../lib/api.ts";
 import { trainingLink } from "./focus-picker.tsx";
+import { lessonLink } from "./lessons.tsx";
 import { Async, Bar, clock, clockOrDash, LineChart, Metric, Metrics, PageHead, ScoreMetric, points, TimeStrip } from "../ui/kit.tsx";
 
 const GOAL_CHOICES = [20, 35, 50, 70, 100, 150];
@@ -132,7 +133,7 @@ function Dashboard({ d }: { d: StudentDashboard }) {
                 <div className="skill-name">{s.topic}<small>{s.discipline} · {s.mastery}% de domínio · {s.attempts} {s.attempts === 1 ? "questão" : "questões"}</small></div>
                 <div className="dots" role="img" aria-label={`Etapa ${s.stage} de 5`}>{[1, 2, 3, 4, 5].map((n) => <i key={n} className={n <= s.stage ? "on" : ""} />)}</div>
                 <div className="skill-stage">{s.stage} · {s.stageName}</div>
-                {s.discipline ? <Link className="btn soft slim skill-train" to={trainingLink(s)} aria-label={`Treinar ${s.topic}`}>Treinar</Link> : null}
+                {s.discipline ? <Link className="btn soft slim skill-train" to={s.mastery < 60 ? lessonLink(s) : trainingLink(s)} aria-label={`${s.mastery < 60 ? "Aula de" : "Treinar"} ${s.topic}`}>{s.mastery < 60 ? "Aula" : "Treinar"}</Link> : null}
               </div>
             ))}
           </div>

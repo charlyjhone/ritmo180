@@ -6,6 +6,7 @@ import { REVIEW_STEPS, type MistakeBook } from "@ritmo/contracts";
 import { api } from "../lib/api.ts";
 import { Async, PageHead } from "../ui/kit.tsx";
 import { trainingLink } from "./focus-picker.tsx";
+import { lessonLink } from "./lessons.tsx";
 import { QuestionReview } from "./question-review.tsx";
 
 const SEPARATOR = "\n";
@@ -23,7 +24,7 @@ export function MistakesPage() {
       <PageHead
         kicker="Caderno de erros e revisões"
         title={query.data ? (query.data.total === 0 ? "Nada para rever hoje" : `${query.data.total} ${query.data.total === 1 ? "questão para rever hoje" : "questões para rever hoje"}`) : "Seus erros"}
-        actions={query.data?.total ? <Link className="btn" to={trainingLink({ discipline, topic, mistakes: true })}>{choice ? "Rever este assunto" : "Rever agora"}</Link> : null}
+        actions={query.data?.total ? <><Link className="btn" to={trainingLink({ discipline, topic, mistakes: true })}>{choice ? "Rever este assunto" : "Rever agora"}</Link>{discipline && topic ? <Link className="btn soft" to={lessonLink({ discipline, topic })}>Aula rápida do assunto</Link> : null}</> : null}
       />
       <Async query={query}>
         {(book) => book.total === 0 ? <div className="state">{book.upcoming.count > 0 ? `${upcomingText(book.upcoming)} Volte nesse dia: lembrar depois de um intervalo é o que fixa o conteúdo.` : "Quando você errar uma questão ou acertar no chute, ela aparece aqui. Depois de refazer, ela volta em 2, 7 e 21 dias até ficar na memória."}</div> : (

@@ -1,0 +1,42 @@
+[
+  {
+    "discipline": "Sociologia",
+    "topic": "Poder, Política e Estado",
+    "title": "Estado, poder, democracia e cidadania",
+    "explanationHtml": "<ul><li><strong>Weber</strong>: o Estado detém o <strong>monopólio do uso legítimo da força</strong> num território. Três tipos de dominação legítima: <strong>tradicional</strong> (costume), <strong>carismática</strong> (qualidades do líder) e <strong>racional-legal</strong> (leis e burocracia).</li><li><strong>Formas de Estado</strong>: absolutista, liberal (Estado mínimo), de bem-estar social (garante direitos sociais), neoliberal.</li><li><strong>Democracia</strong>: direta, representativa e participativa (conselhos, orçamento participativo, plebiscitos).</li><li><strong>Cidadania</strong> (T. H. Marshall): direitos <strong>civis</strong> (liberdades), <strong>políticos</strong> (votar e ser votado) e <strong>sociais</strong> (saúde, educação). No Brasil, os sociais vieram antes dos políticos plenos, na Era Vargas.</li><li><strong>Totalitarismo</strong>: controle total da vida, partido único, propaganda, terror.</li></ul>",
+    "exampleHtml": "<p>Um líder que obtém obediência por sua personalidade e capacidade de inspirar exerce que tipo de dominação, segundo Weber?</p><p><strong>Carismática</strong>: a legitimidade vem das qualidades extraordinárias atribuídas à pessoa, não do costume nem das leis.</p>",
+    "pitfallsHtml": "<ul><li>Confundir poder (impor a vontade) com dominação legítima (obediência aceita).</li><li>Achar que cidadania é só votar.</li><li>Confundir Estado (instituição permanente) com governo (grupo que o administra temporariamente).</li></ul>"
+  },
+  {
+    "discipline": "Sociologia",
+    "topic": "Cultura e Sociedade",
+    "title": "Cultura, etnocentrismo e identidade",
+    "explanationHtml": "<ul><li><strong>Cultura</strong>, para a antropologia: todo modo de vida aprendido e compartilhado (valores, costumes, técnicas, linguagem), não só as artes.</li><li><strong>Etnocentrismo</strong>: julgar outras culturas pelos valores da própria, vista como superior.</li><li><strong>Relativismo cultural</strong>: compreender cada cultura em seus próprios termos.</li><li><strong>Aculturação</strong>, <strong>sincretismo</strong> (mistura de elementos, como em religiões afro-brasileiras) e <strong>diversidade</strong>.</li><li><strong>Indústria cultural</strong> e cultura de massa transformam a cultura em mercadoria.</li><li><strong>Socialização</strong>: processo pelo qual aprendemos normas, na família (primária) e na escola, no trabalho e na mídia (secundária).</li><li><strong>Racismo estrutural</strong>: desigualdades raciais reproduzidas pelas instituições, mesmo sem intenção individual.</li></ul>",
+    "exampleHtml": "<p>Chamar de «primitivos» povos indígenas por não usarem tecnologia industrial é exemplo de quê?</p><p>De <strong>etnocentrismo</strong>: usa os critérios da própria sociedade como medida universal, ignorando os saberes e a complexidade de outras culturas.</p>",
+    "pitfallsHtml": "<ul><li>Achar que cultura é só arte erudita.</li><li>Confundir relativismo cultural com aceitar qualquer violação de direitos humanos.</li><li>Tratar culturas como estáticas: elas mudam e trocam elementos.</li></ul>"
+  },
+  {
+    "discipline": "Sociologia",
+    "topic": "Movimentos Sociais",
+    "title": "Movimentos sociais e ação coletiva",
+    "explanationHtml": "<ul><li><strong>Movimentos sociais</strong>: ações coletivas organizadas para mudar (ou conservar) aspectos da sociedade, reivindicando direitos.</li><li><strong>Tradicionais</strong>: ligados ao trabalho e à classe, como o movimento operário e os sindicatos.</li><li><strong>Novos movimentos sociais</strong> (a partir dos anos 1960): identidades e causas diversas, como feminismo, movimento negro, LGBTQIA+, ambientalismo, povos indígenas.</li><li><strong>No Brasil</strong>: MST (reforma agrária), movimentos por moradia, Diretas Já, movimento negro (cotas), movimento indígena (demarcação de terras), movimentos estudantis.</li><li>Atuação por protestos, ocupações, redes sociais, pressão sobre o Legislativo. Muitas conquistas foram incorporadas à Constituição de 1988.</li></ul>",
+    "exampleHtml": "<p>Por que o movimento feminista é classificado como «novo movimento social»?</p><p>Sua luta não se baseia principalmente na <strong>classe</strong>, mas em <strong>identidade e reconhecimento</strong> (igualdade de gênero, fim da violência), característica dos movimentos surgidos após os anos 1960.</p>",
+    "pitfallsHtml": "<ul><li>Achar que movimento social é o mesmo que partido político.</li><li>Ver movimentos sociais só como baderna, ignorando seu papel na ampliação de direitos.</li><li>Confundir movimentos de classe com os de identidade.</li></ul>"
+  },
+  {
+    "discipline": "Sociologia",
+    "topic": "Sociologia Contemporânea",
+    "title": "Globalização, modernidade líquida e redes",
+    "explanationHtml": "<ul><li><strong>Bauman</strong>: <strong>modernidade líquida</strong>, em que relações, empregos e identidades são frágeis e passageiros; consumismo.</li><li><strong>Giddens</strong>: globalização e sociedade de risco; reflexividade.</li><li><strong>Bourdieu</strong>: <strong>capital cultural</strong> (conhecimentos, hábitos valorizados) e <strong>habitus</strong>; a escola tende a <strong>reproduzir</strong> desigualdades ao premiar quem já traz esse capital de casa.</li><li><strong>Castells</strong>: sociedade em rede, informação como base da economia.</li><li><strong>Trabalho hoje</strong>: flexibilização, terceirização, <strong>uberização</strong> (trabalho por aplicativo, sem vínculo e direitos), precarização.</li><li>Questões de gênero, raça e desigualdade como eixos de análise.</li></ul>",
+    "exampleHtml": "<p>Por que, segundo Bourdieu, alunos com pais escolarizados tendem a ir melhor na escola, mesmo com igual esforço?</p><p>Porque trazem de casa um <strong>capital cultural</strong> (vocabulário, leitura, familiaridade com a cultura escolar) que a escola valoriza como se fosse mérito individual.</p>",
+    "pitfallsHtml": "<ul><li>Atribuir a modernidade líquida a Giddens (é de Bauman).</li><li>Achar que capital cultural é sinônimo de dinheiro.</li><li>Tratar a uberização como empreendedorismo, sem considerar a perda de direitos.</li></ul>"
+  },
+  {
+    "discipline": "Sociologia",
+    "topic": "Karl Marx",
+    "title": "Marx: classes, mais-valia e alienação",
+    "explanationHtml": "<ul><li><strong>Materialismo histórico</strong>: as condições materiais (como a sociedade produz) moldam a política, o direito e as ideias. A base econômica (<strong>infraestrutura</strong>) condiciona a <strong>superestrutura</strong>.</li><li><strong>Luta de classes</strong>: motor da história. No capitalismo, <strong>burguesia</strong> (dona dos meios de produção) × <strong>proletariado</strong> (vende sua força de trabalho).</li><li><strong>Mais-valia</strong>: valor produzido pelo trabalhador além do que recebe de salário, apropriado pelo capitalista como lucro. Absoluta (aumentar a jornada) e relativa (aumentar a produtividade).</li><li><strong>Alienação</strong>: o trabalhador não controla o processo nem o produto do seu trabalho.</li><li><strong>Fetichismo da mercadoria</strong>: as relações sociais aparecem como relações entre coisas.</li><li><strong>Ideologia</strong>: ideias da classe dominante apresentadas como verdades universais.</li></ul>",
+    "exampleHtml": "<p>Uma empresa que aumenta a produção por trabalhador com novas máquinas, sem aumentar salários, amplia que tipo de mais-valia?</p><p>A <strong>mais-valia relativa</strong>: o trabalhador produz o valor do seu salário em menos tempo, sobrando mais tempo de trabalho excedente apropriado pelo capitalista.</p>",
+    "pitfallsHtml": "<ul><li>Confundir mais-valia absoluta (jornada maior) com relativa (produtividade maior).</li><li>Achar que alienação em Marx significa falta de informação política.</li><li>Atribuir a Marx os tipos de dominação (são de Weber) ou o fato social (Durkheim).</li></ul>"
+  }
+]

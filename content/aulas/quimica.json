@@ -1,0 +1,106 @@
+[
+  {
+    "discipline": "Química",
+    "topic": "Química Orgânica",
+    "title": "Cadeias de carbono, funções orgânicas e isomeria",
+    "explanationHtml": "<p>O carbono faz 4 ligações e forma cadeias. O ENEM cobra sobretudo <strong>reconhecer funções</strong> em moléculas do cotidiano.</p><ul><li><strong>Hidrocarbonetos</strong>: só C e H (petróleo, gás de cozinha). Apolares e insolúveis em água.</li><li><strong>Álcool</strong>: –OH ligado a carbono saturado (etanol). <strong>Fenol</strong>: –OH ligado direto ao anel aromático.</li><li><strong>Aldeído</strong>: C=O na ponta da cadeia; <strong>cetona</strong>: C=O no meio.</li><li><strong>Ácido carboxílico</strong>: –COOH (vinagre). <strong>Éster</strong>: –COO– entre carbonos (aromas, biodiesel, gorduras).</li><li><strong>Amina</strong>: N ligado a carbono; <strong>amida</strong>: N ligado a C=O (proteínas, nylon).</li><li><strong>Isomeria</strong>: mesma fórmula molecular, estruturas diferentes. Isômeros ópticos têm carbono quiral (4 ligantes diferentes) e podem ter efeitos biológicos distintos.</li><li><strong>Reações frequentes</strong>: combustão, esterificação (ácido + álcool → éster + água), saponificação (gordura + base → sabão), polimerização.</li></ul>",
+    "exampleHtml": "<p>O biodiesel é obtido de óleo vegetal reagindo com etanol ou metanol. Que função ele apresenta?</p><p>A reação (transesterificação) troca o álcool do éster do óleo: o biodiesel é um <strong>éster</strong>, e o subproduto é a glicerina (um álcool).</p>",
+    "pitfallsHtml": "<ul><li>Confundir álcool com fenol: no fenol o –OH está preso ao anel aromático.</li><li>Confundir amina com amida: a amida tem o C=O vizinho ao nitrogênio.</li><li>Achar que isômeros têm sempre as mesmas propriedades.</li></ul>"
+  },
+  {
+    "discipline": "Química",
+    "topic": "Estequiometria",
+    "title": "Mol, massa molar e cálculos com reações",
+    "explanationHtml": "<ul><li><strong>Mol</strong>: quantidade com 6 × 10²³ partículas.</li><li><strong>Massa molar</strong>: massa de 1 mol, em g/mol, somando as massas atômicas (H₂O: 2 · 1 + 16 = 18 g/mol).</li><li>Gás ideal nas CNTP: 1 mol ocupa cerca de 22,4 L.</li><li><strong>Roteiro</strong>: (1) equação balanceada; (2) proporção em mols pelos coeficientes; (3) converta para a unidade pedida (massa, volume, partículas) por regra de três.</li><li><strong>Reagente limitante</strong>: o que acaba primeiro e define quanto produto se forma.</li><li><strong>Rendimento</strong> e <strong>pureza</strong>: multiplique pela fração indicada (80% → × 0,8).</li></ul>",
+    "exampleHtml": "<p>Quantos gramas de CO₂ se formam na queima de 16 g de metano? CH₄ + 2 O₂ → CO₂ + 2 H₂O (C = 12, H = 1, O = 16)</p><p>CH₄ = 16 g/mol e CO₂ = 44 g/mol. 1 mol de CH₄ gera 1 mol de CO₂, então 16 g de CH₄ geram <strong>44 g de CO₂</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Fazer a proporção em gramas direto, sem passar pelos mols da equação.</li><li>Esquecer de balancear a equação antes.</li><li>Ignorar rendimento ou pureza informados no enunciado.</li></ul>"
+  },
+  {
+    "discipline": "Química",
+    "topic": "Eletroquímica",
+    "title": "Pilhas, eletrólise e oxirredução",
+    "explanationHtml": "<ul><li><strong>Oxidação</strong>: perda de elétrons (o NOX aumenta). <strong>Redução</strong>: ganho de elétrons (o NOX diminui). O agente redutor é o que se oxida.</li><li><strong>Pilha</strong> (espontânea, gera energia): no <strong>ânodo</strong> ocorre oxidação (polo negativo); no <strong>cátodo</strong>, redução (polo positivo). Os elétrons vão do ânodo para o cátodo pelo fio.</li><li>Quem tem <strong>maior potencial de redução</strong> sofre redução; a diferença de potencial da pilha é E = E_red(cátodo) − E_red(ânodo).</li><li><strong>Eletrólise</strong> (não espontânea, consome energia): usada para obter alumínio, cloro, soda e fazer galvanoplastia.</li><li><strong>Metal de sacrifício</strong>: um metal mais reativo (zinco, magnésio) se oxida no lugar do ferro e protege cascos e tubulações da corrosão.</li></ul>",
+    "exampleHtml": "<p>Numa pilha de zinco e cobre, o Cu²⁺ tem potencial de redução +0,34 V e o Zn²⁺ −0,76 V. Qual a ddp e quem se oxida?</p><p>O cobre (maior potencial) se reduz; o <strong>zinco se oxida</strong>. E = 0,34 − (−0,76) = <strong>1,10 V</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Trocar ânodo e cátodo: na pilha, oxidação no ânodo.</li><li>Achar que o metal de sacrifício precisa ser menos reativo que o ferro.</li><li>Confundir agente oxidante (sofre redução) com espécie oxidada.</li></ul>"
+  },
+  {
+    "discipline": "Química",
+    "topic": "Separação de Misturas",
+    "title": "Misturas e métodos de separação",
+    "explanationHtml": "<p><strong>Mistura homogênea</strong> tem uma fase (água com sal); <strong>heterogênea</strong>, mais de uma (água e óleo).</p><ul><li><strong>Sólido + líquido heterogêneo</strong>: filtração, decantação, centrifugação.</li><li><strong>Dois líquidos imiscíveis</strong>: funil de decantação (separação de água e óleo).</li><li><strong>Sólido dissolvido em líquido</strong>: evaporação (salinas) ou destilação simples (recupera o líquido).</li><li><strong>Líquidos miscíveis</strong> com pontos de ebulição diferentes: destilação fracionada (petróleo, cachaça).</li><li><strong>Gases</strong>: liquefação seguida de destilação fracionada (ar).</li><li><strong>Outros</strong>: separação magnética, peneiração, levigação (água corrente arrasta o mais leve, como no garimpo), dissolução fracionada, flotação.</li><li><strong>Tratamento de água</strong>: coagulação/floculação, decantação, filtração, cloração e fluoretação.</li></ul>",
+    "exampleHtml": "<p>Que método separa álcool e água?</p><p>Os dois são miscíveis e têm pontos de ebulição diferentes (78 °C e 100 °C): <strong>destilação fracionada</strong>. O álcool evapora primeiro e é condensado.</p>",
+    "pitfallsHtml": "<ul><li>Achar que a filtração separa sal dissolvido em água.</li><li>Achar que o cloro da estação de tratamento remove a sujeira: ele desinfeta; quem remove partículas é a floculação com decantação e filtração.</li><li>Usar destilação simples para dois líquidos (o certo é a fracionada).</li></ul>"
+  },
+  {
+    "discipline": "Química",
+    "topic": "Química Inorgânica",
+    "title": "Ácidos, bases, sais, óxidos e pH",
+    "explanationHtml": "<ul><li><strong>Ácidos</strong> liberam H⁺ em água (HCl, H₂SO₄); azedos, deixam o pH abaixo de 7.</li><li><strong>Bases</strong> liberam OH⁻ (NaOH, Mg(OH)₂ do antiácido); deixam o pH acima de 7.</li><li><strong>Neutralização</strong>: ácido + base → sal + água. Corrigir solo ácido com calcário é neutralização.</li><li><strong>Óxidos</strong>: os ácidos (CO₂, SO₂, NO₂) reagem com água formando ácidos e causam a <strong>chuva ácida</strong>; os básicos (CaO, cal virgem) formam bases.</li><li><strong>Escala de pH</strong> (a 25 °C): 7 é neutro; cada unidade a menos significa 10 vezes mais H⁺.</li><li><strong>Indicadores</strong> mudam de cor com o pH (repolho roxo, fenolftaleína, que fica rosa em meio básico).</li></ul>",
+    "exampleHtml": "<p>Por que o leite de magnésia alivia a azia?</p><p>A azia é excesso de ácido clorídrico no estômago. O Mg(OH)₂ é uma base: Mg(OH)₂ + 2 HCl → MgCl₂ + 2 H₂O. É uma <strong>neutralização</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Achar que pH 4 é «duas vezes» mais ácido que pH 6: é 100 vezes.</li><li>Atribuir a chuva ácida ao CO₂ sozinho: os principais vilões são SO₂ e NOₓ.</li><li>Achar que toda solução de sal é neutra: depende do ácido e da base que o formaram.</li></ul>"
+  },
+  {
+    "discipline": "Química",
+    "topic": "Soluções",
+    "title": "Concentração, diluição e mistura de soluções",
+    "explanationHtml": "<ul><li><strong>Concentração comum</strong>: C = massa de soluto ÷ volume da solução (g/L).</li><li><strong>Concentração em mol/L</strong>: M = mols de soluto ÷ volume em litros.</li><li><strong>Título</strong> e porcentagem: massa de soluto ÷ massa da solução; ppm = partes por milhão (1 mg por kg ou, para soluções aquosas diluídas, 1 mg por L).</li><li><strong>Diluição</strong>: acrescentar solvente não muda a quantidade de soluto: C₁ · V₁ = C₂ · V₂.</li><li><strong>Mistura de mesmo soluto</strong>: C_final = (C₁ · V₁ + C₂ · V₂) ÷ (V₁ + V₂).</li><li><strong>Solubilidade</strong>: máximo que se dissolve numa temperatura. Acima disso, a solução está saturada com corpo de fundo. Gases dissolvem menos em água quente (refrigerante quente perde gás).</li></ul>",
+    "exampleHtml": "<p>Quanto de água é preciso adicionar a 200 mL de suco a 60 g/L para que fique a 20 g/L?</p><p>60 · 200 = 20 · V₂ → V₂ = 600 mL. É preciso adicionar <strong>400 mL de água</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Responder o volume final quando a pergunta é quanto de água adicionar.</li><li>Dividir pela massa de solvente em vez do volume da solução.</li><li>Achar que gases ficam mais solúveis com aquecimento.</li></ul>"
+  },
+  {
+    "discipline": "Química",
+    "topic": "Termoquímica",
+    "title": "Reações que liberam e que absorvem calor",
+    "explanationHtml": "<ul><li><strong>Exotérmica</strong>: libera calor; ΔH &lt; 0 (combustão, respiração, neutralização).</li><li><strong>Endotérmica</strong>: absorve calor; ΔH &gt; 0 (fotossíntese, derreter gelo, cozinhar).</li><li>ΔH = H_produtos − H_reagentes.</li><li><strong>Lei de Hess</strong>: o ΔH total depende só dos estados inicial e final; some as etapas, invertendo o sinal da que for invertida e multiplicando ΔH quando multiplicar a equação.</li><li><strong>Energia de ligação</strong>: quebrar ligação absorve energia; formar libera. ΔH = energia das ligações quebradas − energia das formadas.</li><li>O calor liberado é proporcional à quantidade queimada: compare combustíveis pela energia por grama ou por litro.</li></ul>",
+    "exampleHtml": "<p>A queima de 1 mol de etanol (46 g) libera 1 368 kJ. Quanta energia sai da queima de 23 g?</p><p>23 g é meio mol: 1 368 ÷ 2 = <strong>684 kJ</strong> liberados.</p>",
+    "pitfallsHtml": "<ul><li>Achar que ΔH negativo significa que a reação absorve calor.</li><li>Esquecer de inverter o sinal ao inverter uma etapa na lei de Hess.</li><li>Achar que quebrar ligação libera energia.</li></ul>"
+  },
+  {
+    "discipline": "Química",
+    "topic": "Radioatividade",
+    "title": "Emissões, meia-vida, fissão e fusão",
+    "explanationHtml": "<ul><li><strong>Alfa (α)</strong>: núcleo de hélio (2 prótons e 2 nêutrons); o número atômico cai 2 e a massa cai 4. Pouco penetrante (papel barra).</li><li><strong>Beta (β)</strong>: elétron vindo do núcleo; o número atômico sobe 1 e a massa não muda.</li><li><strong>Gama (γ)</strong>: onda eletromagnética, muito penetrante; não muda número atômico nem massa.</li><li><strong>Meia-vida</strong>: tempo para metade dos núcleos decair. Após n meias-vidas, sobra (1/2)ⁿ. Carbono-14 (cerca de 5 730 anos) data fósseis.</li><li><strong>Fissão</strong>: núcleo pesado se divide (usinas nucleares, bomba atômica). <strong>Fusão</strong>: núcleos leves se unem (estrelas).</li><li>Usos: radioterapia, diagnóstico, esterilização de alimentos e materiais (que <em>não</em> ficam radioativos).</li></ul>",
+    "exampleHtml": "<p>Um isótopo tem meia-vida de 8 dias. De 80 g, quanto resta após 24 dias?</p><p>24 ÷ 8 = 3 meias-vidas: 80 → 40 → 20 → <strong>10 g</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Achar que alimento irradiado fica radioativo.</li><li>Achar que após duas meias-vidas não sobra nada (sobra um quarto).</li><li>Trocar fissão (usinas) com fusão (Sol).</li></ul>"
+  },
+  {
+    "discipline": "Química",
+    "topic": "Ligações Químicas",
+    "title": "Ligações iônica, covalente e metálica; polaridade",
+    "explanationHtml": "<ul><li><strong>Iônica</strong>: metal doa elétrons a ametal (NaCl). Forma sólidos de ponto de fusão alto que conduzem eletricidade só fundidos ou em solução.</li><li><strong>Covalente</strong>: ametais compartilham elétrons (H₂O, CO₂, moléculas orgânicas).</li><li><strong>Metálica</strong>: mar de elétrons livres; explica brilho, condutividade e maleabilidade dos metais.</li><li><strong>Polaridade</strong>: depende da diferença de eletronegatividade e da geometria. CO₂ é apolar (linear e simétrico); H₂O é polar (angular).</li><li><strong>Semelhante dissolve semelhante</strong>: polar dissolve polar (sal e açúcar em água); apolar dissolve apolar (gordura em gasolina). O sabão tem uma ponta polar e outra apolar.</li><li><strong>Forças intermoleculares</strong> (da mais fraca para a mais forte): dipolo induzido, dipolo-dipolo, ligação de hidrogênio. Forças mais fortes → ponto de ebulição mais alto.</li></ul>",
+    "exampleHtml": "<p>Por que a água tem ponto de ebulição muito mais alto que o metano, de massa parecida?</p><p>As moléculas de água fazem <strong>ligações de hidrogênio</strong> entre si, muito mais fortes que as forças do metano (apolar). É preciso mais energia para separá-las.</p>",
+    "pitfallsHtml": "<ul><li>Achar que toda molécula com ligações polares é polar: a geometria pode cancelar (CO₂).</li><li>Confundir ligação de hidrogênio (entre moléculas) com ligação covalente com hidrogênio.</li><li>Achar que sal sólido conduz eletricidade.</li></ul>"
+  },
+  {
+    "discipline": "Química",
+    "topic": "Química Ambiental",
+    "title": "Efeito estufa, chuva ácida, ozônio e poluição",
+    "explanationHtml": "<ul><li><strong>Efeito estufa</strong>: gases como CO₂, CH₄ e vapor d’água retêm o infravermelho emitido pela Terra. É natural e necessário; o problema é a intensificação pela queima de combustíveis fósseis e pelo desmatamento.</li><li><strong>Chuva ácida</strong>: SO₂ (queima de carvão e diesel com enxofre) e NOₓ (motores) formam ácidos sulfúrico e nítrico; corroem monumentos de mármore e acidificam lagos e solos.</li><li><strong>Camada de ozônio</strong>: o O₃ da estratosfera filtra o ultravioleta; foi destruída pelos CFCs (Protocolo de Montreal). Ozônio na baixa atmosfera é poluente.</li><li><strong>Eutrofização</strong>: excesso de nutrientes (esgoto, fertilizantes) faz as algas proliferarem; ao morrerem, a decomposição consome o oxigênio e os peixes morrem.</li><li><strong>Metais pesados</strong> (mercúrio, chumbo) se acumulam ao longo da cadeia alimentar (bioacumulação).</li></ul>",
+    "exampleHtml": "<p>Por que trocar carvão por gás natural numa usina reduz a chuva ácida na região?</p><p>O carvão contém enxofre, que vira <strong>SO₂</strong> na queima; o gás natural praticamente não tem enxofre. Menos SO₂ significa menos ácido sulfúrico na chuva.</p>",
+    "pitfallsHtml": "<ul><li>Confundir efeito estufa com buraco na camada de ozônio.</li><li>Dizer que o efeito estufa é, em si, prejudicial: sem ele a Terra seria gelada.</li><li>Achar que a eutrofização mata os peixes por envenenamento: é a falta de oxigênio.</li></ul>"
+  },
+  {
+    "discipline": "Química",
+    "topic": "Cinética Química",
+    "title": "Velocidade das reações e catalisadores",
+    "explanationHtml": "<p>Para reagir, as partículas precisam colidir com energia suficiente (a <strong>energia de ativação</strong>) e na orientação certa. Tudo o que aumenta as colisões efetivas acelera a reação:</p><ul><li><strong>Temperatura</strong> maior: partículas mais rápidas e mais colisões com energia suficiente (por isso a geladeira conserva alimentos).</li><li><strong>Concentração</strong> maior dos reagentes: mais colisões.</li><li><strong>Superfície de contato</strong> maior: comprimido triturado dissolve mais rápido que inteiro; lenha picada queima mais rápido.</li><li><strong>Catalisador</strong>: cria um caminho com energia de ativação menor; não é consumido e não altera o ΔH. Enzimas são catalisadores biológicos; o catalisador do carro converte CO e NOₓ em gases menos nocivos.</li></ul>",
+    "exampleHtml": "<p>Por que a carne moída estraga mais rápido que um bife inteiro?</p><p>Moída, ela tem <strong>superfície de contato muito maior</strong> exposta ao ar e aos microrganismos, o que acelera as reações de decomposição.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o catalisador muda a quantidade de produto ou o ΔH.</li><li>Achar que o catalisador é consumido na reação.</li><li>Ler no gráfico de energia a altura dos produtos como energia de ativação.</li></ul>"
+  },
+  {
+    "discipline": "Química",
+    "topic": "Atomística",
+    "title": "Átomo: prótons, nêutrons, elétrons e isótopos",
+    "explanationHtml": "<ul><li><strong>Número atômico (Z)</strong>: número de prótons; identifica o elemento.</li><li><strong>Número de massa (A)</strong> = prótons + nêutrons. Nêutrons = A − Z.</li><li>Átomo neutro tem elétrons = prótons. Cátion perdeu elétrons; ânion ganhou.</li><li><strong>Isótopos</strong>: mesmo Z, massas diferentes (carbono-12 e carbono-14).</li><li><strong>Modelos atômicos</strong>: Dalton (esfera maciça), Thomson (pudim de passas, com elétrons), Rutherford (núcleo pequeno e denso com eletrosfera, a partir do experimento com a folha de ouro), Bohr (elétrons em níveis de energia; o salto entre níveis emite luz de cor definida, como nos fogos de artifício).</li></ul>",
+    "exampleHtml": "<p>Quantos prótons, nêutrons e elétrons tem o íon Ca²⁺, com Z = 20 e A = 40?</p><p>Prótons = 20; nêutrons = 40 − 20 = 20; elétrons = 20 − 2 = <strong>18</strong> (perdeu dois).</p>",
+    "pitfallsHtml": "<ul><li>Achar que íon positivo ganhou prótons: ele perdeu elétrons.</li><li>Confundir isótopos (mesmo Z) com isóbaros (mesmo A).</li><li>Atribuir a ideia de núcleo a Thomson: é de Rutherford.</li></ul>"
+  },
+  {
+    "discipline": "Química",
+    "topic": "Tabela Periódica",
+    "title": "Organização da tabela e propriedades periódicas",
+    "explanationHtml": "<ul><li>Os elementos estão em ordem crescente de número atômico. <strong>Períodos</strong> (linhas) indicam o número de camadas; <strong>famílias</strong> (colunas) reúnem elementos com propriedades parecidas.</li><li>Famílias importantes: 1 (metais alcalinos, muito reativos), 2 (alcalinoterrosos), 17 (halogênios), 18 (gases nobres, estáveis).</li><li><strong>Raio atômico</strong> cresce para baixo e para a esquerda.</li><li><strong>Eletronegatividade</strong> e <strong>energia de ionização</strong> crescem para cima e para a direita (o flúor é o mais eletronegativo).</li><li>Metais ficam à esquerda e no centro; ametais à direita.</li></ul>",
+    "exampleHtml": "<p>Entre sódio (família 1) e cloro (família 17), do mesmo período, qual tem maior raio e qual é mais eletronegativo?</p><p>O <strong>sódio</strong>, à esquerda, tem raio maior; o <strong>cloro</strong>, à direita, é mais eletronegativo. Por isso o sódio doa e o cloro recebe o elétron no NaCl.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o raio aumenta para a direita no período: diminui, porque a carga nuclear atrai mais os elétrons.</li><li>Confundir período (linha) com família (coluna).</li><li>Achar que gases nobres reagem facilmente.</li></ul>"
+  }
+]

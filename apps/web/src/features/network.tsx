@@ -2,7 +2,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ItemSuggestionView, NetworkDashboard } from "@ritmo/contracts";
+import type { ItemSuggestionView, LessonSuggestionView, NetworkDashboard } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
 import { Async, Html, Metric, Metrics, number, PageHead, Pill } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
@@ -108,6 +108,42 @@ function SuggestionQueue() {
   );
 }
 
+function LessonQueue() {
+  const client = useQueryClient();
+  const query = useQuery({ queryKey: ["lesson-review"], queryFn: () => api.get<LessonSuggestionView[]>("/api/lessons/review") });
+  async function decide(lesson: LessonSuggestionView, approved: boolean) {
+    await api.post("/api/lessons/review", { discipline: lesson.discipline, topic: lesson.topic, approved });
+    await client.invalidateQueries({ queryKey: ["lesson-review"] });
+  }
+  return (
+    <section className="card" aria-labelledby="lesson-rev-title">
+      <h2 id="lesson-rev-title">Aulas rápidas de IA aguardando revisão</h2>
+      <p className="sub">Só depois de aprovada a aula aparece para os alunos. Para gerar novas, rode <code>npm run content:aulas -- 20</code>.</p>
+      <Async query={query}>
+        {(lessons) => lessons.length === 0 ? <p className="sub">Nada na fila.</p> : (
+          <div className="stack">
+            {lessons.map((lesson) => (
+              <details className="flag" key={`${lesson.discipline}${lesson.topic}`}>
+                <summary className="flag-head">{lesson.discipline}<span>{lesson.topic} · {lesson.title}</span></summary>
+                <p className="sub"><b>O essencial</b></p>
+                <Html className="lesson-body" html={lesson.explanationHtml} />
+                <p className="sub"><b>Exemplo resolvido</b></p>
+                <Html className="lesson-body" html={lesson.exampleHtml} />
+                <p className="sub"><b>Pegadinhas do ENEM</b></p>
+                <Html className="lesson-body" html={lesson.pitfallsHtml} />
+                <div className="btn-row">
+                  <button className="btn slim" type="button" onClick={() => void decide(lesson, true)}>Aprovar</button>
+                  <button className="btn outline slim" type="button" onClick={() => void decide(lesson, false)}>Recusar</button>
+                </div>
+              </details>
+            ))}
+          </div>
+        )}
+      </Async>
+    </section>
+  );
+}
+
 function Board({ d }: { d: NetworkDashboard }) {
   const m = d.metrics;
   const maxFunnel = Math.max(1, ...d.funnel.map((f) => f.count));
@@ -143,6 +179,7 @@ function Board({ d }: { d: NetworkDashboard }) {
       </section>
       <ReviewQueue />
       <SuggestionQueue />
+      <LessonQueue />
       <section className="card" aria-labelledby="esc-title">
         <h2 id="esc-title">Escolas</h2>
         <div className="table-wrap">

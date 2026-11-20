@@ -1,0 +1,42 @@
+[
+  {
+    "discipline": "Português",
+    "topic": "Leitura e Interpretação de Texto",
+    "title": "Como ler uma questão de interpretação do ENEM",
+    "explanationHtml": "<ul><li><strong>Comece pelo comando</strong>: saiba o que é pedido (finalidade, tese, efeito de sentido, recurso) antes de ler o texto.</li><li><strong>Compreender × interpretar</strong>: compreender é identificar o que está escrito; interpretar é inferir o que está implícito, mas sempre <strong>com base no texto</strong>.</li><li>Identifique <strong>tema</strong>, <strong>tese</strong> (opinião defendida) e <strong>argumentos</strong>.</li><li>Observe <strong>conectivos</strong>: «mas, porém» (oposição), «portanto» (conclusão), «pois» (explicação), «embora» (concessão).</li><li>Atenção a <strong>pressupostos</strong> (informação garantida pelas palavras: «parou de fumar» pressupõe que fumava) e <strong>subentendidos</strong> (insinuações).</li><li>Leia fonte, data e autor: o <strong>contexto</strong> muda o sentido.</li><li>Elimine alternativas que <strong>extrapolam</strong> (dizem mais do que o texto), <strong>reduzem</strong> (pegam só um detalhe) ou <strong>contradizem</strong>.</li></ul>",
+    "exampleHtml": "<p>Texto: «Apesar das campanhas, o consumo de água não caiu.» Uma alternativa diz: «As campanhas fizeram o consumo aumentar.» Está correta?</p><p>Não: ela <strong>extrapola</strong>. O texto diz só que o consumo não caiu, não que aumentou, nem que a causa foram as campanhas.</p>",
+    "pitfallsHtml": "<ul><li>Responder com sua opinião ou conhecimento externo em vez do que o texto sustenta.</li><li>Escolher alternativas com palavras absolutas («sempre», «nunca», «todos») sem apoio no texto.</li><li>Ignorar a fonte e a data do texto.</li></ul>"
+  },
+  {
+    "discipline": "Português",
+    "topic": "Gêneros textuais",
+    "title": "Gêneros e tipos textuais",
+    "explanationHtml": "<ul><li><strong>Tipos textuais</strong> (modos de organizar o texto, poucos): narração, descrição, dissertação/argumentação, exposição e injunção (instrução).</li><li><strong>Gêneros textuais</strong> (formas concretas de comunicação, muitos): notícia, reportagem, editorial, artigo de opinião, crônica, charge, tirinha, receita, bula, anúncio, carta, meme, post.</li><li>Um gênero pode combinar vários tipos (uma reportagem narra, descreve e expõe).</li><li>Identifique o gênero pela <strong>finalidade</strong> (informar, convencer, divertir, orientar), pelo <strong>suporte</strong> (jornal, rede social) e pelo <strong>público</strong>.</li><li>Diferenças-chave: <strong>notícia</strong> informa fato recente com objetividade; <strong>editorial</strong> expressa a opinião do veículo, sem assinatura; <strong>artigo de opinião</strong> é assinado; <strong>crônica</strong> parte do cotidiano com tom leve e reflexivo.</li></ul>",
+    "exampleHtml": "<p>Um texto de jornal, sem assinatura, defende que a cidade precisa de mais ciclovias. Qual é o gênero?</p><p><strong>Editorial</strong>: é argumentativo e expressa a opinião do próprio jornal, por isso não é assinado por um autor.</p>",
+    "pitfallsHtml": "<ul><li>Confundir tipo (narração) com gênero (conto, crônica).</li><li>Confundir editorial com artigo de opinião (a diferença é a assinatura e a voz).</li><li>Achar que charge e tirinha são iguais: a charge comenta um fato atual; a tirinha costuma ter personagens fixos e humor mais geral.</li></ul>"
+  },
+  {
+    "discipline": "Português",
+    "topic": "Variação Linguística",
+    "title": "Variação linguística e preconceito",
+    "explanationHtml": "<ul><li>Toda língua varia; nenhuma variedade é «errada» em si, apenas <strong>adequada ou não</strong> à situação.</li><li><strong>Tipos de variação</strong>: <strong>diatópica</strong> (região: «mandioca, aipim, macaxeira»), <strong>diastrática</strong> (grupo social, profissão, idade: gírias, jargões), <strong>diafásica</strong> (situação: formal × informal) e <strong>diacrônica</strong> (tempo: «vossa mercê» virou «você»).</li><li><strong>Norma-padrão</strong>: modelo ideal das gramáticas, exigido em contextos formais; <strong>norma culta</strong>: uso real de falantes escolarizados.</li><li><strong>Preconceito linguístico</strong>: discriminar pessoas pelo modo de falar, geralmente ligado a preconceito social e regional.</li><li>O ENEM costuma valorizar o respeito à diversidade e a noção de <strong>adequação</strong>.</li></ul>",
+    "exampleHtml": "<p>Um poema usa «nóis vai» para representar a fala de um personagem do interior. Qual a função disso?</p><p>Caracterizar a <strong>identidade sociocultural</strong> do personagem por meio da variação linguística, o que é um recurso expressivo legítimo, não um erro do autor.</p>",
+    "pitfallsHtml": "<ul><li>Escolher alternativas que chamam uma variedade de «errada» ou «inferior».</li><li>Confundir variação diatópica (lugar) com diastrática (grupo social).</li><li>Achar que a norma-padrão é a língua que todos realmente falam.</li></ul>"
+  },
+  {
+    "discipline": "Português",
+    "topic": "Função da Linguagem",
+    "title": "As seis funções da linguagem",
+    "explanationHtml": "<ul><li>Baseadas em Jakobson; cada função foca um elemento da comunicação.</li><li><strong>Referencial</strong> (foco no assunto): informar com objetividade. Notícias, textos científicos.</li><li><strong>Emotiva ou expressiva</strong> (foco no emissor): sentimentos e opiniões, 1ª pessoa. Diários, poemas líricos.</li><li><strong>Conativa ou apelativa</strong> (foco no receptor): convencer ou ordenar, imperativo, vocativo, 2ª pessoa. Propagandas.</li><li><strong>Fática</strong> (foco no canal): testar ou manter o contato. «Alô?», «Tá me ouvindo?», «Bom dia».</li><li><strong>Metalinguística</strong> (foco no código): a linguagem falando de si mesma. Dicionários, poema sobre o fazer poético.</li><li><strong>Poética</strong> (foco na mensagem): trabalho com a forma, sons, ritmo, figuras.</li><li>Um texto pode ter várias; a questão pede a <strong>predominante</strong>.</li></ul>",
+    "exampleHtml": "<p>Um anúncio diz: «Você merece. Venha conhecer o novo modelo hoje!» Qual função predomina?</p><p>A <strong>conativa</strong>: o foco é o leitor («você»), com verbo no imperativo («venha») para persuadi-lo a agir.</p>",
+    "pitfallsHtml": "<ul><li>Confundir metalinguística (fala do código) com poética (trabalha a forma).</li><li>Achar que todo poema tem função emotiva predominante.</li><li>Confundir fática (manter contato) com conativa (convencer).</li></ul>"
+  },
+  {
+    "discipline": "Português",
+    "topic": "Gramática",
+    "title": "Gramática a serviço do sentido",
+    "explanationHtml": "<ul><li>O ENEM cobra gramática ligada ao <strong>efeito de sentido</strong>, não à decoreba de regras.</li><li><strong>Conectivos</strong>: trocar «mas» por «portanto» muda a relação lógica. Saiba o valor de cada um: adição, oposição, causa, consequência, conclusão, concessão, condição.</li><li><strong>Pronomes e coesão</strong>: identificar a quem um pronome se refere (referência) e como o texto evita repetições.</li><li><strong>Pontuação</strong>: a vírgula pode mudar o sentido; aspas indicam citação, ironia ou destaque.</li><li><strong>Tempos e modos verbais</strong>: subjuntivo exprime hipótese ou desejo; imperativo, ordem ou pedido.</li><li><strong>Figuras de linguagem</strong>: metáfora, metonímia, ironia, hipérbole, eufemismo, antítese, personificação.</li><li><strong>Denotação</strong> (sentido literal) × <strong>conotação</strong> (sentido figurado).</li></ul>",
+    "exampleHtml": "<p>Compare: «Estudou muito, mas não passou» e «Estudou muito, portanto passou». O que muda?</p><p>«Mas» indica <strong>oposição</strong> (o resultado contraria a expectativa); «portanto» indica <strong>conclusão</strong> (o resultado decorre do esforço).</p>",
+    "pitfallsHtml": "<ul><li>Confundir metáfora (comparação implícita) com metonímia (substituição por relação de proximidade: «ler Machado»).</li><li>Achar que «embora» indica oposição simples: indica concessão, com verbo no subjuntivo.</li><li>Ignorar o pronome e perder a quem ele se refere.</li></ul>"
+  }
+]

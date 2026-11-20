@@ -1,0 +1,74 @@
+[
+  {
+    "discipline": "Geografia",
+    "topic": "Brasil: demografia, economia e sociedade",
+    "title": "População, urbanização e economia brasileira",
+    "explanationHtml": "<ul><li><strong>Transição demográfica</strong>: as taxas de natalidade e mortalidade caíram; a população envelhece e a pirâmide etária se estreita na base. Isso pressiona a previdência e a saúde e abre o «bônus demográfico» (muita gente em idade ativa).</li><li><strong>Urbanização</strong> rápida a partir de 1950, puxada pelo êxodo rural e pela industrialização; hoje mais de 80% vivem em cidades. Consequências: periferização, favelas, déficit de saneamento e mobilidade.</li><li><strong>Metropolização</strong> e, mais recentemente, crescimento das cidades médias.</li><li><strong>Migrações internas</strong>: nordestinos para o Sudeste (século XX), expansão para o Centro-Oeste e o Norte com a fronteira agrícola; hoje há migração de retorno.</li><li><strong>Economia</strong>: forte peso do agronegócio exportador (soja, carne, minério) e dos serviços; concentração de renda e desigualdade regional.</li><li><strong>Indicadores</strong>: IDH (renda, educação e longevidade), índice de Gini (desigualdade: quanto mais perto de 1, mais desigual).</li></ul>",
+    "exampleHtml": "<p>O que a redução da base da pirâmide etária brasileira indica e que desafio ela traz?</p><p>Indica <strong>queda da natalidade</strong> e envelhecimento da população. O desafio é sustentar a previdência e a saúde com proporcionalmente menos pessoas em idade ativa no futuro.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o crescimento populacional atual é explosivo: ele desacelerou.</li><li>Confundir crescimento econômico (PIB) com desenvolvimento humano (IDH).</li><li>Atribuir a urbanização só à atração das cidades, esquecendo a expulsão do campo pela mecanização e concentração de terras.</li></ul>"
+  },
+  {
+    "discipline": "Geografia",
+    "topic": "Globalização",
+    "title": "Globalização, redes e divisão do trabalho",
+    "explanationHtml": "<ul><li>Globalização é a intensificação dos fluxos de mercadorias, capitais, informações e pessoas, apoiada nas tecnologias de transporte e comunicação (meio técnico-científico-informacional).</li><li><strong>Empresas transnacionais</strong> espalham etapas da produção pelo mundo em busca de mão de obra barata, incentivos fiscais e mercados.</li><li><strong>Blocos econômicos</strong>: zona de livre comércio, união aduaneira, mercado comum (União Europeia, Mercosul, USMCA).</li><li><strong>Contradições</strong>: concentração de riqueza, desigualdade entre países, precarização do trabalho, homogeneização cultural e, ao mesmo tempo, reafirmação de identidades locais.</li><li><strong>Divisão internacional do trabalho</strong>: países centrais concentram tecnologia, marcas e finanças; periféricos exportam produtos primários ou montagem.</li><li><strong>Fluxos financeiros</strong> são instantâneos e voláteis; crises se espalham rápido (2008).</li></ul>",
+    "exampleHtml": "<p>Por que um tênis de marca americana pode ser projetado nos EUA, fabricado no Vietnã e vendido no Brasil?</p><p>É a <strong>fragmentação da produção</strong> pelas transnacionais: cada etapa vai para onde é mais lucrativa (projeto e marca no centro, fabricação onde a mão de obra é barata), conectadas por transportes e comunicação rápidos.</p>",
+    "pitfallsHtml": "<ul><li>Achar que a globalização beneficia todos os lugares igualmente.</li><li>Confundir os tipos de bloco: o Mercosul é uma união aduaneira (incompleta), não um mercado comum pleno.</li><li>Tratar a globalização como só econômica, ignorando os fluxos culturais e de informação.</li></ul>"
+  },
+  {
+    "discipline": "Geografia",
+    "topic": "Geopolítica",
+    "title": "Ordem mundial, conflitos e fronteiras",
+    "explanationHtml": "<ul><li><strong>Guerra Fria</strong> (1947–1991): ordem bipolar entre EUA (capitalismo) e URSS (socialismo).</li><li><strong>Depois de 1991</strong>: hegemonia dos EUA e, hoje, ordem <strong>multipolar</strong>, com ascensão da China e articulações como os BRICS.</li><li><strong>Conflitos</strong> costumam envolver território, recursos (petróleo, água), identidades étnicas e religiosas, e fronteiras traçadas por potências coloniais (África, Oriente Médio).</li><li><strong>Refugiados</strong>: fogem de guerras e perseguições e têm proteção internacional; migrantes econômicos buscam trabalho.</li><li><strong>Organismos internacionais</strong>: ONU (Conselho de Segurança com 5 membros permanentes com poder de veto), OTAN (aliança militar), OMC (comércio).</li><li><strong>Nação</strong> (identidade cultural) é diferente de <strong>Estado</strong> (organização política com território); há nações sem Estado, como os curdos.</li></ul>",
+    "exampleHtml": "<p>Por que o povo curdo é citado como exemplo de nação sem Estado?</p><p>Os curdos têm <strong>identidade cultural e língua próprias</strong>, mas seu território está dividido entre Turquia, Iraque, Irã e Síria, sem um Estado soberano reconhecido.</p>",
+    "pitfallsHtml": "<ul><li>Usar nação e Estado como sinônimos.</li><li>Explicar conflitos só pela religião, ignorando recursos e fronteiras.</li><li>Confundir refugiado com migrante econômico.</li></ul>"
+  },
+  {
+    "discipline": "Geografia",
+    "topic": "Cartografia",
+    "title": "Escala, coordenadas, fusos e projeções",
+    "explanationHtml": "<ul><li><strong>Escala</strong> = distância no mapa ÷ distância real. 1:100 000 significa que 1 cm no mapa vale 100 000 cm = 1 km. Escala <em>grande</em> (denominador pequeno) mostra mais detalhes de área menor.</li><li><strong>Coordenadas</strong>: latitude (0° a 90°, norte ou sul do Equador) e longitude (0° a 180°, leste ou oeste de Greenwich).</li><li><strong>Fusos horários</strong>: cada 15° de longitude equivale a 1 hora. A leste as horas estão adiantadas; a oeste, atrasadas.</li><li><strong>Projeções</strong>: todo mapa distorce algo. Mercator preserva formas e ângulos (navegação) e exagera áreas perto dos polos; Peters preserva áreas e distorce formas.</li><li><strong>Curvas de nível</strong>: linhas de mesma altitude; quanto mais próximas, mais íngreme o terreno.</li></ul>",
+    "exampleHtml": "<p>Num mapa de escala 1:50 000, duas cidades estão a 8 cm. Qual a distância real?</p><p>8 × 50 000 = 400 000 cm = <strong>4 km</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Achar que escala 1:1 000 000 é «grande»: é pequena (pouco detalhe, área grande).</li><li>Somar horas indo para o oeste: a oeste o horário é mais cedo.</li><li>Achar que a Groenlândia é do tamanho da África, como parece na projeção de Mercator.</li></ul>"
+  },
+  {
+    "discipline": "Geografia",
+    "topic": "Vegetação/biomas",
+    "title": "Biomas brasileiros e suas ameaças",
+    "explanationHtml": "<ul><li><strong>Amazônia</strong>: floresta densa e úmida, maior biodiversidade; solo pobre, sustentado pela ciclagem rápida de nutrientes; ameaçada por desmatamento, garimpo e pecuária. Gera os «rios voadores» que levam umidade ao Centro-Sul.</li><li><strong>Cerrado</strong>: savana com árvores de troncos retorcidos e raízes profundas; berço de nascentes de grandes bacias; muito convertido em soja e pasto.</li><li><strong>Caatinga</strong>: semiárido, plantas xerófilas que perdem folhas na seca; exclusivamente brasileira; sofre com desertificação.</li><li><strong>Mata Atlântica</strong>: a mais devastada (resta pequena parte), por estar onde se concentra a população.</li><li><strong>Pampa</strong>: campos do sul, usados para pecuária.</li><li><strong>Pantanal</strong>: planície que alaga na cheia; maior área úmida contínua do mundo; ameaçado por queimadas.</li></ul>",
+    "exampleHtml": "<p>Por que o solo da Amazônia, apesar da floresta exuberante, é pobre para a agricultura após o desmatamento?</p><p>Os nutrientes estão concentrados na <strong>biomassa e na camada de folhas</strong>, reciclados rapidamente. Sem a floresta, a chuva lava o solo (lixiviação) e ele empobrece.</p>",
+    "pitfallsHtml": "<ul><li>Achar que a vegetação exuberante indica solo fértil.</li><li>Dizer que a Amazônia é «o pulmão do mundo»: seu papel central é regular chuvas e estocar carbono.</li><li>Confundir Caatinga (semiárido) com Cerrado (clima tropical com estação seca).</li></ul>"
+  },
+  {
+    "discipline": "Geografia",
+    "topic": "Solo e Relevo",
+    "title": "Agentes do relevo, solos e erosão",
+    "explanationHtml": "<ul><li><strong>Agentes internos</strong> (endógenos) criam o relevo: tectonismo, vulcanismo, terremotos.</li><li><strong>Agentes externos</strong> (exógenos) desgastam e modelam: chuva, rios, vento, gelo, mar e seres vivos.</li><li><strong>Formas</strong>: planaltos (predomina erosão), planícies (predomina sedimentação), depressões e montanhas.</li><li><strong>Intemperismo</strong>: desagregação da rocha (física, por variação de temperatura) e decomposição (química, favorecida por calor e umidade, comum no Brasil). Daí vem o solo.</li><li><strong>Erosão</strong>: acelerada pelo desmatamento; gera voçorocas e assoreamento dos rios. <strong>Lixiviação</strong>: a chuva lava os nutrientes do solo.</li><li><strong>Conservação</strong>: plantio direto, curvas de nível, terraceamento, matas ciliares, rotação de culturas.</li></ul>",
+    "exampleHtml": "<p>Por que o desmatamento das margens de um rio leva ao assoreamento?</p><p>Sem a <strong>mata ciliar</strong>, a chuva arrasta o solo das margens para o leito; os sedimentos se acumulam, o rio fica raso e transborda com mais facilidade.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o relevo brasileiro tem grandes cordilheiras recentes: é antigo e desgastado, sem dobramentos modernos.</li><li>Confundir erosão (remoção do material) com intemperismo (alteração da rocha no lugar).</li><li>Achar que arar seguindo a declividade protege o solo (o certo é em curvas de nível).</li></ul>"
+  },
+  {
+    "discipline": "Geografia",
+    "topic": "Clima",
+    "title": "Fatores do clima, massas de ar e climogramas",
+    "explanationHtml": "<ul><li><strong>Tempo</strong> é a condição atmosférica do momento; <strong>clima</strong> é o padrão observado ao longo de décadas.</li><li><strong>Fatores</strong>: latitude (mais perto do Equador, mais calor), altitude (a temperatura cai cerca de 0,6 °C a cada 100 m), maritimidade e continentalidade (o mar suaviza a amplitude térmica), massas de ar, correntes marítimas e relevo.</li><li><strong>Chuvas</strong>: convectivas (calor e evaporação, fim de tarde), frontais (encontro de massas de ar) e orográficas (o relevo força o ar a subir; o outro lado fica seco).</li><li><strong>Massas de ar no Brasil</strong>: Equatorial (quente e úmida), Tropical Atlântica, Polar Atlântica (frio no Sul e friagem na Amazônia).</li><li><strong>Climogramas</strong>: barras de chuva e linha de temperatura por mês; procure a estação seca e a amplitude térmica.</li><li><strong>Fenômenos</strong>: El Niño (aquecimento do Pacífico; seca no Nordeste e chuva no Sul), ilha de calor urbana, inversão térmica (piora a poluição no inverno).</li></ul>",
+    "exampleHtml": "<p>Por que cidades do litoral têm amplitude térmica menor que cidades do interior na mesma latitude?</p><p>A água do mar aquece e esfria mais devagar que a terra (<strong>maritimidade</strong>); ela suaviza as temperaturas, evitando extremos.</p>",
+    "pitfallsHtml": "<ul><li>Confundir tempo com clima.</li><li>Achar que a inversão térmica é um fenômeno de verão: é mais comum em noites frias de inverno.</li><li>Inverter os efeitos do El Niño no Brasil.</li></ul>"
+  },
+  {
+    "discipline": "Geografia",
+    "topic": "Geologia",
+    "title": "Placas tectônicas, rochas e recursos minerais",
+    "explanationHtml": "<ul><li>A litosfera é dividida em <strong>placas tectônicas</strong> que se movem sobre o manto. Nos limites ocorrem terremotos, vulcões e formação de montanhas.</li><li>Limites convergentes (choque: Andes, Himalaia), divergentes (afastamento: dorsal do Atlântico) e transformantes (deslizamento lateral).</li><li>O Brasil fica no <strong>centro da placa Sul-Americana</strong>: tem poucos tremores fortes e nenhum vulcão ativo.</li><li><strong>Rochas</strong>: magmáticas (do magma: granito, basalto), sedimentares (camadas de sedimentos: arenito; guardam fósseis e petróleo) e metamórficas (transformadas por pressão e calor: mármore).</li><li><strong>Estruturas</strong>: escudos cristalinos (antigos, ricos em minerais metálicos, como o ferro de Carajás e do Quadrilátero Ferrífero) e bacias sedimentares (petróleo, carvão, gás).</li></ul>",
+    "exampleHtml": "<p>Por que o petróleo brasileiro é encontrado em bacias sedimentares, e não nos escudos cristalinos?</p><p>O petróleo se forma da matéria orgânica soterrada em <strong>camadas de sedimentos</strong> ao longo de milhões de anos; os escudos são rochas magmáticas e metamórficas antigas, sem essa origem.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o Brasil não tem nenhum terremoto: tem tremores, geralmente fracos.</li><li>Procurar minérios metálicos em bacias sedimentares e combustíveis fósseis em escudos.</li><li>Confundir placas convergentes com divergentes.</li></ul>"
+  },
+  {
+    "discipline": "Geografia",
+    "topic": "Hidrografia",
+    "title": "Bacias hidrográficas, aquíferos e uso da água",
+    "explanationHtml": "<ul><li><strong>Bacia hidrográfica</strong>: área drenada por um rio principal e seus afluentes, separada das outras pelos divisores de águas.</li><li>Os rios brasileiros são majoritariamente de <strong>planalto</strong> (bom potencial hidrelétrico) e perenes, exceto parte do semiárido, onde há rios temporários.</li><li><strong>Bacia Amazônica</strong>: maior do mundo em volume; rios de planície navegáveis. <strong>Bacia do Paraná</strong>: maior aproveitamento hidrelétrico (Itaipu). <strong>São Francisco</strong>: o «rio da integração nacional», atravessa o semiárido; obra de transposição.</li><li><strong>Aquíferos</strong> (Guarani, Alter do Chão): água subterrânea, recarregada pela infiltração da chuva.</li><li><strong>Usos e conflitos</strong>: a agricultura irrigada é a maior consumidora; poluição por esgoto e agrotóxicos; crises hídricas ligadas a desmatamento e má gestão.</li></ul>",
+    "exampleHtml": "<p>Por que impermeabilizar o solo das cidades agrava as enchentes e diminui a recarga dos aquíferos?</p><p>Asfalto e concreto impedem a <strong>infiltração</strong>: a água da chuva escoa rápido pela superfície para os rios (enchente) e não chega ao lençol subterrâneo.</p>",
+    "pitfallsHtml": "<ul><li>Achar que a maior parte da água doce consumida vai para uso doméstico: é a agropecuária.</li><li>Confundir bacia hidrográfica com o rio principal.</li><li>Achar que o aquífero é um «lago subterrâneo»: a água está nos poros das rochas.</li></ul>"
+  }
+]
