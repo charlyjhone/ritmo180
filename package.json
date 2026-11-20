@@ -26,7 +26,8 @@
     "conta:admin": "node apps/api/src/cli/account.ts admin",
     "conta:senha": "node apps/api/src/cli/account.ts senha",
     "conta:coordenacao": "node apps/api/src/cli/account.ts coordenacao",
-    "turma": "sh scripts/abrir-para-turma.sh"
+    "turma": "sh scripts/abrir-para-turma.sh",
+    "carga": "node scripts/carga.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

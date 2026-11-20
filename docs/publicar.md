@@ -72,4 +72,14 @@ Guarde os backups fora do serviço do banco. Teste a restauração antes do lan�
 
 - Revisão jurídica da página `/privacidade` e do contrato com a escola.
 - Datas do ENEM 2027 em `packages/engine/src/plan.ts`, quando sair o edital. Tire `estimated` da edição.
-- Teste de carga com o número de alunos previsto.
+- Teste de carga com o número de alunos previsto: `npm run carga` mede o servidor sozinho; com `CARGA_URL`, `CARGA_EMAILS` e `CARGA_SENHA` de contas de uma escola de teste, mede o servidor publicado.
+
+## Conexão cifrada com o banco
+
+No Supabase o servidor confere o certificado do banco com a raiz `apps/api/certs/supabase-root-2021.pem`, que é a mesma do arquivo `prod-ca-2021.crt` do painel (SHA-256 `80:70:25:AD:…:E6:CA:FA`). O `sslmode` da `DATABASE_URL` é ignorado nesse caso. Em outro provedor, aponte a raiz em `DATABASE_SSL_CA_FILE`. Em emergência, `DATABASE_SSL_VERIFY=off` volta ao comportamento antigo.
+
+## Aviso de erro
+
+Com `RITMO_ALERTA_URL` configurada no Render, o servidor manda uma linha curta quando dá erro 500, quando há erro sem tratamento e quando reinicia. Serve um webhook do Discord, do Slack ou um tópico do ntfy.sh (aplicativo grátis no celular). O mesmo erro avisa no máximo uma vez a cada 15 minutos, e e-mails, ids e valores citados pelo banco saem do texto.
+
+Para saber se o site saiu do ar, use também um monitor externo (UptimeRobot, por exemplo) chamando `/api/health` a cada 5 minutos.
