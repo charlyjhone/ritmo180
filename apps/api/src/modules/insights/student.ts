@@ -7,7 +7,7 @@ import {
 import type { Tx } from "../../platform/db.ts";
 import { HttpError } from "../../platform/http.ts";
 import { loadItems } from "../catalog/index.ts";
-import { computeSnapshot, extraMinutesOf, irtFor, loadAttempts, pendingDiagnostics, previewPlan, scoreViewOf, type StoredAttempt } from "../practice/index.ts";
+import { computeSnapshot, extraMinutesOf, irtFor, loadAttempts, pendingDiagnostics, previewPlan, reviewCounts, scoreViewOf, type StoredAttempt } from "../practice/index.ts";
 import { readingHistory } from "../reading/index.ts";
 
 const WEEKS = 6;
@@ -68,6 +68,7 @@ export async function studentDashboard(tx: Tx, student: { id: string; name: stri
     syncedAttempts: attempts.length,
     enem: nextEnem(now),
     goal: await weeklyGoal(tx, student.id, timestamps, now),
+    reviews: await reviewCounts(tx, student.id, now),
   };
 }
 

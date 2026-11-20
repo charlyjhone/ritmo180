@@ -3,7 +3,8 @@ import {
   accommodationFactor, assembleExam, attemptFlags, calibrateItem, diagnoseTime, estimateTheta, evaluateReading, fatigueCurve,
   guessStreakPositions, incoherences, information, masteryOf, nextAdaptiveItem, nextEnem, paceBalance, planSession, planUntilEnem, probability, ritmoSummary, spreadAcrossAreas,
   SeededRng, simulateCorrect, stageOf, targetSeconds, toScore, trainingStreak, whatIfScenarios,
-  type AttemptFact, type Candidate, type ExamResponse, type IrtParams,
+  isReviewDueNow, reviewState,
+  type AttemptFact, type Candidate, type ExamResponse, type IrtParams, type ReviewFact,
 } from "../src/index.ts";
 
 const item: IrtParams = { a: 2, b: 0.5, c: 0.2 };
@@ -283,5 +284,43 @@ describe("calibração", () => {
     const rng = new SeededRng(4);
     const data = Array.from({ length: 2000 }, () => ({ theta: rng.normal(0, 1), correct: rng.next() < 0.5 }));
     expect(calibrateItem(data).lowDiscrimination).toBe(true);
+  });
+});
+
+describe("revisão espaçada", () => {
+  const DAY = 86_400_000;
+  const T0 = Date.parse("2026-11-20T13:00:00Z");
+  const fact = (correct: boolean, days: number, confidence: ReviewFact["confidence"] = "think"): ReviewFact => ({ correct, confidence, answeredAt: T0 + days * DAY });
+
+  it("fica fora do caderno enquanto o aluno acerta com alguma certeza", () => {
+    expect(reviewState([fact(true, 0), fact(true, 1, null)]).status).toBe("clear");
+  });
+
+  it("erro pede para refazer já e cada acerto empurra a revisão para 2, 7 e 21 dias", () => {
+    const miss = reviewState([fact(false, 0, "sure")]);
+    expect(miss).toMatchObject({ status: "redo", dueAt: T0, misses: 1, sureMiss: true });
+    expect(isReviewDueNow(miss, T0)).toBe(true);
+
+    const redone = reviewState([fact(false, 0), fact(true, 0.01)]);
+    expect(redone.status).toBe("spaced");
+    expect(redone.dueAt).toBe(Date.parse("2026-11-22T03:00:00Z"));
+    expect(isReviewDueNow(redone, T0 + DAY)).toBe(false);
+    expect(isReviewDueNow(redone, Date.parse("2026-11-22T10:00:00Z"))).toBe(true);
+
+    const second = reviewState([fact(false, 0), fact(true, 0.01), fact(true, 2)]);
+    expect(second).toMatchObject({ status: "spaced", step: 1, dueAt: Date.parse("2026-11-29T03:00:00Z") });
+    const third = reviewState([fact(false, 0), fact(true, 0.01), fact(true, 2), fact(true, 9)]);
+    expect(third).toMatchObject({ status: "spaced", step: 2, dueAt: Date.parse("2026-12-20T03:00:00Z") });
+    expect(reviewState([fact(false, 0), fact(true, 0.01), fact(true, 2), fact(true, 9), fact(true, 30)]).status).toBe("clear");
+  });
+
+  it("acerto antes da data não adianta e erro na revisão recomeça", () => {
+    expect(reviewState([fact(false, 0), fact(true, 0.01), fact(true, 1)])).toMatchObject({ status: "spaced", step: 0 });
+    expect(reviewState([fact(false, 0), fact(true, 0.01), fact(true, 2), fact(false, 9)])).toMatchObject({ status: "redo", step: 0, misses: 2 });
+  });
+
+  it("acerto no chute entra no caderno", () => {
+    expect(reviewState([fact(true, 0, "guess")])).toMatchObject({ status: "redo", guessed: true, misses: 0 });
+    expect(reviewState([fact(false, 0), fact(true, 0.01, "guess")]).status).toBe("redo");
   });
 });

@@ -418,3 +418,4 @@ select.input { width: 100%; }
 .goal .bar, .goal [role="progressbar"] { margin-top: 12px; }
 .legal { max-width: 720px; margin: 0 auto; padding: 32px 16px 64px; line-height: 1.6; }
 .legal h2 { margin-top: 28px; }
+.confidence { margin-top: 20px; }

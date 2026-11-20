@@ -24,7 +24,7 @@ export const practiceRoutes: ModuleRoutes = (app, { db, llm, now }) => {
   app.get<{ Querystring: { disciplina?: string; assunto?: string } }>("/api/practice/mistakes", async (request) => {
     const actor = requireActor(request, "student");
     const { disciplina: discipline, assunto: topic } = request.query;
-    return db.tenant(tenantOf(actor), (tx) => mistakeBook(tx, actor.id, { discipline, topic }));
+    return db.tenant(tenantOf(actor), (tx) => mistakeBook(tx, actor.id, { discipline, topic }, now()));
   });
 
   app.put("/api/practice/goal", async (request) => {
