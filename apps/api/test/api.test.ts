@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { LightMyRequestResponse } from "fastify";
-import type { ClassExamReport, CreatedPerson, DeletionRequestView, RosterCommitResult, SchoolClass, ExamResultView, ExamSittingView, ExamSummary, ItemSuggestionView, MistakeBook, Person, PracticeSessionPack, StudentDashboard, StudyPlan, SyncResult, TrainingCatalog } from "@ritmo/contracts";
+import type { ClassExamReport, CreatedPerson, DeletionRequestView, RosterCommitResult, SchoolClass, ExamResultView, ExamSittingView, ExamSummary, ItemSuggestionView, LessonIndex, LessonSuggestionView, LessonView, MistakeBook, Person, PracticeSessionPack, StudentDashboard, StudyPlan, SyncResult, TrainingCatalog } from "@ritmo/contracts";
 import { normalizeItems, parseCanonicalJson } from "@ritmo/ingest";
 import { buildApp } from "../src/app.ts";
 import { openPglite } from "../src/platform/db-pglite.ts";
@@ -11,6 +11,7 @@ import type { Database } from "../src/platform/db.ts";
 import { seedDemo, type DemoAccounts } from "../src/seed/demo.ts";
 import { importBatch, releaseOfficialItems } from "../src/seed/install.ts";
 import { enrichItems, generateItems, reviewItem, reviewQueue } from "../src/modules/content/index.ts";
+import { allPrerequisiteLinks, AuthoredLessons, generateLessons, importLessons } from "../src/modules/lessons/index.ts";
 import type { Llm } from "../src/platform/llm.ts";
 import { runCalibration } from "../src/modules/calibration/index.ts";
 import { NOT_GUEST_ATTEMPT, removeExpiredGuests } from "../src/modules/identity/index.ts";
@@ -429,6 +430,85 @@ describe("complemento com IA", () => {
     expect(updated.solution_html).toContain("Passo a passo");
     expect(updated.alternatives.find((x: { letter: string }) => x.letter !== updated.answer).trap).toBeTruthy();
     expect(json<ItemSuggestionView[]>(await network.get("/api/content/suggestions"))).toEqual([]);
+  });
+});
+
+describe("aulas rápidas", () => {
+  it("a IA propõe, a rede aprova e só então o aluno vê a aula", async () => {
+    const prompts: string[] = [];
+    const llm: Llm = {
+      async json<T>(request: { prompt: string }) {
+        prompts.push(request.prompt);
+        return { title: "Aula de teste", explanationHtml: "<p>O essencial.</p><script>alert(1)</script>", exampleHtml: "<p>Exemplo.</p>", pitfallsHtml: "<ul><li>Pegadinha.</li></ul>" } as T;
+      },
+    };
+    expect(await generateLessons(db, llm, 2)).toEqual({ suggested: 2, failed: 0 });
+    expect(prompts[0]).toContain("<questao_exemplo");
+
+    expect((await as(await login(a.teacher)).get("/api/lessons/review")).statusCode).toBe(403);
+    const network = as(await login(a.network));
+    const queue = json<LessonSuggestionView[]>(await network.get("/api/lessons/review"));
+    expect(queue).toHaveLength(2);
+    const [approved, rejected] = queue;
+    expect(approved!.explanationHtml).not.toContain("script");
+
+    const student = as(await login(a.student));
+    const topicUrl = (s: { discipline: string; topic: string }) => `/api/lessons/topic?${new URLSearchParams({ disciplina: s.discipline, assunto: s.topic })}`;
+    expect(json<LessonView>(await student.get(topicUrl(approved!))).lesson).toBeNull();
+
+    expect((await network.post("/api/lessons/review", { ...approved, approved: true })).statusCode).toBe(200);
+    expect((await network.post("/api/lessons/review", { ...rejected, approved: false })).statusCode).toBe(200);
+    expect((await network.post("/api/lessons/review", { ...approved, approved: true })).statusCode).toBe(404);
+
+    const view = json<LessonView>(await student.get(topicUrl(approved!)));
+    expect(view.lesson).toMatchObject({ title: "Aula de teste", pitfallsHtml: "<ul><li>Pegadinha.</li></ul>" });
+    expect(view.questions).toBeGreaterThan(0);
+    expect(json<LessonView>(await student.get(topicUrl(rejected!))).lesson).toBeNull();
+    expect((await student.get(topicUrl({ discipline: "Física", topic: "Assunto que não existe" }))).statusCode).toBe(404);
+
+    const index = json<LessonIndex>(await student.get("/api/lessons"));
+    const listed = index.disciplines.find((d) => d.discipline === approved!.discipline)!.topics.find((t) => t.topic === approved!.topic)!;
+    expect(listed.hasLesson).toBe(true);
+    expect((await as(await login(a.teacher)).get(topicUrl(approved!))).statusCode).toBe(200);
+
+    // A recusada volta para a fila numa nova geração; a aprovada não é refeita.
+    prompts.length = 0;
+    await generateLessons(db, llm, 50);
+    expect(prompts.some((p) => p.includes(`Assunto: ${rejected!.topic}`))).toBe(true);
+    expect(prompts.some((p) => p.includes(`Assunto: ${approved!.topic}`))).toBe(false);
+  });
+
+  it("o mapa de pré-requisitos não aponta para o próprio assunto nem forma ciclo", () => {
+    const links = allPrerequisiteLinks();
+    const key = (t: { discipline: string; topic: string }) => `${t.discipline}/${t.topic}`;
+    const graph = new Map(links.map((l) => [key(l), l.requires.map(key)]));
+    const visit = (node: string, path: Set<string>): void => {
+      expect(path.has(node), `ciclo em ${[...path, node].join(" → ")}`).toBe(false);
+      for (const next of graph.get(node) ?? []) visit(next, new Set([...path, node]));
+    };
+    for (const node of graph.keys()) visit(node, new Set());
+    expect(links.length).toBeGreaterThan(80);
+  });
+
+  it("as aulas escritas em content/aulas são válidas e a importação não sobrescreve aula publicada", async () => {
+    const dir = new URL("../../../content/aulas/", import.meta.url);
+    const authored = readdirSync(dir).filter((f) => f.endsWith(".json")).flatMap((file) => {
+      const parsed = AuthoredLessons.safeParse(JSON.parse(readFileSync(new URL(file, dir), "utf8")));
+      expect(parsed.success, `${file}: ${parsed.error?.issues[0]?.path.join(".")} ${parsed.error?.issues[0]?.message}`).toBe(true);
+      return parsed.data ?? [];
+    });
+    const keys = authored.map((l) => `${l.discipline}/${l.topic}`);
+    expect(new Set(keys).size).toBe(keys.length);
+    expect(authored.length).toBeGreaterThan(100);
+    for (const l of authored) expect(`${l.explanationHtml}${l.exampleHtml}${l.pitfallsHtml}`, keys.join()).not.toMatch(/<h[1-6]|<script/);
+
+    const sample = authored.filter((l) => l.discipline === "Matemática");
+    const pending = await importLessons(db, sample, { now: Date.now() });
+    expect(pending.imported + pending.kept + pending.unknown.length).toBe(sample.length);
+    const published = await importLessons(db, sample, { publishedBy: "Revisor", now: Date.now() });
+    expect(published.imported).toBe(pending.imported);
+    const again = await importLessons(db, sample, { now: Date.now() });
+    expect(again).toMatchObject({ imported: 0, kept: published.imported + published.kept });
   });
 });
 

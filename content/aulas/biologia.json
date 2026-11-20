@@ -1,0 +1,114 @@
+[
+  {
+    "discipline": "Biologia",
+    "topic": "Ecologia",
+    "title": "Cadeias alimentares, relações e ciclos",
+    "explanationHtml": "<ul><li><strong>Níveis tróficos</strong>: produtores (fotossíntese) → consumidores primários (herbívoros) → secundários → … e decompositores (fungos e bactérias), que devolvem os nutrientes ao ambiente.</li><li>A <strong>energia</strong> flui num só sentido e diminui a cada nível (cerca de 10% passa adiante); a <strong>matéria</strong> circula.</li><li><strong>Bioacumulação</strong>: substâncias que não se degradam (mercúrio, DDT) se concentram nos níveis mais altos.</li><li><strong>Relações</strong>: mutualismo (+/+, obrigatório, como líquen), protocooperação (+/+, não obrigatória), comensalismo (+/0), predação e parasitismo (+/−), competição (−/−).</li><li><strong>Ciclos</strong>: no do carbono, a fotossíntese retira CO₂ e a respiração e a combustão devolvem; no do nitrogênio, bactérias fixam o N₂ do ar (em raízes de leguminosas), e a desnitrificação o devolve.</li><li><strong>Sucessão ecológica</strong>: espécies pioneiras preparam o ambiente para comunidades mais complexas, até o clímax.</li></ul>",
+    "exampleHtml": "<p>Por que plantar feijão (leguminosa) entre safras de milho reduz o uso de adubo nitrogenado?</p><p>Nas raízes das leguminosas vivem <strong>bactérias fixadoras de nitrogênio</strong> (mutualismo), que transformam o N₂ do ar em compostos que a planta usa; o solo fica mais rico em nitrogênio para a safra seguinte.</p>",
+    "pitfallsHtml": "<ul><li>Dizer que a energia é reciclada: ela se perde como calor; quem circula é a matéria.</li><li>Confundir mutualismo com comensalismo.</li><li>Achar que a pirâmide de energia pode ser invertida (a de números e a de biomassa podem; a de energia, não).</li></ul>"
+  },
+  {
+    "discipline": "Biologia",
+    "topic": "Citologia/Bioquímica",
+    "title": "A célula, suas organelas e as moléculas da vida",
+    "explanationHtml": "<ul><li><strong>Procariontes</strong> (bactérias) não têm núcleo organizado; <strong>eucariontes</strong> têm núcleo e organelas membranosas.</li><li><strong>Membrana plasmática</strong>: controla o que entra e sai. Difusão e osmose são passivas (a favor do gradiente); bomba de sódio e potássio é transporte ativo (gasta ATP). Na osmose, a água vai para o meio mais concentrado.</li><li><strong>Mitocôndria</strong>: respiração celular, produz ATP. <strong>Cloroplasto</strong> (vegetais): fotossíntese.</li><li><strong>Ribossomo</strong>: síntese de proteínas. <strong>Retículo</strong> e <strong>complexo golgiense</strong>: produção e envio de substâncias. <strong>Lisossomo</strong>: digestão intracelular.</li><li><strong>Moléculas</strong>: carboidratos (energia rápida), lipídios (reserva e membranas), proteínas (estrutura e enzimas), ácidos nucleicos (DNA guarda a informação; RNA a usa para fazer proteínas).</li><li><strong>Fotossíntese</strong>: 6 CO₂ + 6 H₂O + luz → glicose + 6 O₂. <strong>Respiração</strong>: o inverso, liberando energia. <strong>Fermentação</strong>: sem oxigênio, rende menos ATP (pão, iogurte, álcool).</li></ul>",
+    "exampleHtml": "<p>Por que salgar a carne ajuda a conservá-la?</p><p>O sal deixa o meio externo muito concentrado: por <strong>osmose</strong>, as células dos microrganismos perdem água e não conseguem se multiplicar.</p>",
+    "pitfallsHtml": "<ul><li>Achar que planta não respira: faz respiração dia e noite, e fotossíntese só com luz.</li><li>Inverter o sentido da osmose: a água vai para onde há mais soluto.</li><li>Achar que bactérias têm mitocôndrias.</li></ul>"
+  },
+  {
+    "discipline": "Biologia",
+    "topic": "Genética",
+    "title": "Herança, cruzamentos e probabilidade",
+    "explanationHtml": "<ul><li><strong>Gene</strong>: trecho de DNA; <strong>alelos</strong>: versões do mesmo gene. Cada pessoa tem dois alelos de cada gene, um de cada genitor.</li><li><strong>Dominante</strong> (A) se manifesta em AA e Aa; <strong>recessivo</strong> (a) só em aa.</li><li><strong>Genótipo</strong> é a constituição genética; <strong>fenótipo</strong> é a característica expressa (genótipo + ambiente).</li><li><strong>1ª lei de Mendel</strong>: cruzamento Aa × Aa → 1 AA : 2 Aa : 1 aa (3/4 com fenótipo dominante).</li><li><strong>Grupos sanguíneos ABO</strong>: alelos Iᴬ e Iᴮ codominantes e i recessivo. Tipo O (ii) é doador universal de hemácias; AB é receptor universal.</li><li><strong>Herança ligada ao X</strong> (daltonismo, hemofilia): mais comum em homens, que têm um só X.</li><li>Use probabilidade: «e» multiplica, «ou» soma.</li></ul>",
+    "exampleHtml": "<p>Um casal heterozigoto (Aa) para um gene recessivo de uma doença quer saber a chance de ter um filho afetado.</p><p>Aa × Aa: a chance de aa é <strong>1/4 (25%)</strong>. A de ser um menino afetado seria 1/4 × 1/2 = 1/8.</p>",
+    "pitfallsHtml": "<ul><li>Achar que, se o casal já teve um filho afetado, o próximo não será: cada gestação é independente.</li><li>Confundir genótipo com fenótipo.</li><li>Esquecer de multiplicar por 1/2 quando a pergunta especifica o sexo.</li></ul>"
+  },
+  {
+    "discipline": "Biologia",
+    "topic": "Evolução",
+    "title": "Seleção natural e as evidências da evolução",
+    "explanationHtml": "<ul><li><strong>Darwin</strong>: há variação entre indivíduos; os mais adaptados ao ambiente sobrevivem e se reproduzem mais; com o tempo, as características vantajosas ficam mais frequentes. Isso é <strong>seleção natural</strong>.</li><li><strong>Neodarwinismo</strong>: as variações surgem por mutação e recombinação genética, e a seleção age sobre elas.</li><li><strong>Lamarck</strong> (superado): uso e desuso e herança dos caracteres adquiridos.</li><li><strong>Evidências</strong>: fósseis, órgãos homólogos (mesma origem, como braço humano e asa de morcego), órgãos vestigiais, semelhanças no DNA.</li><li><strong>Especiação</strong>: populações isoladas acumulam diferenças até não cruzarem mais.</li><li><strong>Resistência a antibióticos</strong>: o antibiótico não cria a resistência; ele seleciona as bactérias que já eram resistentes.</li></ul>",
+    "exampleHtml": "<p>Por que o uso inadequado de antibióticos aumenta as bactérias resistentes?</p><p>Na população já existem algumas bactérias resistentes por mutação. O antibiótico mata as sensíveis e <strong>seleciona as resistentes</strong>, que se multiplicam sem competição.</p>",
+    "pitfallsHtml": "<ul><li>Dizer que o ambiente «provoca» a mutação útil: a mutação é ao acaso; o ambiente seleciona.</li><li>Usar explicações lamarckistas (a girafa esticou o pescoço e passou isso aos filhos).</li><li>Confundir órgãos homólogos (mesma origem) com análogos (mesma função).</li></ul>"
+  },
+  {
+    "discipline": "Biologia",
+    "topic": "Botânica",
+    "title": "Grupos de plantas, tecidos e fisiologia vegetal",
+    "explanationHtml": "<ul><li><strong>Briófitas</strong> (musgos): sem vasos condutores, pequenas e de lugares úmidos.</li><li><strong>Pteridófitas</strong> (samambaias): com vasos, sem sementes.</li><li><strong>Gimnospermas</strong> (pinheiros, araucária): sementes nuas, sem frutos.</li><li><strong>Angiospermas</strong>: flores e frutos; o fruto protege e ajuda a dispersar a semente.</li><li><strong>Xilema</strong> leva água e sais da raiz às folhas (seiva bruta); <strong>floema</strong> leva açúcares das folhas ao resto da planta (seiva elaborada).</li><li><strong>Estômatos</strong>: poros das folhas que controlam as trocas gasosas e a transpiração; fecham com falta de água.</li><li><strong>Hormônios</strong>: auxina (crescimento, fototropismo), etileno (amadurecimento dos frutos), giberelina, citocinina.</li><li><strong>Polinização</strong> por vento, insetos, aves e morcegos.</li></ul>",
+    "exampleHtml": "<p>Por que colocar banana madura junto de frutas verdes acelera o amadurecimento delas?</p><p>A banana madura libera <strong>etileno</strong>, gás que funciona como hormônio de amadurecimento para as outras frutas.</p>",
+    "pitfallsHtml": "<ul><li>Trocar xilema e floema.</li><li>Achar que as gimnospermas têm frutos (o pinhão é semente).</li><li>Achar que a planta tira a massa do solo: a maior parte vem do CO₂ do ar pela fotossíntese.</li></ul>"
+  },
+  {
+    "discipline": "Biologia",
+    "topic": "Doenças",
+    "title": "Doenças, transmissão e prevenção",
+    "explanationHtml": "<p>O ENEM cobra mais a <strong>forma de transmissão</strong> e a <strong>prevenção</strong> do que os sintomas.</p><ul><li><strong>Por vetor (mosquito)</strong>: dengue, zika, chikungunya e febre amarela (<em>Aedes aegypti</em>); malária (<em>Anopheles</em>). Prevenção: eliminar água parada, repelentes, telas; vacina contra a febre amarela.</li><li><strong>Por água e alimentos contaminados</strong>: cólera, hepatite A, amebíase, giardíase, verminoses. Prevenção: saneamento básico, água tratada, higiene.</li><li><strong>Por contato com pele em água contaminada</strong>: esquistossomose (larvas do caramujo) e leptospirose (urina de rato em enchentes).</li><li><strong>Pelo ar</strong>: gripe, tuberculose, sarampo. Vacinas e ventilação.</li><li><strong>Sexual e sangue</strong>: HIV, sífilis, hepatite B. Preservativo e testagem.</li><li><strong>Doença de Chagas</strong>: barbeiro (fezes na picada) ou alimentos contaminados (açaí, caldo de cana).</li></ul>",
+    "exampleHtml": "<p>Que medida coletiva mais reduz casos de esquistossomose numa comunidade ribeirinha?</p><p><strong>Saneamento básico</strong>: os ovos saem nas fezes humanas; sem esgoto chegando aos rios, o ciclo com o caramujo é interrompido.</p>",
+    "pitfallsHtml": "<ul><li>Achar que antibiótico trata virose.</li><li>Atribuir a malária ao Aedes: o vetor é o Anopheles.</li><li>Propor só tratamento individual quando a questão pede prevenção coletiva.</li></ul>"
+  },
+  {
+    "discipline": "Biologia",
+    "topic": "Vírus",
+    "title": "Vírus: estrutura, replicação e combate",
+    "explanationHtml": "<ul><li>Vírus não têm células nem metabolismo próprio: são <strong>parasitas intracelulares obrigatórios</strong>, formados por material genético (DNA ou RNA) envolto por uma cápsula de proteínas.</li><li>Para se multiplicar, o vírus se liga à célula, injeta o material genético e usa a maquinaria dela (ribossomos, energia) para fazer novas cópias.</li><li><strong>Retrovírus</strong> (como o HIV) têm RNA e usam a transcriptase reversa para fazer DNA; o HIV ataca linfócitos T CD4, que coordenam a defesa.</li><li>Vírus de RNA mutam muito rápido: por isso a vacina da gripe é atualizada todo ano.</li><li><strong>Antibióticos não funcionam</strong> contra vírus. O combate vem de vacinas, antivirais específicos e medidas de prevenção da transmissão.</li></ul>",
+    "exampleHtml": "<p>Por que é preciso tomar vacina da gripe todos os anos, mas a de sarampo não?</p><p>O vírus da gripe, de RNA, <strong>sofre mutações frequentes</strong> nas proteínas de superfície; os anticorpos do ano anterior deixam de reconhecê-lo. O vírus do sarampo é mais estável.</p>",
+    "pitfallsHtml": "<ul><li>Dizer que vírus são bactérias pequenas.</li><li>Indicar antibiótico para infecção viral.</li><li>Achar que vírus se reproduzem fora de células.</li></ul>"
+  },
+  {
+    "discipline": "Biologia",
+    "topic": "Sistema Imunológico",
+    "title": "Defesas do corpo, vacinas e soros",
+    "explanationHtml": "<ul><li><strong>Imunidade inata</strong>: barreiras (pele, mucosas), inflamação e fagócitos; age rápido e de forma inespecífica.</li><li><strong>Imunidade adaptativa</strong>: linfócitos B produzem <strong>anticorpos</strong> específicos para cada antígeno; linfócitos T coordenam e destroem células infectadas.</li><li><strong>Memória imunológica</strong>: depois do primeiro contato, ficam células de memória, e a segunda resposta é mais rápida e intensa.</li><li><strong>Vacina</strong>: apresenta o antígeno (agente atenuado, inativado, partes dele ou instruções em RNA) e gera <strong>imunidade ativa</strong>, com memória. É <em>prevenção</em>.</li><li><strong>Soro</strong>: já traz os anticorpos prontos, produzidos em outro animal. É <strong>imunidade passiva</strong>, imediata e passageira. É <em>tratamento</em> (picada de cobra, tétano já instalado).</li><li>O leite materno também passa anticorpos (imunidade passiva natural).</li></ul>",
+    "exampleHtml": "<p>Uma pessoa picada por jararaca deve receber vacina ou soro?</p><p><strong>Soro antiofídico</strong>: o veneno age em horas, e o soro traz anticorpos prontos. A vacina demoraria semanas para gerar resposta.</p>",
+    "pitfallsHtml": "<ul><li>Trocar vacina (prevenção, ativa) por soro (tratamento, passiva).</li><li>Achar que o soro gera memória imunológica.</li><li>Achar que anticorpos servem contra qualquer microrganismo: são específicos.</li></ul>"
+  },
+  {
+    "discipline": "Biologia",
+    "topic": "Sistema Digestório",
+    "title": "Digestão, enzimas e absorção",
+    "explanationHtml": "<ul><li><strong>Boca</strong>: mastigação e amilase salivar (começa a digerir o amido).</li><li><strong>Estômago</strong>: ácido clorídrico (pH muito baixo) e pepsina, que começa a digestão das proteínas.</li><li><strong>Fígado</strong>: produz a bile, que <em>emulsiona</em> as gorduras (não é enzima); a vesícula biliar a armazena.</li><li><strong>Pâncreas</strong>: lança no duodeno enzimas para carboidratos, proteínas e lipídios, e bicarbonato, que neutraliza a acidez.</li><li><strong>Intestino delgado</strong>: termina a digestão e absorve os nutrientes pelas vilosidades, que aumentam a superfície.</li><li><strong>Intestino grosso</strong>: absorve água; abriga a microbiota. Fibras ajudam o trânsito intestinal.</li></ul>",
+    "exampleHtml": "<p>Uma pessoa que retirou a vesícula biliar deve evitar refeições muito gordurosas. Por quê?</p><p>Sem a vesícula, a bile não fica armazenada para ser liberada em quantidade na refeição. Com menos bile, a <strong>emulsificação das gorduras</strong> fica prejudicada e a digestão delas também.</p>",
+    "pitfallsHtml": "<ul><li>Dizer que a bile é uma enzima.</li><li>Achar que a absorção ocorre principalmente no estômago: é no intestino delgado.</li><li>Achar que a digestão das proteínas começa na boca.</li></ul>"
+  },
+  {
+    "discipline": "Biologia",
+    "topic": "Biotecnologia e Engenharia Genética",
+    "title": "DNA recombinante, transgênicos, clonagem e células-tronco",
+    "explanationHtml": "<ul><li><strong>DNA recombinante</strong>: enzimas de restrição cortam o DNA em pontos específicos e a ligase une o trecho a outro DNA, como um plasmídeo bacteriano.</li><li><strong>Transgênico</strong>: organismo que recebeu gene de outra espécie. Ex.: bactérias que produzem insulina humana; plantas resistentes a pragas.</li><li><strong>Clonagem reprodutiva</strong>: o núcleo de uma célula do corpo é colocado num óvulo sem núcleo (ovelha Dolly); o clone tem o DNA nuclear do doador.</li><li><strong>Células-tronco</strong>: indiferenciadas, capazes de originar outros tipos de célula; as embrionárias são as mais versáteis.</li><li><strong>PCR</strong>: multiplica trechos de DNA (testes de diagnóstico, perícia). <strong>Teste de paternidade</strong>: compara padrões do DNA.</li><li>Debates frequentes: segurança alimentar, patentes, impacto ambiental e ética.</li></ul>",
+    "exampleHtml": "<p>Como se produz insulina humana em escala industrial?</p><p>O gene humano da insulina é inserido num <strong>plasmídeo de bactéria</strong>; as bactérias transgênicas se multiplicam e passam a fabricar a proteína, que é purificada.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o clone é idêntico em tudo: o ambiente e o DNA mitocondrial do óvulo também influenciam.</li><li>Confundir transgênico (gene de outra espécie) com melhoramento por cruzamento.</li><li>Achar que a enzima de restrição corta o DNA ao acaso.</li></ul>"
+  },
+  {
+    "discipline": "Biologia",
+    "topic": "Sistema Endócrino",
+    "title": "Hormônios e o equilíbrio do corpo",
+    "explanationHtml": "<ul><li>Hormônios são mensageiros químicos lançados no sangue que agem em células com receptores específicos.</li><li><strong>Pâncreas</strong>: insulina (reduz a glicose no sangue, faz as células captarem glicose) e glucagon (aumenta a glicose). No diabetes tipo 1 falta insulina; no tipo 2, as células respondem mal a ela.</li><li><strong>Tireoide</strong>: hormônios que regulam o metabolismo; dependem de iodo (por isso o sal é iodado).</li><li><strong>Hipófise</strong>: controla outras glândulas e produz o hormônio do crescimento.</li><li><strong>Suprarrenais</strong>: adrenalina (luta ou fuga) e cortisol (estresse).</li><li><strong>Gônadas</strong>: estrógeno e progesterona (ciclo menstrual) e testosterona.</li><li><strong>Retroalimentação negativa</strong>: o próprio hormônio, em excesso, inibe sua produção.</li></ul>",
+    "exampleHtml": "<p>Por que a falta de iodo na dieta pode causar bócio (aumento da tireoide)?</p><p>Sem iodo, a tireoide não produz seus hormônios; a hipófise, por <strong>retroalimentação</strong>, libera mais estímulo (TSH), e a glândula cresce tentando compensar.</p>",
+    "pitfallsHtml": "<ul><li>Achar que a insulina aumenta a glicose no sangue.</li><li>Confundir hormônio com enzima.</li><li>Achar que todo diabetes se deve à falta total de insulina.</li></ul>"
+  },
+  {
+    "discipline": "Biologia",
+    "topic": "Sistema Circulatório",
+    "title": "Coração, vasos e sangue",
+    "explanationHtml": "<ul><li><strong>Circulação dupla</strong>: a pequena circulação leva o sangue do coração aos pulmões e de volta; a grande, do coração ao corpo e de volta.</li><li>O lado direito do coração recebe sangue pobre em oxigênio e o manda aos pulmões; o esquerdo recebe o oxigenado e o manda ao corpo.</li><li><strong>Artérias</strong> saem do coração (paredes grossas, alta pressão); <strong>veias</strong> chegam a ele (têm válvulas); <strong>capilares</strong> fazem as trocas com os tecidos.</li><li>Atenção: a artéria pulmonar leva sangue pobre em oxigênio, e as veias pulmonares, sangue oxigenado.</li><li><strong>Sangue</strong>: hemácias (transportam O₂ pela hemoglobina, que tem ferro), leucócitos (defesa), plaquetas (coagulação) e plasma.</li><li>Pressão alta e placas de gordura nas artérias aumentam o risco de infarto e AVC.</li></ul>",
+    "exampleHtml": "<p>Por que a falta de ferro na dieta causa cansaço?</p><p>O ferro faz parte da <strong>hemoglobina</strong>. Sem ele, as hemácias transportam menos oxigênio (anemia ferropriva), e as células produzem menos energia.</p>",
+    "pitfallsHtml": "<ul><li>Definir artéria como vaso de sangue oxigenado: é vaso que sai do coração.</li><li>Trocar os lados do coração.</li><li>Achar que as trocas de gases acontecem nas artérias: acontecem nos capilares.</li></ul>"
+  },
+  {
+    "discipline": "Biologia",
+    "topic": "Fisiologia Animal",
+    "title": "Respiração, excreção e regulação nos animais",
+    "explanationHtml": "<ul><li><strong>Respiração</strong>: cutânea (minhoca, anfíbios em parte), traqueal (insetos, o ar vai direto às células), branquial (peixes) e pulmonar (mamíferos, aves, répteis).</li><li><strong>Excreção nitrogenada</strong>: amônia (muito tóxica, exige muita água; peixes ósseos), ureia (mamíferos) e ácido úrico (aves, répteis, insetos; economiza água, adaptação ao ambiente seco e ao ovo com casca).</li><li><strong>Temperatura</strong>: endotérmicos (aves e mamíferos) mantêm a temperatura com o metabolismo; ectotérmicos dependem do ambiente.</li><li><strong>Desenvolvimento</strong>: metamorfose em insetos e anfíbios; o ovo com casca e o âmnio permitiram aos répteis a vida em terra firme.</li></ul>",
+    "exampleHtml": "<p>Por que excretar ácido úrico é vantajoso para aves?</p><p>O ácido úrico é pouco tóxico e pode ser eliminado quase sem água. Isso <strong>economiza água</strong> e permite que o embrião acumule os resíduos dentro do ovo sem se intoxicar.</p>",
+    "pitfallsHtml": "<ul><li>Achar que insetos levam oxigênio pelo sangue: as traqueias levam o ar às células.</li><li>Associar amônia a animais de ambiente seco (é o contrário).</li><li>Chamar ectotérmicos de «animais de sangue frio» como se o sangue estivesse sempre frio.</li></ul>"
+  },
+  {
+    "discipline": "Biologia",
+    "topic": "Sistema Respiratório",
+    "title": "Respiração pulmonar e trocas gasosas",
+    "explanationHtml": "<ul><li>O ar passa por fossas nasais (filtram, aquecem e umedecem), faringe, laringe, traqueia, brônquios e bronquíolos até os <strong>alvéolos</strong>.</li><li>Nos alvéolos, o O₂ passa para o sangue e o CO₂ sai dele, por <strong>difusão</strong>, a favor da diferença de concentração.</li><li><strong>Inspiração</strong>: o diafragma contrai e desce, o volume da caixa torácica aumenta, a pressão interna cai e o ar entra.</li><li>O <strong>bulbo</strong> controla o ritmo respiratório pelo nível de CO₂ no sangue (CO₂ alto acelera a respiração).</li><li><strong>Monóxido de carbono</strong> se liga à hemoglobina com muito mais força que o O₂ e causa asfixia.</li><li>Em grandes altitudes, o ar rarefeito estimula a produção de mais hemácias.</li></ul>",
+    "exampleHtml": "<p>Por que é perigoso ficar num ambiente fechado com um aquecedor a gás com defeito?</p><p>A queima incompleta produz <strong>CO</strong>, que ocupa a hemoglobina no lugar do oxigênio; os tecidos ficam sem O₂ mesmo com a pessoa respirando normalmente.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o estímulo principal para respirar é a falta de O₂ (é o excesso de CO₂).</li><li>Dizer que o diafragma relaxa na inspiração.</li><li>Achar que a troca de gases ocorre nos brônquios: ocorre nos alvéolos.</li></ul>"
+  }
+]

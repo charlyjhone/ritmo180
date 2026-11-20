@@ -470,3 +470,42 @@ export interface HintResponse {
   hint: string;
   source: "ai" | "item" | "none";
 }
+
+/** Aula rápida de um assunto: explicação, exemplo resolvido e erros comuns do ENEM. */
+export interface LessonContent {
+  title: string;
+  explanationHtml: string;
+  exampleHtml: string;
+  pitfallsHtml: string;
+}
+
+export interface LessonView {
+  area: Area;
+  discipline: string;
+  topic: string;
+  /** Nulo enquanto a aula não foi aprovada pela rede. */
+  lesson: LessonContent | null;
+  questions: number;
+  /** Domínio do aluno no assunto, de 0 a 100; nulo se ainda não treinou. */
+  mastery: number | null;
+  prerequisites: {
+    discipline: string;
+    topic: string;
+    why: string;
+    mastery: number | null;
+    /** `weak`: domínio abaixo de 60%; `untested`: ainda não treinou; `ok`: em dia. */
+    status: "weak" | "untested" | "ok";
+    hasLesson: boolean;
+  }[];
+  /** O Raio-X do aluno aponta o cálculo como gargalo: as bases de Matemática pesam mais. */
+  calcBottleneck: boolean;
+}
+
+export interface LessonIndex {
+  disciplines: { area: Area; discipline: string; topics: { topic: string; questions: number; hasLesson: boolean; mastery: number | null; weakPrerequisites: number }[] }[];
+}
+
+export interface LessonSuggestionView extends LessonContent {
+  discipline: string;
+  topic: string;
+}

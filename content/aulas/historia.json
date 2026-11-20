@@ -1,0 +1,186 @@
+[
+  {
+    "discipline": "História",
+    "topic": "Período Colonial",
+    "title": "Brasil colônia: açúcar, ouro e escravidão",
+    "explanationHtml": "<ul><li><strong>Pacto colonial</strong>: a colônia existia para enriquecer a metrópole; comércio exclusivo com Portugal.</li><li><strong>Ciclo do açúcar</strong> (séculos XVI–XVII), no Nordeste: latifúndio, monocultura exportadora e trabalho escravizado (plantation). Engenho como centro econômico e social.</li><li><strong>Escravidão</strong>: primeiro de indígenas, depois sobretudo de africanos, pelo tráfico atlântico, que era muito lucrativo. Resistência: quilombos (Palmares), fugas, revoltas, preservação cultural.</li><li><strong>Bandeirantes</strong> expandiram o território para o interior, caçando indígenas e procurando metais.</li><li><strong>Mineração</strong> (século XVIII), em Minas Gerais: urbanização, deslocamento da capital para o Rio (1763) e cobrança pesada de impostos (quinto, derrama).</li><li><strong>Revoltas</strong>: nativistas (Beckman, Emboabas, Mascates) e emancipacionistas (Inconfidência Mineira, 1789; Conjuração Baiana, 1798, com participação popular e proposta de fim da escravidão).</li></ul>",
+    "exampleHtml": "<p>Por que a Conjuração Baiana é considerada mais radical que a Inconfidência Mineira?</p><p>A Inconfidência foi liderada pela elite e não propunha o fim da escravidão. A Conjuração Baiana teve grande participação de <strong>alfaiates, soldados e escravizados</strong> e defendia igualdade e abolição.</p>",
+    "pitfallsHtml": "<ul><li>Achar que a economia colonial servia ao mercado interno: era voltada para a exportação.</li><li>Tratar os escravizados como passivos, ignorando as formas de resistência.</li><li>Confundir revoltas nativistas (contra abusos, sem querer independência) com emancipacionistas.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Primeira República",
+    "title": "República Velha: oligarquias, café e revoltas",
+    "explanationHtml": "<ul><li>Período de 1889 a 1930. A Constituição de 1891 criou o federalismo e o voto aberto, só para homens alfabetizados.</li><li><strong>Política dos governadores</strong>: o presidente apoiava as oligarquias estaduais, que garantiam bancadas fiéis no Congresso.</li><li><strong>Coronelismo</strong> e <strong>voto de cabresto</strong>: o coronel controlava os votos da sua região; fraudes eram comuns.</li><li><strong>Café com leite</strong>: alternância entre São Paulo e Minas na presidência; política de valorização do café.</li><li><strong>Revoltas rurais</strong>: Canudos (1896–1897), Contestado (1912–1916), cangaço. <strong>Urbanas</strong>: Revolta da Vacina (1904), Revolta da Chibata (1910), greves operárias de 1917.</li><li><strong>Tenentismo</strong> e <strong>Semana de Arte Moderna</strong> (1922) mostram a crise do modelo, que cai com a Revolução de 1930.</li></ul>",
+    "exampleHtml": "<p>Por que a Revolta da Vacina não foi só contra a vacina?</p><p>A vacinação obrigatória veio junto com a <strong>reforma urbana autoritária</strong> do Rio, que demoliu cortiços e expulsou a população pobre do centro. A revolta expressou essa insatisfação acumulada.</p>",
+    "pitfallsHtml": "<ul><li>Achar que a República trouxe democracia ampla: o voto era restrito e manipulado.</li><li>Reduzir Canudos a fanatismo religioso, ignorando a questão da terra e da miséria.</li><li>Confundir coronelismo (poder local) com tenentismo (movimento militar de jovens oficiais).</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Segundo Reinado",
+    "title": "Dom Pedro II: café, Guerra do Paraguai e abolição",
+    "explanationHtml": "<ul><li>Período de 1840 a 1889. Estabilidade política com o <strong>parlamentarismo às avessas</strong> (o imperador escolhia o primeiro-ministro, usando o Poder Moderador).</li><li><strong>Café</strong> no Vale do Paraíba e depois no Oeste Paulista; ferrovias; imigração europeia para substituir a mão de obra escravizada.</li><li><strong>Lei de Terras</strong> (1850): terra só por compra, dificultando o acesso dos pobres e dos futuros libertos.</li><li><strong>Abolição gradual</strong>: Eusébio de Queirós (fim do tráfico, 1850), Ventre Livre (1871), Sexagenários (1885) e <strong>Lei Áurea</strong> (1888), sem indenização nem integração dos libertos.</li><li><strong>Guerra do Paraguai</strong> (1864–1870): fortaleceu o Exército, que passou a ter peso político.</li><li><strong>Queda</strong>: questões religiosa, militar e abolicionista (a elite escravista retirou o apoio). República proclamada em 1889.</li></ul>",
+    "exampleHtml": "<p>Por que a Lei de Terras de 1850 é associada às desigualdades que vieram depois da abolição?</p><p>Ela determinou que a terra só seria obtida por <strong>compra</strong>. Assim, os libertos e os imigrantes pobres ficaram sem acesso a ela, mantendo-se como mão de obra barata.</p>",
+    "pitfallsHtml": "<ul><li>Achar que a Lei Áurea veio acompanhada de políticas de inclusão.</li><li>Achar que o Brasil aboliu a escravidão cedo: foi o último país das Américas.</li><li>Confundir o parlamentarismo do Império com o modelo britânico.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Era Vargas",
+    "title": "Era Vargas: trabalhismo, Estado Novo e industrialização",
+    "explanationHtml": "<ul><li><strong>Governo Provisório</strong> (1930–1934): centralização; Revolução Constitucionalista de 1932 em São Paulo.</li><li><strong>Governo Constitucional</strong> (1934–1937): Constituição de 1934 com voto secreto e feminino; polarização entre integralistas e comunistas (Intentona de 1935).</li><li><strong>Estado Novo</strong> (1937–1945): ditadura com censura (DIP), propaganda, perseguição a opositores e Constituição outorgada.</li><li><strong>Trabalhismo</strong>: Ministério do Trabalho, salário mínimo (1940) e CLT (1943). Direitos vieram junto com controle dos sindicatos pelo Estado.</li><li><strong>Industrialização</strong> com o Estado à frente: CSN (Volta Redonda), Vale do Rio Doce.</li><li><strong>Volta</strong> eleito (1951–1954): Petrobras («o petróleo é nosso»); crise política e suicídio em 1954.</li></ul>",
+    "exampleHtml": "<p>Por que o trabalhismo de Vargas é visto como ambíguo?</p><p>Ele garantiu <strong>direitos trabalhistas</strong> (CLT, salário mínimo), mas atrelou os sindicatos ao Estado e reprimiu movimentos autônomos, criando apoio popular ao governo e controle sobre os trabalhadores.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o Estado Novo foi democrático por ter leis trabalhistas.</li><li>Confundir a Revolução de 1930 com a de 1932.</li><li>Achar que a industrialização foi obra só da iniciativa privada.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Governo dos Militares (1964-1985)",
+    "title": "Ditadura militar: repressão, milagre e abertura",
+    "explanationHtml": "<ul><li><strong>Golpe de 1964</strong> derrubou João Goulart, no contexto da Guerra Fria, com apoio de setores civis e dos EUA.</li><li><strong>Atos Institucionais</strong>: bipartidarismo (ARENA e MDB), eleições indiretas; o <strong>AI-5</strong> (1968) fechou o Congresso, suspendeu o habeas corpus e endureceu a censura.</li><li><strong>Repressão</strong>: tortura, desaparecimentos, exílio; resistência armada e cultural (música de protesto, teatro).</li><li><strong>Milagre econômico</strong> (1968–1973): crescimento alto com endividamento externo e concentração de renda; depois, crise do petróleo e inflação.</li><li><strong>Abertura lenta e gradual</strong>: Lei da Anistia (1979), volta do pluripartidarismo, greves do ABC, <strong>Diretas Já</strong> (1984). Fim com a eleição indireta de Tancredo Neves (1985).</li></ul>",
+    "exampleHtml": "<p>Por que o «milagre econômico» é criticado mesmo tendo crescimento alto?</p><p>O crescimento veio com <strong>arrocho salarial, concentração de renda e dívida externa</strong>, que explodiu na crise seguinte. «Fazer o bolo crescer para depois dividir» não se cumpriu.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o MDB era um partido de oposição livre: atuava dentro dos limites do regime.</li><li>Achar que as Diretas Já conseguiram eleição direta em 1985: a emenda foi rejeitada.</li><li>Ignorar o contexto da Guerra Fria no golpe.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Idade Média",
+    "title": "Feudalismo, Igreja e transformações medievais",
+    "explanationHtml": "<ul><li>Após a queda de Roma no Ocidente (476), a vida se ruralizou.</li><li><strong>Feudalismo</strong>: economia agrária e de subsistência; o senhor feudal dava terra e proteção; o servo trabalhava e pagava obrigações (corveia, talha, banalidades). Relação de suserania e vassalagem entre nobres.</li><li><strong>Sociedade estamental</strong>: clero (os que rezam), nobreza (os que guerreiam) e servos (os que trabalham), com pouca mobilidade.</li><li><strong>Igreja</strong>: maior proprietária de terras, controlava a educação e a visão de mundo (teocentrismo).</li><li><strong>Baixa Idade Média</strong> (séculos XI–XV): Cruzadas, renascimento comercial e urbano, burguesia, feiras e corporações de ofício.</li><li><strong>Crise do século XIV</strong>: fome, Peste Negra e Guerra dos Cem Anos.</li></ul>",
+    "exampleHtml": "<p>Como as Cruzadas contribuíram para o fim do feudalismo?</p><p>Elas reabriram o <strong>comércio com o Oriente</strong> pelo Mediterrâneo, impulsionando cidades, moeda e a burguesia, que não se encaixava na ordem feudal.</p>",
+    "pitfallsHtml": "<ul><li>Chamar a Idade Média de «idade das trevas» sem considerar universidades, catedrais e o comércio da Baixa Idade Média.</li><li>Confundir servo com escravizado: o servo estava preso à terra, não era propriedade do senhor.</li><li>Achar que o feudalismo existiu igualmente no mundo todo.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Grécia e Roma Antigas",
+    "title": "Democracia ateniense, Esparta e Roma",
+    "explanationHtml": "<ul><li><strong>Atenas</strong>: berço da democracia direta (século V a.C.), mas só os <em>cidadãos</em> votavam: homens adultos atenienses. Mulheres, estrangeiros (metecos) e escravizados ficavam de fora.</li><li><strong>Esparta</strong>: sociedade militarizada, oligárquica, com educação voltada à guerra.</li><li><strong>Legado grego</strong>: filosofia, teatro, história, ideia de cidadania e de debate público.</li><li><strong>Roma</strong>: monarquia, <strong>república</strong> (Senado, conflitos entre patrícios e plebeus, que conquistaram tribunos da plebe e a Lei das Doze Tábuas) e <strong>império</strong>.</li><li>Expansão romana pelo Mediterrâneo; uso de escravizados das conquistas; política do «pão e circo».</li><li><strong>Legado romano</strong>: direito, latim (base do português), urbanismo, organização administrativa. Queda do Império Romano do Ocidente em 476.</li></ul>",
+    "exampleHtml": "<p>Por que se diz que a democracia ateniense era excludente?</p><p>A participação era restrita aos <strong>cidadãos</strong>, uma minoria: mulheres, estrangeiros e escravizados não votavam, embora fossem a maior parte da população.</p>",
+    "pitfallsHtml": "<ul><li>Comparar a democracia ateniense à atual como se fossem iguais (lá era direta e restrita).</li><li>Confundir república romana com democracia: o poder estava concentrado no Senado aristocrático.</li><li>Esquecer o papel da escravidão nas duas sociedades.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Primeira e Segunda Guerra Mundial",
+    "title": "As guerras mundiais e o entreguerras",
+    "explanationHtml": "<ul><li><strong>Primeira Guerra</strong> (1914–1918): causas no imperialismo, no nacionalismo, na corrida armamentista e nas alianças (Tríplice Entente × Tríplice Aliança). Estopim: assassinato do herdeiro austríaco em Sarajevo. Guerra de trincheiras.</li><li><strong>Tratado de Versalhes</strong> (1919) humilhou a Alemanha com perdas territoriais e indenizações, alimentando ressentimentos.</li><li><strong>Entreguerras</strong>: Revolução Russa (1917), crise de 1929 e ascensão de regimes totalitários (fascismo na Itália, nazismo na Alemanha).</li><li><strong>Segunda Guerra</strong> (1939–1945): Eixo (Alemanha, Itália, Japão) × Aliados (Reino Unido, URSS, EUA, França). <strong>Holocausto</strong>: extermínio sistemático de cerca de 6 milhões de judeus, além de ciganos, pessoas com deficiência e outros grupos.</li><li>Fim com as bombas atômicas em Hiroshima e Nagasaki; criação da ONU e início da Guerra Fria.</li><li>O Brasil participou da Segunda Guerra com a FEB, na Itália.</li></ul>",
+    "exampleHtml": "<p>Como o Tratado de Versalhes ajuda a explicar a ascensão do nazismo?</p><p>As <strong>indenizações e perdas impostas</strong> à Alemanha geraram crise econômica e ressentimento nacional, que Hitler explorou com discurso de revanche, somado à crise de 1929.</p>",
+    "pitfallsHtml": "<ul><li>Atribuir a Primeira Guerra só ao assassinato em Sarajevo (foi o estopim, não a causa).</li><li>Confundir a Tríplice Aliança com os Aliados da Segunda Guerra.</li><li>Reduzir o Holocausto a «efeito colateral» da guerra: foi política deliberada de extermínio.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Revolução Industrial",
+    "title": "Revolução Industrial: máquinas, fábricas e operários",
+    "explanationHtml": "<ul><li>Começou na <strong>Inglaterra</strong> no século XVIII, que tinha capital acumulado (comércio e colônias), carvão e ferro, mão de obra expulsa do campo pelos cercamentos e mercado consumidor.</li><li><strong>Primeira fase</strong>: máquina a vapor, indústria têxtil, carvão.</li><li><strong>Mudança no trabalho</strong>: do artesão dono das ferramentas ao operário assalariado; divisão do trabalho; ritmo ditado pela máquina e pelo relógio.</li><li><strong>Condições</strong>: jornadas de 14 a 16 horas, trabalho infantil, cortiços insalubres.</li><li><strong>Reações</strong>: ludismo (quebra de máquinas), cartismo (direitos políticos), sindicatos; surgimento do socialismo.</li><li><strong>Segunda Revolução Industrial</strong> (fim do século XIX): eletricidade, petróleo, aço, química; linha de montagem (fordismo).</li></ul>",
+    "exampleHtml": "<p>Qual a relação entre os cercamentos e a Revolução Industrial?</p><p>Os <strong>cercamentos</strong> transformaram terras comunais em propriedades privadas para criar ovelhas; os camponeses expulsos foram para as cidades e se tornaram mão de obra barata para as fábricas.</p>",
+    "pitfallsHtml": "<ul><li>Achar que a Revolução Industrial melhorou de imediato a vida dos trabalhadores.</li><li>Confundir o ludismo (contra as máquinas) com o cartismo (por direitos políticos).</li><li>Explicar o pioneirismo inglês só pelo carvão, esquecendo capital e mão de obra.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "História da África",
+    "title": "Reinos africanos, tráfico atlântico e colonização",
+    "explanationHtml": "<ul><li>A África teve sociedades complexas antes dos europeus: <strong>Egito</strong>, <strong>Kush</strong>, <strong>Mali</strong> (Tombuctu, centro de estudos islâmicos), <strong>Gana</strong>, <strong>Congo</strong>, <strong>Grande Zimbábue</strong>, iorubás.</li><li><strong>Tradição oral</strong>: os griôs preservavam a história e os saberes.</li><li><strong>Tráfico atlântico</strong> (séculos XVI–XIX): milhões de africanos escravizados levados às Américas; o Brasil foi o maior destino. Desestruturou sociedades africanas.</li><li><strong>Partilha da África</strong>: na Conferência de Berlim (1884–1885), potências europeias dividiram o continente, com fronteiras que ignoravam povos e culturas. Justificativas racistas (darwinismo social, «missão civilizadora»).</li><li><strong>Descolonização</strong>: sobretudo após 1950; em colônias portuguesas, com guerras (Angola, Moçambique, 1975).</li><li>A Lei 10.639/2003 tornou obrigatório o ensino de história e cultura afro-brasileira.</li></ul>",
+    "exampleHtml": "<p>Por que muitos conflitos africanos atuais são associados à Conferência de Berlim?</p><p>As fronteiras foram traçadas por <strong>interesses europeus</strong>, juntando povos rivais num mesmo país e separando grupos aparentados, o que gerou tensões após as independências.</p>",
+    "pitfallsHtml": "<ul><li>Achar que a história da África começa com a chegada dos europeus.</li><li>Tratar a África como um país homogêneo.</li><li>Aceitar as justificativas da época («civilizar») como explicação, em vez de reconhecer o interesse econômico e o racismo.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Guerra Fria",
+    "title": "Guerra Fria: mundo bipolar",
+    "explanationHtml": "<ul><li>Disputa entre <strong>EUA</strong> (capitalismo) e <strong>URSS</strong> (socialismo) de 1947 a 1991, sem confronto militar direto entre os dois.</li><li><strong>Instrumentos</strong>: corrida armamentista e nuclear, corrida espacial, propaganda, alianças militares (OTAN × Pacto de Varsóvia), ajuda econômica (Plano Marshall).</li><li><strong>Momentos</strong>: divisão da Alemanha e Muro de Berlim (1961), Crise dos Mísseis em Cuba (1962), Guerras da Coreia e do Vietnã (conflitos «quentes» na periferia).</li><li><strong>América Latina</strong>: Revolução Cubana (1959) e apoio dos EUA a ditaduras militares para conter o comunismo.</li><li><strong>Fim</strong>: reformas de Gorbatchev (perestroika e glasnost), queda do Muro (1989) e fim da URSS (1991).</li></ul>",
+    "exampleHtml": "<p>Por que a Guerra Fria é chamada de «fria»?</p><p>As superpotências <strong>nunca se enfrentaram diretamente</strong>, por causa do risco de destruição nuclear mútua; a disputa ocorreu por propaganda, alianças e guerras em outros países.</p>",
+    "pitfallsHtml": "<ul><li>Achar que não houve guerras no período: houve muitas, na periferia.</li><li>Desligar as ditaduras latino-americanas do contexto da Guerra Fria.</li><li>Confundir perestroika (reestruturação econômica) com glasnost (transparência política).</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Primeiro Reinado",
+    "title": "Independência e Primeiro Reinado",
+    "explanationHtml": "<ul><li>A vinda da família real (1808) abriu os portos e elevou o Brasil a Reino Unido (1815).</li><li>A Revolução do Porto (1820) exigiu a volta de D. João VI e a recolonização do Brasil. D. Pedro ficou (Dia do Fico) e declarou a <strong>independência</strong> em 1822.</li><li>A independência manteve a monarquia, a escravidão e o latifúndio: mudança conduzida pela elite, sem ruptura social.</li><li><strong>Constituição de 1824</strong>, outorgada: <strong>Poder Moderador</strong> do imperador, voto censitário (por renda), catolicismo oficial.</li><li><strong>Confederação do Equador</strong> (1824), revolta republicana em Pernambuco, reprimida.</li><li>Desgaste: Guerra da Cisplatina (perda do Uruguai), crise econômica, autoritarismo e envolvimento na sucessão portuguesa. D. Pedro I abdica em 1831.</li></ul>",
+    "exampleHtml": "<p>O que era o Poder Moderador?</p><p>Um quarto poder, exclusivo do imperador, que lhe permitia <strong>intervir nos outros três</strong>: dissolver a Câmara, nomear senadores e ministros. Concentrava o poder no monarca.</p>",
+    "pitfallsHtml": "<ul><li>Achar que a independência aboliu a escravidão.</li><li>Achar que a Constituição de 1824 foi votada por uma assembleia: foi outorgada após a dissolução da Constituinte.</li><li>Confundir voto censitário (por renda) com voto universal.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Nova República (1985-atualidade)",
+    "title": "Redemocratização e Constituição de 1988",
+    "explanationHtml": "<ul><li><strong>Constituição de 1988</strong> («Cidadã»): direitos sociais, voto facultativo para analfabetos e jovens de 16 e 17 anos, racismo como crime inafiançável, criação do SUS, demarcação de terras indígenas, direitos de quilombolas.</li><li><strong>Planos econômicos</strong> contra a hiperinflação: Cruzado, Collor e, com sucesso, o <strong>Plano Real</strong> (1994).</li><li><strong>Impeachments</strong>: Collor (1992) e Dilma Rousseff (2016).</li><li>Primeira eleição direta para presidente após a ditadura: 1989.</li><li>Políticas sociais de transferência de renda e cotas nas universidades nos anos 2000.</li><li>Debates atuais: desigualdade, violência, meio ambiente, participação política e fortalecimento das instituições democráticas.</li></ul>",
+    "exampleHtml": "<p>Por que a Constituição de 1988 é chamada de «Cidadã»?</p><p>Porque ampliou muito os <strong>direitos civis, políticos e sociais</strong> após a ditadura, como saúde universal (SUS), e incorporou demandas de movimentos sociais na sua elaboração.</p>",
+    "pitfallsHtml": "<ul><li>Achar que a Nova República começou com eleição direta (a primeira foi em 1989).</li><li>Confundir os planos econômicos fracassados com o Plano Real.</li><li>Achar que o voto é obrigatório para todos a partir dos 16 anos.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Absolutismo",
+    "title": "Absolutismo e mercantilismo",
+    "explanationHtml": "<ul><li>Na formação dos Estados nacionais, o rei concentrou o poder com apoio da burguesia (que queria mercado unificado) e da nobreza (privilégios).</li><li><strong>Teóricos</strong>: Maquiavel (o governante deve ser eficaz, separar política da moral), Hobbes (sem Estado forte haveria a «guerra de todos contra todos»), Bossuet (direito divino dos reis).</li><li>Símbolo: Luís XIV na França («O Estado sou eu»), com a corte de Versalhes.</li><li><strong>Mercantilismo</strong>: política econômica do absolutismo. Metalismo (acumular ouro e prata), balança comercial favorável, protecionismo e exploração colonial.</li><li>A <strong>Revolução Inglesa</strong> (século XVII) limitou o rei pelo Parlamento (monarquia parlamentar), antecipando a crise do absolutismo.</li></ul>",
+    "exampleHtml": "<p>Que relação há entre mercantilismo e colonização da América?</p><p>As colônias garantiam <strong>metais preciosos e produtos tropicais</strong> e serviam de mercado exclusivo, ajudando a metrópole a manter a balança comercial favorável.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o absolutismo era contra a burguesia: houve aliança de interesses.</li><li>Atribuir o direito divino a Hobbes (sua justificativa era racional, o contrato social).</li><li>Confundir mercantilismo com liberalismo econômico.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Expansão Marítima e Comercial",
+    "title": "Grandes navegações",
+    "explanationHtml": "<ul><li>Nos séculos XV e XVI, europeus buscaram novas rotas para as especiarias do Oriente, já que o Mediterrâneo era controlado por italianos e o caminho terrestre, pelos turcos após a tomada de Constantinopla (1453).</li><li><strong>Pioneirismo português</strong>: centralização política precoce, burguesia mercantil, posição atlântica e conhecimento náutico (Escola de Sagres, caravela, bússola, astrolábio).</li><li>Marcos: Bartolomeu Dias contorna a África (1488), Colombo chega à América (1492), Vasco da Gama chega à Índia (1498), Cabral ao Brasil (1500).</li><li><strong>Tratado de Tordesilhas</strong> (1494) dividiu as terras entre Portugal e Espanha.</li><li><strong>Consequências</strong>: deslocamento do eixo econômico para o Atlântico, colonização, genocídio de povos indígenas, tráfico de africanos, acúmulo de capital na Europa.</li></ul>",
+    "exampleHtml": "<p>Por que Portugal foi pioneiro nas navegações?</p><p>Porque reuniu cedo <strong>Estado centralizado, burguesia interessada no comércio, posição geográfica atlântica e técnica náutica</strong>, o que permitiu financiar e organizar as expedições.</p>",
+    "pitfallsHtml": "<ul><li>Falar em «descobrimento» como se a América fosse vazia: havia milhões de habitantes.</li><li>Atribuir as navegações só à curiosidade científica, sem o interesse comercial.</li><li>Achar que Tordesilhas incluía outras potências europeias.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "República Democrática (1945-1964)",
+    "title": "República de 1946: populismo e desenvolvimentismo",
+    "explanationHtml": "<ul><li>Após o Estado Novo, a Constituição de 1946 restabeleceu eleições e liberdades (com limites: analfabetos não votavam, o Partido Comunista foi cassado em 1947).</li><li><strong>Dutra</strong> (1946–1951): alinhamento aos EUA. <strong>Vargas</strong> (1951–1954): nacionalismo, Petrobras.</li><li><strong>Juscelino Kubitschek</strong> (1956–1961): Plano de Metas, «50 anos em 5», indústria automobilística com capital estrangeiro, <strong>Brasília</strong> (1960), mas com inflação e dívida.</li><li><strong>Jânio Quadros</strong> renunciou em 1961; <strong>João Goulart</strong> assumiu sob parlamentarismo e depois presidencialismo.</li><li><strong>Reformas de base</strong> de Jango (agrária, urbana, educacional) assustaram elites e setores médios em plena Guerra Fria, levando ao golpe de 1964.</li><li><strong>Populismo</strong>: relação direta do líder com as massas urbanas, com concessões e controle.</li></ul>",
+    "exampleHtml": "<p>Que custo teve o desenvolvimentismo de JK?</p><p>O crescimento industrial e a construção de Brasília foram financiados com <strong>emissão de moeda e empréstimos externos</strong>, o que elevou a inflação e a dívida nos governos seguintes.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o período foi uma democracia plena: havia restrições ao voto e aos comunistas.</li><li>Confundir as reformas de base com medidas da ditadura.</li><li>Achar que JK industrializou só com capital nacional.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "América Espanhola",
+    "title": "Conquista e colonização da América Espanhola",
+    "explanationHtml": "<ul><li>Povos pré-colombianos complexos: <strong>astecas</strong> (México), <strong>maias</strong> (América Central) e <strong>incas</strong> (Andes).</li><li><strong>Conquista</strong>: Cortez contra os astecas e Pizarro contra os incas, favorecidos por alianças com povos rivais, por armas e, sobretudo, por epidemias (varíola) que dizimaram os indígenas.</li><li><strong>Exploração do trabalho indígena</strong>: <strong>encomienda</strong> (indígenas entregues a um colono em troca de catequese) e <strong>mita</strong> (trabalho obrigatório nas minas, como em Potosí).</li><li><strong>Sociedade</strong>: chapetones (espanhóis), criollos (descendentes de espanhóis nascidos na América), mestiços, indígenas e africanos escravizados.</li><li><strong>Independências</strong> (início do século XIX), lideradas pelos criollos (Bolívar, San Martín); a América se fragmentou em vários países, diferente do Brasil.</li></ul>",
+    "exampleHtml": "<p>Por que as independências da América Espanhola foram lideradas pelos criollos?</p><p>Eles tinham riqueza, mas eram <strong>excluídos dos altos cargos</strong>, reservados aos chapetones; queriam poder político e liberdade comercial.</p>",
+    "pitfallsHtml": "<ul><li>Explicar a conquista só pela superioridade das armas, esquecendo epidemias e alianças.</li><li>Confundir encomienda com mita.</li><li>Achar que as independências mudaram a estrutura social: a elite criolla manteve seus privilégios.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Reforma Religiosa",
+    "title": "Reforma Protestante e Contrarreforma",
+    "explanationHtml": "<ul><li><strong>Causas</strong>: críticas à venda de indulgências e à corrupção do clero, interesse de reis e nobres nas terras da Igreja, burguesia incomodada com a condenação do lucro, imprensa difundindo ideias.</li><li><strong>Lutero</strong> (1517, 95 teses): salvação pela fé, Bíblia como autoridade, tradução para o alemão.</li><li><strong>Calvino</strong>: predestinação; o trabalho e o sucesso como sinais de graça, ideia associada por Max Weber ao espírito do capitalismo.</li><li><strong>Anglicanismo</strong>: Henrique VIII rompe com Roma e se torna chefe da Igreja na Inglaterra.</li><li><strong>Contrarreforma</strong>: Concílio de Trento, reafirmação dos dogmas, Inquisição, Índice de livros proibidos e Companhia de Jesus (jesuítas), que atuou na catequese no Brasil.</li></ul>",
+    "exampleHtml": "<p>Por que o calvinismo atraiu tantos burgueses?</p><p>Ao valorizar o <strong>trabalho e o sucesso econômico</strong> como sinais de salvação, ele legitimava o lucro, que a Igreja Católica medieval via com desconfiança.</p>",
+    "pitfallsHtml": "<ul><li>Explicar a Reforma só por motivos religiosos, sem os interesses políticos e econômicos.</li><li>Achar que o anglicanismo surgiu de divergências teológicas profundas (o motivo imediato foi político).</li><li>Confundir Contrarreforma com Reforma.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Renascimento",
+    "title": "Renascimento cultural e científico",
+    "explanationHtml": "<ul><li>Movimento cultural dos séculos XIV a XVI, iniciado nas cidades italianas, financiado por mecenas (burgueses ricos, como os Médici, e papas).</li><li><strong>Características</strong>: <strong>antropocentrismo</strong> (o ser humano no centro), <strong>humanismo</strong>, racionalismo, valorização da Antiguidade greco-romana, individualismo.</li><li><strong>Arte</strong>: perspectiva, proporção, estudo da anatomia; Leonardo da Vinci, Michelangelo, Rafael.</li><li><strong>Ciência</strong>: observação e experimentação; heliocentrismo de Copérnico, depois Galileu.</li><li>A <strong>imprensa</strong> de Gutenberg (c. 1450) espalhou livros e ideias.</li><li>O Renascimento não rompeu totalmente com a religião: muitos temas eram cristãos, tratados de forma nova.</li></ul>",
+    "exampleHtml": "<p>Como a perspectiva nas pinturas renascentistas expressa a mentalidade da época?</p><p>Ela representa o espaço como o <strong>olho humano o vê</strong>, a partir de um ponto de vista; reflete o antropocentrismo e o uso da razão e da matemática para compreender o mundo.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o Renascimento foi antirreligioso.</li><li>Confundir antropocentrismo com ateísmo.</li><li>Achar que ele surgiu de repente, sem as transformações urbanas e comerciais da Baixa Idade Média.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Brasil Pré-colonial",
+    "title": "Povos indígenas e o período pré-colonial",
+    "explanationHtml": "<ul><li>Antes de 1500, viviam no atual Brasil milhões de indígenas de muitos povos e línguas (troncos tupi, macro-jê, entre outros), com agricultura (mandioca, milho), cerâmica (marajoara) e relações profundas com o ambiente.</li><li><strong>Período pré-colonial</strong> (1500–1530): pouco interesse português, voltado ao comércio com o Oriente. Exploração do <strong>pau-brasil</strong> por meio do <strong>escambo</strong> com indígenas (troca de trabalho por objetos).</li><li>Feitorias no litoral e expedições guarda-costas contra franceses.</li><li>A colonização efetiva começou por volta de 1530, com Martim Afonso de Sousa e depois as capitanias hereditárias.</li><li>O contato trouxe doenças, escravização e perda de territórios, mas também resistência indígena, que continua até hoje.</li></ul>",
+    "exampleHtml": "<p>Por que Portugal demorou cerca de 30 anos para colonizar efetivamente o Brasil?</p><p>O comércio com o <strong>Oriente era mais lucrativo</strong>, e não se encontraram metais preciosos logo. Só a ameaça de invasões estrangeiras e a crise do comércio oriental levaram à ocupação.</p>",
+    "pitfallsHtml": "<ul><li>Tratar os indígenas como um povo único e homogêneo.</li><li>Confundir escambo com escravidão.</li><li>Achar que os indígenas desapareceram: há centenas de povos vivos hoje.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Iluminismo",
+    "title": "Iluminismo: razão, liberdade e direitos",
+    "explanationHtml": "<ul><li>Movimento intelectual do século XVIII que criticava o absolutismo, os privilégios e o poder da Igreja, usando a <strong>razão</strong> como guia.</li><li><strong>Locke</strong>: direitos naturais (vida, liberdade, propriedade); o governo que os viola pode ser derrubado.</li><li><strong>Montesquieu</strong>: separação dos poderes em Executivo, Legislativo e Judiciário.</li><li><strong>Voltaire</strong>: liberdade de expressão e tolerância religiosa.</li><li><strong>Rousseau</strong>: contrato social, soberania popular e vontade geral.</li><li><strong>Adam Smith</strong> e os fisiocratas: liberalismo econômico, livre mercado, contra o mercantilismo.</li><li>Influenciou a independência dos EUA, a Revolução Francesa e as revoltas coloniais no Brasil (Inconfidência Mineira).</li></ul>",
+    "exampleHtml": "<p>Que princípio iluminista aparece na organização do Estado brasileiro atual?</p><p>A <strong>separação dos poderes</strong> de Montesquieu: Executivo, Legislativo e Judiciário, independentes e harmônicos, para evitar a concentração de poder.</p>",
+    "pitfallsHtml": "<ul><li>Atribuir a separação dos poderes a Rousseau (é de Montesquieu).</li><li>Achar que todos os iluministas defendiam a democracia popular (Voltaire aceitava o despotismo esclarecido).</li><li>Confundir liberalismo econômico com mercantilismo.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Período Regencial",
+    "title": "Regências: crise e revoltas provinciais",
+    "explanationHtml": "<ul><li>De 1831 a 1840: após a abdicação de D. Pedro I, o herdeiro tinha 5 anos, e o país foi governado por <strong>regentes</strong>.</li><li>Disputas entre liberais moderados, exaltados e restauradores. Criação da <strong>Guarda Nacional</strong> (1831), controlada pelos grandes proprietários.</li><li><strong>Ato Adicional</strong> (1834): mais autonomia às províncias (assembleias provinciais). Depois, a <strong>Lei de Interpretação</strong> (1840) recentralizou o poder.</li><li><strong>Revoltas</strong>: <strong>Cabanagem</strong> (Pará, forte participação popular), <strong>Sabinada</strong> (Bahia), <strong>Balaiada</strong> (Maranhão), <strong>Revolta dos Malês</strong> (Salvador, 1835, africanos escravizados muçulmanos) e <strong>Farroupilha</strong> (Rio Grande do Sul, 1835–1845, elite pecuarista contra impostos sobre o charque).</li><li>O <strong>Golpe da Maioridade</strong> (1840) antecipou a maioridade de D. Pedro II, aos 14 anos, para tentar estabilizar o país.</li></ul>",
+    "exampleHtml": "<p>Por que a Farroupilha é diferente da Cabanagem quanto aos participantes?</p><p>A Farroupilha foi liderada pela <strong>elite estancieira</strong> gaúcha, insatisfeita com os impostos; a Cabanagem teve <strong>ampla participação popular</strong> (indígenas, mestiços pobres), que chegou a tomar o poder no Pará.</p>",
+    "pitfallsHtml": "<ul><li>Achar que todas as revoltas regenciais tinham o mesmo perfil social.</li><li>Confundir o Ato Adicional (descentralizou) com a Lei de Interpretação (recentralizou).</li><li>Achar que a Revolta dos Malês buscava a independência do Brasil: era uma revolta de escravizados.</li></ul>"
+  },
+  {
+    "discipline": "História",
+    "topic": "Revolução Francesa",
+    "title": "Revolução Francesa: fim do Antigo Regime",
+    "explanationHtml": "<ul><li><strong>Antigo Regime</strong>: sociedade de três estados. Clero (1º) e nobreza (2º) tinham privilégios e não pagavam impostos; o <strong>Terceiro Estado</strong> (burguesia, camponeses, trabalhadores urbanos) sustentava o reino.</li><li><strong>Causas</strong>: crise financeira, fome, ideias iluministas e insatisfação da burguesia sem poder político.</li><li><strong>1789</strong>: Estados Gerais, Assembleia Nacional, <strong>queda da Bastilha</strong> (14 de julho) e <strong>Declaração dos Direitos do Homem e do Cidadão</strong>. Lema: liberdade, igualdade, fraternidade.</li><li><strong>Fases</strong>: monarquia constitucional; <strong>Convenção</strong> com os jacobinos (radicais, Robespierre) e o <strong>Terror</strong>; girondinos (burguesia moderada); <strong>Diretório</strong>; golpe do 18 Brumário (1799), que levou Napoleão ao poder.</li><li><strong>Legado</strong>: fim dos privilégios feudais, ideia de cidadania e soberania popular, termos «esquerda» e «direita».</li></ul>",
+    "exampleHtml": "<p>Por que a Declaração de 1789 é considerada limitada, apesar de universal no discurso?</p><p>Ela proclamava a igualdade, mas <strong>excluía as mulheres</strong> da cidadania plena (Olympe de Gouges escreveu uma declaração dos direitos da mulher em resposta) e não aboliu de imediato a escravidão nas colônias.</p>",
+    "pitfallsHtml": "<ul><li>Confundir jacobinos (radicais, apoio popular) com girondinos (burguesia moderada).</li><li>Achar que a Revolução foi feita só pela burguesia: camponeses e sans-culottes foram decisivos.</li><li>Achar que a Revolução terminou com uma democracia estável: terminou com Napoleão.</li></ul>"
+  }
+]

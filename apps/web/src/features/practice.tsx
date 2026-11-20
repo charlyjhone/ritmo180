@@ -9,6 +9,7 @@ import { Bar, clock, Html, Pill, useInterval } from "../ui/kit.tsx";
 import { FocusPicker } from "./focus-picker.tsx";
 import { useMe } from "./session.tsx";
 import { LabLinks } from "./lab-links.tsx";
+import { lessonLink } from "./lessons.tsx";
 
 type Item = PracticeSessionPack["items"][number];
 // 0 texto, 1 comando, 2 alternativas, 3 conferência, 4 respondida
@@ -152,6 +153,9 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext }
               {review ? <p className="note" role="status">{review}</p> : null}
               {item.key.solutionHtml ? <><p className="solution"><strong>Resolução:</strong></p><Html className="solution-html" html={item.key.solutionHtml} /></> : null}
             </div>
+            {!right || confidence === "guess" ? (
+              <p className="note"><a href={lessonLink(item)} target="_blank" rel="noopener">Ver a aula rápida de {item.topic}</a> (abre em outra aba; seu treino continua aqui).</p>
+            ) : null}
             <LabLinks discipline={item.discipline} topic={item.topic} text={`${item.contextHtml} ${item.stemHtml}`} solutionHtml={item.key.solutionHtml} />
             <div className="btn-row">
               <button ref={focusRef} className="btn" type="button" onClick={onNext}>{position + 1 < total ? "Próxima questão" : "Concluir treino"}</button>
@@ -200,6 +204,7 @@ export function PracticePage() {
   const [mode, setMode] = useState<"guided" | "exam">("guided");
   const [params] = useSearchParams();
   const mistakes = params.get("erros") === "1";
+  const minutes = Math.min(90, Math.max(5, Number(params.get("minutos")) || 25));
   const [discipline, setDiscipline] = useState(params.get("disciplina") ?? "");
   const [topic, setTopic] = useState(params.get("assunto") ?? "");
   const [replacing, setReplacing] = useState(false);
@@ -216,7 +221,7 @@ export function PracticePage() {
     setBusy(true);
     setMessage(null);
     try {
-      const next = await api.post<PracticeSessionPack>("/api/practice/sessions", { mode, minutes: 25, discipline: discipline || undefined, topic: topic || undefined, mistakes });
+      const next = await api.post<PracticeSessionPack>("/api/practice/sessions", { mode, minutes, discipline: discipline || undefined, topic: topic || undefined, mistakes });
       if (next.items.length === 0) {
         setMessage(next.notice);
         return;

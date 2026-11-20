@@ -11,6 +11,7 @@ import { contentRoutes } from "./modules/content/index.ts";
 import { examRoutes } from "./modules/exam/index.ts";
 import { identityRoutes } from "./modules/identity/index.ts";
 import { insightsRoutes } from "./modules/insights/index.ts";
+import { lessonRoutes } from "./modules/lessons/index.ts";
 import { onboardingRoutes } from "./modules/onboarding/index.ts";
 import { peopleRoutes } from "./modules/people/index.ts";
 import { practiceRoutes } from "./modules/practice/index.ts";
@@ -18,7 +19,7 @@ import { privacyRoutes } from "./modules/privacy/index.ts";
 import { readingRoutes } from "./modules/reading/index.ts";
 
 const BODY_LIMIT = 8 * 1024 * 1024;
-const MODULES = [identityRoutes, practiceRoutes, readingRoutes, examRoutes, insightsRoutes, onboardingRoutes, contentRoutes, peopleRoutes, privacyRoutes];
+const MODULES = [identityRoutes, practiceRoutes, readingRoutes, examRoutes, insightsRoutes, onboardingRoutes, contentRoutes, peopleRoutes, privacyRoutes, lessonRoutes];
 
 export async function buildApp(deps: AppDeps, options: { webRoot?: string; labRoot?: string; logger?: boolean } = {}) {
   // Em produção o servidor fica atrás de um proxy: sem isto, o limite de login veria todos com o mesmo IP.

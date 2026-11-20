@@ -32,6 +32,8 @@ O Laboratório Virtual (simuladores) fica em `apps/lab` e é servido em `http://
 | `npm run db:calibrate` | Recalibra as questões com respostas suficientes |
 | `npm run content:liberar -- "Nome"` | Publica as questões oficiais depois de confirmar os direitos |
 | `npm run content:completar -- 20` | Pede à IA resolução, dica e erros comentados, para revisão no painel da rede |
+| `npm run content:aulas -- 20` | Pede à IA as aulas rápidas dos assuntos de mais peso, para revisão no painel da rede |
+| `npm run content:aulas:importar` | Importa as aulas escritas em `content/aulas` para a fila de revisão (com `-- "Nome"`, já entram publicadas em nome de quem conferiu); aula publicada não é sobrescrita |
 | `npm run conta:admin -- email "Nome"` | Cria a primeira conta da rede |
 | `npm run conta:senha -- email` | Gera senha provisória fora do painel |
 

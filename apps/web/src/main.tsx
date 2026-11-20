@@ -20,6 +20,7 @@ import { FamilyHome } from "./features/family.tsx";
 import { NetworkHome } from "./features/network.tsx";
 import { OnboardingPage } from "./features/onboarding.tsx";
 import { MistakesPage } from "./features/mistakes.tsx";
+import { LessonPage, LessonsIndexPage } from "./features/lessons.tsx";
 import { PeoplePage } from "./features/people.tsx";
 import { PlanPage } from "./features/plan.tsx";
 import { PracticePage } from "./features/practice.tsx";
@@ -119,6 +120,12 @@ function Router() {
             <Route path="simulado/:id" element={<SittingPage />} />
             <Route path="simulado/:id/resultado" element={<ResultPage />} />
             <Route path="diagnostico/:area" element={<DiagnosticPage />} />
+          </>
+        ) : null}
+        {role === "student" || role === "teacher" || role === "coordinator" ? (
+          <>
+            <Route path="aulas" element={<LessonsIndexPage />} />
+            <Route path="aula" element={<LessonPage />} />
           </>
         ) : null}
         {role === "coordinator" ? (

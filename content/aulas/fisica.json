@@ -1,0 +1,122 @@
+[
+  {
+    "discipline": "Física",
+    "topic": "Eletrodinâmica",
+    "title": "Corrente, resistência, potência e consumo",
+    "explanationHtml": "<ul><li><strong>Corrente elétrica</strong> (i): carga que passa por segundo. i = Q ÷ Δt, em ampères (A).</li><li><strong>Lei de Ohm</strong>: U = R · i (tensão em volts, resistência em ohms).</li><li><strong>Potência</strong>: P = U · i = R · i² = U² ÷ R, em watts (W).</li><li><strong>Energia consumida</strong>: E = P · Δt. Na conta de luz, em kWh: potência em kW vezes horas de uso.</li><li><strong>Associação em série</strong>: mesma corrente; R_eq = R₁ + R₂ + … Se um aparelho queima, os outros apagam.</li><li><strong>Associação em paralelo</strong>: mesma tensão (é a das tomadas de casa); 1/R_eq = 1/R₁ + 1/R₂ + … Para dois resistores: R_eq = R₁ · R₂ ÷ (R₁ + R₂).</li><li>Chuveiro na posição «inverno» tem <em>menor</em> resistência: com a mesma tensão, P = U² ÷ R fica maior.</li></ul>",
+    "exampleHtml": "<p>Um chuveiro de 5 400 W fica ligado 20 minutos por dia. Quanto ele consome em 30 dias?</p><p>Por dia: 5,4 kW × (1/3) h = 1,8 kWh. Em 30 dias: 1,8 × 30 = <strong>54 kWh</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Achar que maior resistência aquece mais no chuveiro: com tensão fixa, é o contrário.</li><li>Esquecer de converter W para kW e minutos para horas no cálculo do kWh.</li><li>Somar resistências em paralelo como se fosse em série.</li></ul>"
+  },
+  {
+    "discipline": "Física",
+    "topic": "Termologia",
+    "title": "Calor, temperatura, mudanças de estado e máquinas térmicas",
+    "explanationHtml": "<p><strong>Temperatura</strong> mede a agitação das partículas; <strong>calor</strong> é energia em trânsito, sempre do corpo mais quente para o mais frio, até o equilíbrio térmico.</p><ul><li><strong>Calor sensível</strong> (muda a temperatura): Q = m · c · ΔT. O calor específico c diz quanto calor é preciso para aquecer 1 g em 1 °C (água: 1 cal/g·°C).</li><li><strong>Calor latente</strong> (muda o estado, com temperatura constante): Q = m · L.</li><li><strong>Propagação</strong>: condução (contato, sólidos), convecção (correntes em fluidos: brisa, geladeira com congelador em cima) e irradiação (ondas eletromagnéticas, funciona no vácuo).</li><li><strong>Escalas</strong>: T_C ÷ 5 = (T_F − 32) ÷ 9 e T_K = T_C + 273.</li><li><strong>Máquinas térmicas</strong>: rendimento η = trabalho ÷ calor recebido da fonte quente. O máximo teórico é o de Carnot: η = 1 − T_fria ÷ T_quente, com temperaturas em kelvin.</li></ul>",
+    "exampleHtml": "<p>Quanto calor é preciso para aquecer 500 g de água de 20 °C a 80 °C?</p><p>Q = m · c · ΔT = 500 · 1 · 60 = <strong>30 000 cal</strong> (30 kcal).</p>",
+    "pitfallsHtml": "<ul><li>Confundir calor com temperatura: dois corpos na mesma temperatura podem ter quantidades de energia diferentes.</li><li>Usar Celsius no rendimento de Carnot: a fórmula exige kelvin.</li><li>Achar que a temperatura sobe durante a fusão ou a ebulição: ela fica constante.</li></ul>"
+  },
+  {
+    "discipline": "Física",
+    "topic": "Ondulatória",
+    "title": "Ondas: frequência, comprimento e fenômenos",
+    "explanationHtml": "<ul><li><strong>Equação fundamental</strong>: v = λ · f (velocidade = comprimento de onda × frequência). Período: T = 1 ÷ f.</li><li>Quando a onda muda de meio, a <strong>frequência não muda</strong>; mudam a velocidade e o comprimento de onda.</li><li><strong>Ondas mecânicas</strong> (som) precisam de meio material; <strong>eletromagnéticas</strong> (luz, rádio, micro-ondas, raios X) se propagam no vácuo a 3 × 10⁸ m/s.</li><li>Som: altura depende da frequência (agudo = frequência alta); intensidade, da amplitude; timbre, da forma da onda.</li><li><strong>Fenômenos</strong>: reflexão (eco), refração (mudança de meio), difração (contornar obstáculos), interferência (ondas que se somam ou se anulam), ressonância (vibração forçada na frequência natural) e efeito Doppler (fonte se aproximando parece mais aguda).</li></ul>",
+    "exampleHtml": "<p>Uma rádio FM transmite em 100 MHz. Qual o comprimento da onda?</p><p>λ = v ÷ f = 3 × 10⁸ ÷ 1 × 10⁸ = <strong>3 m</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Achar que a frequência muda na refração: ela é definida pela fonte.</li><li>Confundir som alto (intenso) com som agudo (frequência alta).</li><li>Dizer que o som se propaga no vácuo.</li></ul>"
+  },
+  {
+    "discipline": "Física",
+    "topic": "Cinemática",
+    "title": "Velocidade, aceleração e gráficos do movimento",
+    "explanationHtml": "<ul><li><strong>Velocidade média</strong>: v = Δs ÷ Δt. Para converter, km/h ÷ 3,6 = m/s.</li><li><strong>Movimento uniforme (MU)</strong>: velocidade constante; s = s₀ + v · t (função afim).</li><li><strong>Movimento uniformemente variado (MUV)</strong>: aceleração constante; v = v₀ + a · t; s = s₀ + v₀ · t + a · t² ÷ 2; Torricelli: v² = v₀² + 2 · a · Δs.</li><li><strong>Gráficos</strong>: no gráfico v × t, a inclinação é a aceleração e a área sob a curva é o deslocamento.</li><li><strong>Queda livre</strong>: MUV com a = g ≈ 10 m/s², desprezando o ar.</li></ul>",
+    "exampleHtml": "<p>Um carro a 72 km/h freia até parar em 4 s, com desaceleração constante. Que distância ele percorre?</p><p>72 km/h = 20 m/s. a = (0 − 20) ÷ 4 = −5 m/s². Δs = área do triângulo no gráfico v × t = 20 · 4 ÷ 2 = <strong>40 m</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Misturar km/h e m/s na mesma conta.</li><li>Calcular velocidade média como a média das velocidades (só vale em casos especiais).</li><li>Ler a inclinação do gráfico s × t como aceleração (ali ela é a velocidade).</li></ul>"
+  },
+  {
+    "discipline": "Física",
+    "topic": "Óptica Geométrica",
+    "title": "Reflexão, refração, espelhos e lentes",
+    "explanationHtml": "<ul><li><strong>Reflexão</strong>: o ângulo de incidência é igual ao de reflexão. Espelho plano forma imagem virtual, do mesmo tamanho, à mesma distância.</li><li><strong>Refração</strong>: a luz muda de velocidade e de direção ao mudar de meio. Índice de refração n = c ÷ v. Lei de Snell: n₁ · sen θ₁ = n₂ · sen θ₂.</li><li><strong>Reflexão total</strong>: da luz indo do meio mais refringente para o menos, acima do ângulo limite (fibra óptica, brilho do diamante).</li><li><strong>Lentes convergentes</strong> corrigem hipermetropia e presbiopia; <strong>divergentes</strong> corrigem miopia.</li><li>Equação dos pontos conjugados: 1/f = 1/p + 1/p′. Vergência em dioptrias: V = 1/f (f em metros).</li><li>Dispersão: cada cor refrata de um jeito, e o prisma separa a luz branca (arco-íris).</li></ul>",
+    "exampleHtml": "<p>Uma lente tem vergência de −2 dioptrias. Qual o tipo e a distância focal?</p><p>f = 1 ÷ V = 1 ÷ (−2) = −0,5 m. Vergência negativa indica lente <strong>divergente, com foco de 50 cm</strong>, usada para miopia.</p>",
+    "pitfallsHtml": "<ul><li>Trocar as lentes: miopia se corrige com divergente.</li><li>Achar que a imagem do espelho plano fica «dentro» dele: fica atrás, à mesma distância do objeto.</li><li>Esquecer que só há reflexão total do meio mais refringente para o menos.</li></ul>"
+  },
+  {
+    "discipline": "Física",
+    "topic": "Dinâmica",
+    "title": "As leis de Newton e as forças do dia a dia",
+    "explanationHtml": "<ul><li><strong>1ª lei (inércia)</strong>: sem força resultante, o corpo fica parado ou em movimento retilíneo uniforme. Cinto de segurança existe por causa dela.</li><li><strong>2ª lei</strong>: F_resultante = m · a.</li><li><strong>3ª lei (ação e reação)</strong>: forças de mesma intensidade e sentidos opostos, aplicadas em <em>corpos diferentes</em> (por isso não se anulam).</li><li><strong>Peso</strong>: P = m · g (g ≈ 10 m/s²). <strong>Normal</strong>: reação da superfície, perpendicular a ela.</li><li><strong>Atrito</strong>: F_at = μ · N, oposto ao deslizamento. O atrito estático máximo é maior que o cinético (por isso o ABS evita travar as rodas).</li><li><strong>Plano inclinado</strong>: a componente do peso que puxa o corpo rampa abaixo é P · sen θ.</li></ul>",
+    "exampleHtml": "<p>Um bloco de 4 kg é puxado por 20 N sobre uma mesa com atrito de 8 N. Qual a aceleração?</p><p>F_resultante = 20 − 8 = 12 N. a = 12 ÷ 4 = <strong>3 m/s²</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Achar que ação e reação se anulam: estão em corpos diferentes.</li><li>Achar que é preciso força para manter velocidade constante sem atrito.</li><li>Confundir massa (kg) com peso (N).</li></ul>"
+  },
+  {
+    "discipline": "Física",
+    "topic": "Trabalho e Energia",
+    "title": "Energia, trabalho, potência e conservação",
+    "explanationHtml": "<ul><li><strong>Energia cinética</strong>: E_c = m · v² ÷ 2. <strong>Potencial gravitacional</strong>: E_p = m · g · h. <strong>Elástica</strong>: E = k · x² ÷ 2.</li><li><strong>Conservação</strong>: sem atrito, a energia mecânica (E_c + E_p) se mantém. Com atrito, parte vira energia térmica.</li><li><strong>Trabalho</strong>: τ = F · d · cos θ; também é igual à variação de energia cinética.</li><li><strong>Potência</strong>: P = energia ÷ tempo, em watts. <strong>Rendimento</strong>: η = energia útil ÷ energia total.</li><li>Usinas são cadeias de transformação: hidrelétrica (potencial → cinética → elétrica), termelétrica (química → térmica → cinética → elétrica), eólica (cinética do vento → elétrica).</li></ul>",
+    "exampleHtml": "<p>Um corpo cai de 20 m de altura, a partir do repouso. Com que velocidade chega ao chão, sem resistência do ar?</p><p>m · g · h = m · v² ÷ 2 → v² = 2 · 10 · 20 = 400 → <strong>v = 20 m/s</strong>. A massa se cancela.</p>",
+    "pitfallsHtml": "<ul><li>Achar que corpos mais pesados caem mais rápido no vácuo.</li><li>Esquecer o quadrado da velocidade: dobrar a velocidade quadruplica a energia cinética.</li><li>Dizer que energia «se perde»: ela se transforma, geralmente em calor.</li></ul>"
+  },
+  {
+    "discipline": "Física",
+    "topic": "Hidrostática",
+    "title": "Densidade, pressão, Stevin, Pascal e empuxo",
+    "explanationHtml": "<ul><li><strong>Densidade</strong>: d = m ÷ V. Água: 1 g/cm³ = 1 000 kg/m³.</li><li><strong>Pressão</strong>: p = F ÷ A. A mesma força em área menor dá pressão maior (faca afiada, salto fino).</li><li><strong>Stevin</strong>: p = p_atm + d · g · h. A pressão aumenta cerca de 1 atm a cada 10 m de água.</li><li><strong>Pascal</strong>: a pressão se transmite igualmente no fluido. Prensa hidráulica: F₁ ÷ A₁ = F₂ ÷ A₂.</li><li><strong>Empuxo (Arquimedes)</strong>: E = d_líquido · V_submerso · g. O corpo flutua se sua densidade média é menor que a do líquido.</li><li>Vasos comunicantes: o líquido fica no mesmo nível (caixa-d’água, nível de pedreiro).</li></ul>",
+    "exampleHtml": "<p>Numa prensa hidráulica, o pistão menor tem 10 cm² e o maior 500 cm². Que força no menor ergue um carro de 10 000 N?</p><p>F₁ ÷ 10 = 10 000 ÷ 500 → F₁ = <strong>200 N</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Achar que a pressão no fundo depende da forma do recipiente: só depende da profundidade.</li><li>Achar que a prensa multiplica energia: ela multiplica força, mas o pistão menor percorre distância maior.</li><li>Usar o volume total do corpo no empuxo quando ele está só parcialmente submerso.</li></ul>"
+  },
+  {
+    "discipline": "Física",
+    "topic": "Impulso e Quantidade de Movimento",
+    "title": "Impulso, quantidade de movimento e colisões",
+    "explanationHtml": "<ul><li><strong>Quantidade de movimento</strong>: Q = m · v (vetor).</li><li><strong>Impulso</strong>: I = F · Δt, e o impulso é igual à variação da quantidade de movimento: F · Δt = ΔQ.</li><li>Para a mesma variação de Q, quanto maior o tempo de impacto, menor a força: airbag, colchão de salto, para-choque que deforma.</li><li><strong>Conservação</strong>: num sistema isolado (explosões, colisões, recuo da arma), a quantidade de movimento total antes é igual à depois.</li><li>Colisão perfeitamente inelástica: os corpos seguem juntos. Na elástica, a energia cinética também se conserva.</li></ul>",
+    "exampleHtml": "<p>Um vagão de 2 000 kg a 3 m/s engata em outro de 1 000 kg parado. Com que velocidade seguem juntos?</p><p>2 000 · 3 = (2 000 + 1 000) · v → <strong>v = 2 m/s</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o airbag diminui a variação da quantidade de movimento: ele aumenta o tempo e diminui a força.</li><li>Ignorar o sinal da velocidade em corpos que se movem em sentidos opostos.</li><li>Achar que a energia cinética sempre se conserva nas colisões.</li></ul>"
+  },
+  {
+    "discipline": "Física",
+    "topic": "Eletromagnetismo",
+    "title": "Ímãs, campo magnético e indução",
+    "explanationHtml": "<ul><li>Ímãs têm polos norte e sul; polos iguais se repelem e diferentes se atraem. Partir um ímã gera dois ímãs completos.</li><li>A Terra é um grande ímã: a agulha da bússola aponta para o polo sul magnético, que fica perto do norte geográfico.</li><li><strong>Corrente gera campo magnético</strong> (Oersted): é o princípio do eletroímã, do motor e do alto-falante.</li><li><strong>Indução eletromagnética</strong> (Faraday): a <em>variação</em> do fluxo magnético gera corrente. É o princípio do gerador das usinas, do transformador e do carregador por indução.</li><li><strong>Transformador</strong>: U₁ ÷ U₂ = N₁ ÷ N₂ (razão entre espiras). Só funciona com corrente alternada.</li></ul>",
+    "exampleHtml": "<p>Um transformador tem 1 000 espiras no primário, ligado a 220 V, e 50 no secundário. Qual a tensão de saída?</p><p>220 ÷ U₂ = 1 000 ÷ 50 = 20 → <strong>U₂ = 11 V</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Achar que um ímã parado dentro de uma bobina gera corrente: é preciso variação de fluxo.</li><li>Achar que o transformador funciona com corrente contínua.</li><li>Confundir polo norte geográfico com polo norte magnético.</li></ul>"
+  },
+  {
+    "discipline": "Física",
+    "topic": "Gravitação",
+    "title": "Gravitação universal, órbitas e marés",
+    "explanationHtml": "<ul><li><strong>Lei da gravitação</strong>: F = G · M · m ÷ d². A força cai com o quadrado da distância: o dobro da distância dá um quarto da força.</li><li><strong>Leis de Kepler</strong>: órbitas elípticas com o Sol num dos focos; o planeta é mais rápido quando está mais perto do Sol; T² ÷ R³ é o mesmo para todos os planetas.</li><li>Satélites em órbita estão em queda livre contínua: a gravidade faz o papel de força centrípeta. A «ausência de peso» dos astronautas vem daí, não da falta de gravidade.</li><li>Satélite geoestacionário tem período de 24 h e fica sempre sobre o mesmo ponto do Equador.</li><li><strong>Marés</strong>: causadas principalmente pela atração da Lua (e do Sol), mais forte no lado da Terra mais próximo.</li></ul>",
+    "exampleHtml": "<p>Se a distância entre dois corpos triplicar, o que acontece com a força gravitacional?</p><p>F é proporcional a 1 ÷ d². Com 3d: 1 ÷ 9. A força fica <strong>9 vezes menor</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Achar que não há gravidade na Estação Espacial: lá g ainda é cerca de 90% do valor na superfície.</li><li>Achar que a força cai linearmente com a distância.</li><li>Dizer que as estações do ano vêm da distância ao Sol: vêm da inclinação do eixo da Terra.</li></ul>"
+  },
+  {
+    "discipline": "Física",
+    "topic": "Eletricidade",
+    "title": "Circuitos domésticos, segurança e consumo",
+    "explanationHtml": "<ul><li>As tomadas de casa estão em <strong>paralelo</strong>: cada aparelho recebe a tensão da rede (127 V ou 220 V) e funciona independentemente.</li><li>P = U · i: com a mesma potência, aparelhos em 220 V puxam menos corrente que em 127 V, e por isso usam fios mais finos.</li><li><strong>Disjuntor e fusível</strong> ficam em série com o circuito e o abrem quando a corrente passa do limite (sobrecarga ou curto-circuito).</li><li><strong>Fio terra</strong> desvia correntes de fuga e evita choques.</li><li>Choque: o perigo é a corrente que atravessa o corpo, que depende da tensão e da resistência (pele molhada conduz mais).</li><li>Consumo: E (kWh) = P (kW) × tempo (h); o custo é E × tarifa.</li></ul>",
+    "exampleHtml": "<p>Um ferro de 1 100 W funciona em 220 V. Qual a corrente e qual disjuntor é adequado: 3 A ou 10 A?</p><p>i = P ÷ U = 1 100 ÷ 220 = 5 A. O de 3 A desarmaria; o adequado é o de <strong>10 A</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o disjuntor fica em paralelo: ele precisa estar em série para cortar a corrente.</li><li>Achar que a tensão sozinha mata: o que causa o dano é a corrente pelo corpo.</li><li>Esquecer que todos os aparelhos ligados somam suas correntes no mesmo disjuntor.</li></ul>"
+  },
+  {
+    "discipline": "Física",
+    "topic": "Mecânica",
+    "title": "Movimento, forças e energia: a mecânica no ENEM",
+    "explanationHtml": "<p>As questões de mecânica do ENEM juntam três ideias:</p><ul><li><strong>Descrever o movimento</strong> (cinemática): v = Δs ÷ Δt; com aceleração constante, v = v₀ + a · t.</li><li><strong>Explicar a causa</strong> (dinâmica): F_resultante = m · a; atrito, peso e normal; inércia e ação e reação.</li><li><strong>Contabilizar a energia</strong>: E_c = m · v² ÷ 2, E_p = m · g · h, potência = energia ÷ tempo, e a conservação quando não há atrito.</li><li><strong>Máquinas simples</strong>: alavancas (F₁ · d₁ = F₂ · d₂), roldanas móveis e planos inclinados reduzem a força necessária, mas aumentam a distância percorrida; o trabalho não diminui.</li><li><strong>Movimento circular</strong>: força centrípeta F = m · v² ÷ R aponta para o centro; em engrenagens ligadas por correia, a velocidade linear é a mesma e a menor roda gira mais rápido.</li></ul>",
+    "exampleHtml": "<p>Numa alavanca, uma pedra de 600 N está a 0,5 m do apoio. Que força, a 2 m do apoio do outro lado, a equilibra?</p><p>F · 2 = 600 · 0,5 → <strong>F = 150 N</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Achar que máquinas simples economizam energia: economizam força.</li><li>Em engrenagens, achar que as duas rodas giram com a mesma frequência.</li><li>Esquecer que velocidade constante significa força resultante nula.</li></ul>"
+  },
+  {
+    "discipline": "Física",
+    "topic": "Eletroestática",
+    "title": "Cargas, eletrização e força elétrica",
+    "explanationHtml": "<ul><li>Cargas iguais se repelem, diferentes se atraem. A carga elementar é e = 1,6 × 10⁻¹⁹ C; um corpo fica positivo quando perde elétrons.</li><li><strong>Eletrização</strong>: por atrito (os corpos ficam com cargas opostas), por contato (dividem a carga; esferas iguais ficam com cargas iguais) e por indução (aproximação sem contato, com ligação à terra).</li><li><strong>Lei de Coulomb</strong>: F = k · |Q₁ · Q₂| ÷ d². Como na gravitação, a força cai com o quadrado da distância.</li><li><strong>Condutores</strong> (metais) deixam a carga se mover; <strong>isolantes</strong> não. Num condutor, a carga fica na superfície e o campo interno é nulo: é a <strong>gaiola de Faraday</strong> (por isso o carro protege de raios).</li><li><strong>Para-raios</strong> usam o poder das pontas: a carga se concentra nas regiões pontiagudas.</li></ul>",
+    "exampleHtml": "<p>Duas esferas metálicas iguais, com +6 μC e −2 μC, se tocam e se separam. Com que carga fica cada uma?</p><p>A carga total (+4 μC) se divide igualmente: <strong>+2 μC em cada</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Achar que um corpo fica positivo ao ganhar prótons: prótons não se movem, quem se move são os elétrons.</li><li>Esquecer o quadrado da distância na lei de Coulomb.</li><li>Achar que, por atrito, os dois corpos ficam com cargas de mesmo sinal.</li></ul>"
+  },
+  {
+    "discipline": "Física",
+    "topic": "Ondas e Óptica",
+    "title": "Luz como onda: espectro, cores e fenômenos",
+    "explanationHtml": "<ul><li>A luz é uma onda eletromagnética. Em ordem crescente de frequência (e de energia): rádio, micro-ondas, infravermelho, visível (vermelho → violeta), ultravioleta, raios X e gama.</li><li>Todas viajam no vácuo a 3 × 10⁸ m/s; v = λ · f vale para todas.</li><li><strong>Cor de um objeto</strong>: é a cor que ele reflete. Uma camiseta vermelha sob luz azul parece escura.</li><li><strong>Polarização</strong> só acontece com ondas transversais (luz sim, som não): óculos e telas de LCD usam esse efeito.</li><li><strong>Difração e interferência</strong> mostram o caráter ondulatório: as cores do CD e da bolha de sabão vêm da interferência.</li><li>Radiação ionizante (UV, raios X, gama) tem energia para danificar células; micro-ondas e rádio não.</li></ul>",
+    "exampleHtml": "<p>Por que o forno de micro-ondas aquece a comida?</p><p>As micro-ondas, com frequência em torno de 2,45 GHz, fazem as moléculas de água vibrarem e girarem; essa agitação vira <strong>energia térmica</strong>. Não é radiação ionizante: o alimento não fica radioativo.</p>",
+    "pitfallsHtml": "<ul><li>Achar que o som pode ser polarizado: ele é onda longitudinal.</li><li>Dizer que o ultravioleta tem menos energia que o infravermelho (é o contrário).</li><li>Achar que objeto colorido «tem» a cor independentemente da luz que o ilumina.</li></ul>"
+  }
+]

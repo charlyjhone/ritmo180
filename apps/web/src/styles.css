@@ -419,3 +419,6 @@ select.input { width: 100%; }
 .legal { max-width: 720px; margin: 0 auto; padding: 32px 16px 64px; line-height: 1.6; }
 .legal h2 { margin-top: 28px; }
 .confidence { margin-top: 20px; }
+.lesson-body { line-height: 1.65; }
+.lesson-body li { margin: 6px 0; }
+.lesson-group > summary { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; cursor: pointer; flex-wrap: wrap; }

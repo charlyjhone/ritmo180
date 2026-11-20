@@ -20,6 +20,8 @@
     "ingest": "node apps/api/src/cli/ingest.ts",
     "content:liberar": "node apps/api/src/cli/release.ts",
     "content:completar": "node apps/api/src/cli/complete.ts",
+    "content:aulas": "node apps/api/src/cli/lessons.ts",
+    "content:aulas:importar": "node apps/api/src/cli/import-lessons.ts",
     "content:laboratorio": "LAB_EXPORTAR=1 vitest run apps/lab/src/questoes/exportar.test.ts",
     "conta:admin": "node apps/api/src/cli/account.ts admin",
     "conta:senha": "node apps/api/src/cli/account.ts senha",

@@ -11,11 +11,13 @@ export function parseScope(scope: string): { area?: Area; discipline?: string } 
   return scope.startsWith(AREA_PREFIX) ? { area: scope.slice(AREA_PREFIX.length) as Area } : { discipline: scope };
 }
 
-export function trainingLink(focus: { discipline?: string; topic?: string; mistakes?: boolean }): string {
+/** `minutes` encurta o treino; sem ele vale o padrão de 25 minutos. */
+export function trainingLink(focus: { discipline?: string; topic?: string; mistakes?: boolean; minutes?: number }): string {
   const params = new URLSearchParams();
   if (focus.discipline) params.set("disciplina", focus.discipline);
   if (focus.topic) params.set("assunto", focus.topic);
   if (focus.mistakes) params.set("erros", "1");
+  if (focus.minutes) params.set("minutos", String(focus.minutes));
   const query = params.toString();
   return query ? `/treino?${query}` : "/treino";
 }

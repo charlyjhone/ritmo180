@@ -7,6 +7,7 @@ import { Async, Metric, Metrics, PageHead, Pill } from "../ui/kit.tsx";
 import { trainingLink } from "./focus-picker.tsx";
 import { labModule, labUrl } from "@ritmo/contracts";
 import { labIdsFor } from "./lab-links.tsx";
+import { lessonLink } from "./lessons.tsx";
 
 type Day = StudyPlan["days"][number];
 
@@ -41,6 +42,7 @@ function Plan({ plan }: { plan: StudyPlan }) {
                 <div className="grow">
                   <div className="row-title">{title}</div>
                   <div className="row-sub">{detail}</div>
+                  {day.kind === "focus" && day.discipline && day.topic ? <Link className="row-lab" to={lessonLink({ discipline: day.discipline, topic: day.topic })}>Aula rápida: {day.topic}</Link> : null}
                   {day.kind === "focus"
                     ? labIdsFor(day.discipline, day.topic).slice(0, 1).map((id) => (
                         <a key={id} className="row-lab" href={labUrl(id)} target="_blank" rel="noopener">

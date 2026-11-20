@@ -1,0 +1,130 @@
+[
+  {
+    "discipline": "Matemática",
+    "topic": "Razão e Proporção",
+    "title": "Razão, proporção e regra de três",
+    "explanationHtml": "<p><strong>Razão</strong> é a comparação de duas grandezas por divisão: a razão de a para b é a/b. <strong>Proporção</strong> é a igualdade de duas razões: a/b = c/d, que equivale a <em>a · d = b · c</em> (produto dos meios igual ao dos extremos).</p><ul><li><strong>Grandezas diretamente proporcionais</strong>: uma dobra, a outra dobra (preço e quantidade, distância e tempo a velocidade constante). A razão entre elas é constante.</li><li><strong>Grandezas inversamente proporcionais</strong>: uma dobra, a outra cai pela metade (número de operários e tempo de obra). O produto entre elas é constante.</li><li><strong>Escala</strong> = medida no desenho ÷ medida real, nas mesmas unidades.</li><li><strong>Regra de três composta</strong>: monte uma coluna por grandeza, compare cada uma com a incógnita (direta ou inversa) e inverta as razões inversas antes de multiplicar.</li></ul>",
+    "exampleHtml": "<p>Seis pedreiros constroem um muro em 10 dias. Em quantos dias 4 pedreiros, no mesmo ritmo, constroem o mesmo muro?</p><p>Menos pedreiros levam mais dias: as grandezas são <strong>inversamente</strong> proporcionais, então o produto se mantém.</p><p>6 · 10 = 4 · x → 60 = 4x → <strong>x = 15 dias</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Montar regra de três direta para grandezas inversas: antes de multiplicar em cruz, pergunte se uma aumenta quando a outra aumenta.</li><li>Comparar medidas em unidades diferentes na escala: passe tudo para centímetros (1 km = 100 000 cm) antes de dividir.</li><li>Confundir razão com diferença: «o dobro» é razão 2, não «2 a mais».</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "Porcentagem",
+    "title": "Porcentagem, aumentos e descontos",
+    "explanationHtml": "<p>Porcentagem é uma razão de denominador 100: 35% = 35/100 = 0,35. Para calcular p% de um valor, multiplique o valor por p/100.</p><ul><li><strong>Aumento de p%</strong>: multiplique por (1 + p/100). Aumento de 20% → × 1,20.</li><li><strong>Desconto de p%</strong>: multiplique por (1 − p/100). Desconto de 15% → × 0,85.</li><li><strong>Aumentos e descontos sucessivos</strong> se multiplicam, não se somam: +10% e depois +10% dá × 1,1 × 1,1 = × 1,21 (21%).</li><li><strong>Variação percentual</strong> = (valor final − valor inicial) ÷ valor inicial.</li><li><strong>Pontos percentuais</strong> medem diferença entre porcentagens: de 10% para 12% subiu 2 pontos percentuais, mas 20% em termos relativos.</li></ul>",
+    "exampleHtml": "<p>Um produto de R$ 200,00 sofre aumento de 25% e depois desconto de 20%. Qual o preço final?</p><p>200 × 1,25 = 250; 250 × 0,80 = 200. O preço volta a <strong>R$ 200,00</strong>: os fatores 1,25 e 0,80 se anulam porque 1,25 × 0,80 = 1.</p>",
+    "pitfallsHtml": "<ul><li>Achar que +20% seguido de −20% volta ao valor inicial: 1,2 × 0,8 = 0,96, uma perda de 4%.</li><li>Calcular a variação sobre o valor final em vez do inicial.</li><li>Confundir pontos percentuais com variação percentual em gráficos de taxas.</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "Álgebra e Aritmética",
+    "title": "Operações, frações, potências e equações",
+    "explanationHtml": "<p>Este é o kit básico de quase toda questão de Matemática e de Ciências da Natureza.</p><ul><li><strong>Ordem das operações</strong>: parênteses, potências e raízes, multiplicação e divisão, soma e subtração.</li><li><strong>Frações</strong>: para somar, iguale os denominadores (MMC); para dividir, multiplique pelo inverso.</li><li><strong>Potências de 10</strong>: 10^a · 10^b = 10^(a+b); 10^a ÷ 10^b = 10^(a−b). Notação científica: um número entre 1 e 10 vezes uma potência de 10 (3,2 × 10^5).</li><li><strong>MMC e MDC</strong>: MMC resolve «quando os eventos voltam a coincidir»; MDC resolve «dividir em partes iguais, do maior tamanho possível».</li><li><strong>Equação do 1º grau</strong>: o que soma passa subtraindo, o que multiplica passa dividindo, sempre fazendo a mesma operação dos dois lados.</li></ul>",
+    "exampleHtml": "<p>Dois ônibus saem juntos às 6h; um passa a cada 12 minutos e o outro a cada 18. Quando voltam a sair juntos?</p><p>MMC(12, 18): 12 = 2² · 3 e 18 = 2 · 3², então MMC = 2² · 3² = 36 minutos. Saem juntos de novo às <strong>6h36</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Usar MDC quando a pergunta é de coincidência no tempo (é MMC).</li><li>Somar numeradores e denominadores diretamente: 1/2 + 1/3 = 5/6, não 2/5.</li><li>Errar a vírgula ao passar para notação científica: conte as casas que a vírgula andou.</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "Estatística",
+    "title": "Média, mediana, moda e gráficos",
+    "explanationHtml": "<p>O ENEM cobra muito a leitura de tabelas e gráficos e as medidas de tendência central.</p><ul><li><strong>Média aritmética</strong>: soma dos valores ÷ quantidade. <strong>Média ponderada</strong>: some cada valor vezes seu peso e divida pela soma dos pesos.</li><li><strong>Mediana</strong>: o valor do meio com os dados <em>em ordem</em>. Com quantidade par, é a média dos dois centrais.</li><li><strong>Moda</strong>: o valor que mais aparece (pode haver mais de uma ou nenhuma).</li><li>A média é sensível a valores extremos; a mediana não. Por isso salários costumam ser resumidos pela mediana.</li><li><strong>Desvio padrão</strong>: mede a dispersão em torno da média. Menor desvio = dados mais regulares.</li></ul>",
+    "exampleHtml": "<p>As notas de um aluno foram 4, 8, 6, 9 e 3. Qual a mediana?</p><p>Ordene: 3, 4, 6, 8, 9. São 5 valores; o do meio é o 3º. Mediana = <strong>6</strong>. (A média seria 30 ÷ 5 = 6 também, mas isso é coincidência.)</p>",
+    "pitfallsHtml": "<ul><li>Calcular a mediana sem ordenar os dados.</li><li>Usar média simples quando o enunciado dá pesos.</li><li>Ler o eixo do gráfico sem conferir se começa em zero ou se a escala muda.</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "Geometria Plana",
+    "title": "Áreas, perímetros, ângulos e semelhança",
+    "explanationHtml": "<ul><li><strong>Áreas</strong>: retângulo b · h; triângulo b · h ÷ 2; paralelogramo b · h; trapézio (B + b) · h ÷ 2; losango D · d ÷ 2; círculo π · r².</li><li><strong>Comprimento da circunferência</strong>: 2 · π · r.</li><li><strong>Soma dos ângulos internos</strong>: triângulo 180°; polígono de n lados (n − 2) · 180°.</li><li><strong>Teorema de Pitágoras</strong> (triângulo retângulo): a² = b² + c², onde a é a hipotenusa.</li><li><strong>Semelhança</strong>: triângulos com ângulos iguais têm lados proporcionais. Se a razão dos lados é k, a razão das áreas é k².</li></ul>",
+    "exampleHtml": "<p>Uma escada de 5 m está apoiada num muro, com o pé a 3 m da base do muro. A que altura ela toca o muro?</p><p>Pitágoras: 5² = 3² + h² → 25 = 9 + h² → h² = 16 → <strong>h = 4 m</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Esquecer o «÷ 2» na área do triângulo e do losango.</li><li>Achar que, ao dobrar os lados, a área dobra: ela quadruplica (k² = 4).</li><li>Usar o diâmetro no lugar do raio em π · r².</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "Geometria Espacial",
+    "title": "Volumes e áreas dos sólidos",
+    "explanationHtml": "<ul><li><strong>Prismas e cilindros</strong>: volume = área da base × altura. Cubo: a³. Paralelepípedo: a · b · c. Cilindro: π · r² · h.</li><li><strong>Pirâmides e cones</strong>: volume = (área da base × altura) ÷ 3. Cone: π · r² · h ÷ 3.</li><li><strong>Esfera</strong>: volume 4/3 · π · r³; área 4 · π · r².</li><li><strong>Unidades</strong>: 1 m³ = 1 000 L; 1 dm³ = 1 L; 1 cm³ = 1 mL.</li><li>Se as dimensões de um sólido são multiplicadas por k, o volume fica multiplicado por k³.</li><li><strong>Planificação</strong>: a área total é a soma das áreas de todas as faces.</li></ul>",
+    "exampleHtml": "<p>Uma caixa-d’água cilíndrica tem raio de 1 m e altura de 2 m. Quantos litros cabem nela? (use π = 3)</p><p>V = π · r² · h = 3 · 1² · 2 = 6 m³. Como 1 m³ = 1 000 L, cabem <strong>6 000 L</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Esquecer o «÷ 3» no volume de cone e pirâmide.</li><li>Converter m³ para litros multiplicando por 100 em vez de 1 000.</li><li>Achar que dobrar o raio dobra o volume: no cilindro, o volume quadruplica; na esfera, fica 8 vezes maior.</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "Probabilidade",
+    "title": "Probabilidade: casos favoráveis sobre possíveis",
+    "explanationHtml": "<p>Com resultados igualmente prováveis, <strong>P = casos favoráveis ÷ casos possíveis</strong>, sempre entre 0 e 1.</p><ul><li><strong>Evento complementar</strong>: P(não A) = 1 − P(A). Use quando «pelo menos um» for difícil de contar.</li><li><strong>E</strong> (eventos independentes, um e depois o outro): multiplique as probabilidades.</li><li><strong>OU</strong> (eventos que não ocorrem juntos): some as probabilidades. Se podem ocorrer juntos: P(A ou B) = P(A) + P(B) − P(A e B).</li><li><strong>Condicional</strong>: «sabendo que...» reduz o espaço amostral só aos casos daquela condição.</li><li><strong>Sem reposição</strong>, o total diminui a cada retirada.</li></ul>",
+    "exampleHtml": "<p>Uma moeda é lançada 3 vezes. Qual a probabilidade de sair pelo menos uma cara?</p><p>Complementar: P(nenhuma cara) = (1/2)³ = 1/8. Então P(pelo menos uma) = 1 − 1/8 = <strong>7/8</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Somar quando deveria multiplicar: «e» em sequência multiplica.</li><li>Esquecer que o total muda nas retiradas sem reposição.</li><li>Ignorar a condição no «sabendo que»: o denominador passa a ser só o grupo da condição.</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "Matemática Financeira",
+    "title": "Juros simples, juros compostos e parcelamento",
+    "explanationHtml": "<ul><li><strong>Juros simples</strong>: os juros incidem sempre sobre o capital inicial. J = C · i · t e M = C · (1 + i · t). Crescem como uma função afim.</li><li><strong>Juros compostos</strong>: os juros de cada período entram no cálculo do seguinte. M = C · (1 + i)^t. Crescem como uma função exponencial.</li><li>A taxa i e o tempo t precisam estar na mesma unidade (ao mês com meses, ao ano com anos).</li><li>Para comparar à vista e a prazo, compare os valores na mesma data, corrigindo pela taxa.</li></ul>",
+    "exampleHtml": "<p>R$ 1 000,00 aplicados a 10% ao mês, por 2 meses. Quanto rende em juros simples e compostos?</p><p>Simples: M = 1 000 · (1 + 0,10 · 2) = 1 200. Compostos: M = 1 000 · 1,1² = 1 210. A diferença de <strong>R$ 10,00</strong> são os juros sobre os juros do 1º mês.</p>",
+    "pitfallsHtml": "<ul><li>Usar taxa anual com tempo em meses sem converter.</li><li>Aplicar juros simples quando o enunciado fala em capitalização mensal (é composto).</li><li>Escrever 10% como 10 em vez de 0,10 na fórmula.</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "Função Afim",
+    "title": "Função afim: taxa fixa e gráfico em reta",
+    "explanationHtml": "<p>A função afim tem a forma <strong>f(x) = a · x + b</strong> e seu gráfico é uma reta.</p><ul><li><strong>a</strong> é a taxa de variação: quanto y muda quando x aumenta 1. a &gt; 0, crescente; a &lt; 0, decrescente.</li><li><strong>b</strong> é o valor inicial: onde a reta corta o eixo y (x = 0).</li><li>Com dois pontos, a = (y₂ − y₁) ÷ (x₂ − x₁).</li><li>A raiz é o x em que f(x) = 0: x = −b/a.</li><li>Situações típicas: tarifa fixa + valor por unidade (táxi, conta de água), movimento uniforme, conversão de escalas.</li></ul>",
+    "exampleHtml": "<p>Um táxi cobra R$ 5,00 de bandeirada mais R$ 2,50 por km. Quanto custa uma corrida de 12 km?</p><p>f(x) = 2,5x + 5 → f(12) = 30 + 5 = <strong>R$ 35,00</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Trocar a taxa pelo valor inicial ao montar a função.</li><li>Achar que o valor dobra quando x dobra: só vale se b = 0 (função linear).</li><li>Calcular a inclinação com os pontos em ordem trocada no numerador e no denominador.</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "Análise Combinatória",
+    "title": "Contagem: princípio multiplicativo, arranjos e combinações",
+    "explanationHtml": "<ul><li><strong>Princípio multiplicativo</strong>: se uma escolha tem m opções e outra, independente, tem n, juntas têm m · n.</li><li><strong>Fatorial</strong>: n! = n · (n − 1) · … · 1.</li><li><strong>Permutação</strong> (ordenar todos): n!. Com repetição de elementos, divida pelo fatorial de cada repetição (anagramas).</li><li><strong>Arranjo</strong> (a ordem importa): A(n, p) = n! ÷ (n − p)!. Ex.: pódio, senha, cargos diferentes.</li><li><strong>Combinação</strong> (a ordem não importa): C(n, p) = n! ÷ [p! · (n − p)!]. Ex.: comissão, grupo, salada de frutas.</li></ul><p>Teste decisivo: trocar a ordem dos escolhidos gera uma situação diferente? Se sim, arranjo; se não, combinação.</p>",
+    "exampleHtml": "<p>De 6 alunos, quantas comissões de 3 podem ser formadas?</p><p>A ordem não importa: C(6, 3) = 6! ÷ (3! · 3!) = 720 ÷ 36 = <strong>20 comissões</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Usar arranjo para grupos sem funções diferentes.</li><li>Esquecer de dividir pelas repetições nos anagramas com letras repetidas.</li><li>Somar possibilidades que deveriam ser multiplicadas (escolhas que acontecem juntas).</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "P.A. e P.G.",
+    "title": "Progressões aritméticas e geométricas",
+    "explanationHtml": "<ul><li><strong>P.A.</strong>: cada termo é o anterior <em>mais</em> uma razão r. Termo geral: aₙ = a₁ + (n − 1) · r. Soma: Sₙ = (a₁ + aₙ) · n ÷ 2.</li><li><strong>P.G.</strong>: cada termo é o anterior <em>vezes</em> uma razão q. Termo geral: aₙ = a₁ · q^(n−1). Soma finita: Sₙ = a₁ · (qⁿ − 1) ÷ (q − 1).</li><li>P.G. infinita com 0 &lt; |q| &lt; 1: S = a₁ ÷ (1 − q).</li><li>Crescimento por soma constante é P.A. (linear); por fator constante é P.G. (exponencial).</li></ul>",
+    "exampleHtml": "<p>Uma pessoa guarda R$ 10 na 1ª semana e, a cada semana, R$ 5 a mais que na anterior. Quanto terá guardado em 10 semanas?</p><p>P.A. com a₁ = 10 e r = 5: a₁₀ = 10 + 9 · 5 = 55. S₁₀ = (10 + 55) · 10 ÷ 2 = <strong>R$ 325</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Usar n em vez de (n − 1) no termo geral.</li><li>Confundir aumento fixo em reais (P.A.) com aumento percentual (P.G.).</li><li>Dar o último termo quando a pergunta é o total acumulado (soma).</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "Função Quadrática",
+    "title": "Função quadrática: parábola, raízes e vértice",
+    "explanationHtml": "<p>A função quadrática tem a forma <strong>f(x) = a · x² + b · x + c</strong>, com a ≠ 0, e seu gráfico é uma parábola.</p><ul><li>a &gt; 0: concavidade para cima (tem ponto de mínimo). a &lt; 0: para baixo (tem ponto de máximo).</li><li><strong>Raízes</strong> (Bhaskara): Δ = b² − 4ac e x = (−b ± √Δ) ÷ 2a. Δ &gt; 0, duas raízes; Δ = 0, uma; Δ &lt; 0, nenhuma real.</li><li><strong>Vértice</strong>: xᵥ = −b ÷ 2a e yᵥ = −Δ ÷ 4a. Questões de lucro máximo, área máxima e altura máxima pedem o vértice.</li><li>c é onde a parábola corta o eixo y.</li></ul>",
+    "exampleHtml": "<p>A altura de uma bola é h(t) = −5t² + 20t (metros, segundos). Qual a altura máxima?</p><p>tᵥ = −20 ÷ (2 · −5) = 2 s. h(2) = −20 + 40 = <strong>20 m</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Responder o x do vértice quando a pergunta é o valor máximo (o y do vértice).</li><li>Errar o sinal de b em −b ÷ 2a.</li><li>Esquecer que a &lt; 0 dá máximo e a &gt; 0 dá mínimo.</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "Geometria Analítica",
+    "title": "Pontos, retas e distâncias no plano cartesiano",
+    "explanationHtml": "<ul><li><strong>Distância</strong> entre A(x₁, y₁) e B(x₂, y₂): d = √[(x₂ − x₁)² + (y₂ − y₁)²] (é Pitágoras).</li><li><strong>Ponto médio</strong>: M = ((x₁ + x₂) ÷ 2, (y₁ + y₂) ÷ 2).</li><li><strong>Coeficiente angular</strong> da reta: m = (y₂ − y₁) ÷ (x₂ − x₁). Equação: y − y₁ = m · (x − x₁).</li><li>Retas paralelas têm o mesmo m; perpendiculares têm m₁ · m₂ = −1.</li><li><strong>Circunferência</strong> de centro (a, b) e raio r: (x − a)² + (y − b)² = r².</li></ul>",
+    "exampleHtml": "<p>Qual a distância entre A(1, 2) e B(4, 6)?</p><p>d = √[(4 − 1)² + (6 − 2)²] = √(9 + 16) = √25 = <strong>5</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Misturar a ordem dos pontos no numerador e no denominador do coeficiente angular.</li><li>Esquecer a raiz na fórmula da distância.</li><li>Ler (x − a)² como centro em −a: em (x − 3)² o centro tem x = 3.</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "Função Exponencial",
+    "title": "Crescimento e decaimento exponencial",
+    "explanationHtml": "<p>A função exponencial tem a forma <strong>f(x) = k · aˣ</strong>, com a &gt; 0 e a ≠ 1. A variável está no expoente.</p><ul><li>a &gt; 1: crescimento (bactérias que dobram, juros compostos).</li><li>0 &lt; a &lt; 1: decaimento (meia-vida, depreciação).</li><li>k é o valor inicial (x = 0).</li><li>Para resolver aˣ = a^y, iguale as bases e depois os expoentes: x = y.</li><li><strong>Meia-vida</strong>: após n meias-vidas, sobra a fração (1/2)ⁿ da quantidade inicial.</li></ul>",
+    "exampleHtml": "<p>Uma cultura com 500 bactérias dobra a cada hora. Quantas haverá em 4 horas?</p><p>N(t) = 500 · 2ᵗ → N(4) = 500 · 16 = <strong>8 000 bactérias</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Tratar crescimento exponencial como linear (somar em vez de multiplicar).</li><li>Esquecer o valor inicial k.</li><li>Na meia-vida, contar o tempo total em vez do número de meias-vidas.</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "Trigonometria",
+    "title": "Seno, cosseno e tangente no triângulo retângulo",
+    "explanationHtml": "<p>Num triângulo retângulo, para um ângulo agudo α:</p><ul><li><strong>sen α</strong> = cateto oposto ÷ hipotenusa.</li><li><strong>cos α</strong> = cateto adjacente ÷ hipotenusa.</li><li><strong>tg α</strong> = cateto oposto ÷ cateto adjacente.</li><li>Valores notáveis: sen 30° = 1/2, cos 30° = √3/2; sen 45° = cos 45° = √2/2; sen 60° = √3/2, cos 60° = 1/2; tg 45° = 1.</li><li>Relação fundamental: sen² α + cos² α = 1.</li><li>Funções periódicas (marés, roda-gigante) costumam aparecer como f(t) = A + B · sen(ct); o valor máximo é A + |B| e o mínimo é A − |B|.</li></ul>",
+    "exampleHtml": "<p>Uma rampa forma 30° com o chão e tem 8 m de comprimento. Qual a altura que ela vence?</p><p>A altura é o cateto oposto e a rampa é a hipotenusa: h = 8 · sen 30° = 8 · 1/2 = <strong>4 m</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Trocar oposto e adjacente: o oposto é o cateto que não toca o ângulo.</li><li>Usar seno quando o dado é o cateto adjacente (é cosseno ou tangente).</li><li>Na função periódica, esquecer de somar o termo constante ao máximo.</li></ul>"
+  },
+  {
+    "discipline": "Matemática",
+    "topic": "Logaritmo",
+    "title": "Logaritmo: o expoente que se procura",
+    "explanationHtml": "<p><strong>log_b a = x</strong> significa bˣ = a: o logaritmo é o expoente. Exige a &gt; 0, b &gt; 0 e b ≠ 1.</p><ul><li>log (sem base escrita) é na base 10: log 1 000 = 3.</li><li>Propriedades: log(a · c) = log a + log c; log(a ÷ c) = log a − log c; log(aⁿ) = n · log a.</li><li>Mudança de base: log_b a = log a ÷ log b.</li><li>Use logaritmo para descobrir o <em>tempo</em> numa função exponencial: em 2ᵗ = 10, t = log 10 ÷ log 2.</li><li>Escalas logarítmicas: pH, decibéis e Richter. Um ponto a mais em escala de base 10 significa 10 vezes mais.</li></ul>",
+    "exampleHtml": "<p>Em quantos anos um capital dobra a 10% ao ano, com juros compostos? (log 2 ≈ 0,30; log 1,1 ≈ 0,04)</p><p>1,1ᵗ = 2 → t = log 2 ÷ log 1,1 ≈ 0,30 ÷ 0,04 = <strong>7,5 anos</strong>.</p>",
+    "pitfallsHtml": "<ul><li>Achar que log(a + c) = log a + log c: a propriedade vale para produto, não para soma.</li><li>Ler escala Richter ou pH como linear.</li><li>Esquecer que pH menor significa solução mais ácida (pH = −log[H⁺]).</li></ul>"
+  }
+]
