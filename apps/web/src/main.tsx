@@ -2,13 +2,15 @@ import { StrictMode, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, NavLink, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import "@fontsource/manrope/400.css";
-import "@fontsource/manrope/500.css";
-import "@fontsource/manrope/600.css";
-import "@fontsource/manrope/700.css";
-import "@fontsource/manrope/800.css";
-import "@fontsource/jetbrains-mono/500.css";
-import "@fontsource/jetbrains-mono/700.css";
+import "@fontsource/geist-sans/400.css";
+import "@fontsource/geist-sans/500.css";
+import "@fontsource/geist-sans/600.css";
+import "@fontsource/geist-sans/700.css";
+import "@fontsource/bricolage-grotesque/600.css";
+import "@fontsource/bricolage-grotesque/700.css";
+import "@fontsource/bricolage-grotesque/800.css";
+import "@fontsource/geist-mono/500.css";
+import "@fontsource/geist-mono/600.css";
 import "@fontsource/source-serif-4/400.css";
 import "@fontsource/source-serif-4/600.css";
 import "./styles.css";
@@ -29,7 +31,7 @@ import { PracticePage } from "./features/practice.tsx";
 import { PrivacyPolicy } from "./features/privacy-policy.tsx";
 import { ReadingPage } from "./features/reading.tsx";
 import { SchoolHome } from "./features/school.tsx";
-import { guestDate, logout, NAV, SessionGate, useMe } from "./features/session.tsx";
+import { guestDate, logout, NAV, navLinks, SessionGate, useMe, type NavLinkItem } from "./features/session.tsx";
 import { StudentHome } from "./features/student.tsx";
 import { TeacherHome } from "./features/teacher.tsx";
 import { Pill } from "./ui/kit.tsx";
@@ -62,31 +64,38 @@ function Shell() {
   const location = useLocation();
   const main = useRef<HTMLElement>(null);
   useEffect(() => {
-    const section = NAV[me.role].find((link) => !link.external && (link.to === "/" ? location.pathname === "/" : location.pathname.startsWith(link.to)));
+    const section = navLinks(me.role).find((link) => !link.external && (link.to === "/" ? location.pathname === "/" : location.pathname.startsWith(link.to)));
     const label = location.pathname === "/conta" ? "Minha conta" : section?.label;
     document.title = label ? `${label} · Ritmo 180` : "Ritmo 180";
     main.current?.focus();
     window.scrollTo(0, 0);
   }, [location.pathname, me.role]);
   const dark = me.role === "network_admin";
+  const initials = me.name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("") || "?";
+  const link = (item: NavLinkItem) => item.external
+    ? <a key={item.to} className="navlink external" href={item.to} target="_blank" rel="noopener" title="Abre em outra aba">{item.label}<span aria-hidden="true"> ↗</span><span className="sr-only"> (abre em outra aba)</span></a>
+    : <NavLink key={item.to} className="navlink" to={item.to} end={item.to === "/"}>{item.label}</NavLink>;
   return (
     <>
       <a className="skip-link" href="#main">Pular para o conteúdo</a>
       <header id="topbar" className={dark ? "dark" : ""}>
         <div className="topbar-inner">
-          <div className="brand">
-            <div className="logo">180</div>
+          <NavLink className="brand" to="/" aria-label="Ritmo 180, ir para o início">
+            <div className="logo" aria-hidden="true">180</div>
             <div><div className="brand-name">{dark ? "Ritmo 180 · Rede" : "Ritmo 180"}</div><div className="brand-sub">{me.school?.name ?? "Administração de todas as escolas"}</div></div>
-          </div>
-          <nav aria-label="Áreas da plataforma">
-            {NAV[me.role].map((link) => link.external
-              ? <a key={link.to} className="navlink" href={link.to} target="_blank" rel="noopener" title="Abre em outra aba">{link.label}<span className="sr-only"> (abre em outra aba)</span></a>
-              : <NavLink key={link.to} className="navlink" to={link.to} end={link.to === "/"}>{link.label}</NavLink>)}
+          </NavLink>
+          <nav className="mainnav" aria-label="Áreas da plataforma">
+            {NAV[me.role].map((g, i) => (
+              <div className="navgroup" key={g.group ?? i} role={g.group ? "group" : undefined} aria-label={g.group}>
+                {g.group ? <span className="navgroup-label" aria-hidden="true">{g.group}</span> : null}
+                <div className="navgroup-items">{g.items.map(link)}</div>
+              </div>
+            ))}
           </nav>
           <div className="topbar-end">
             <SyncStatus />
             {me.guestUntil ? <Pill tone="warn">Visitante até {guestDate(me.guestUntil)}</Pill> : me.school?.isDemo ? <Pill tone="warn">Demonstração</Pill> : null}
-            <NavLink className="btn soft slim" to="/conta">Conta</NavLink>
+            <NavLink className="account-link" to="/conta" title="Minha conta"><span className="avatar" aria-hidden="true">{initials}</span><span>Conta</span></NavLink>
             <button className="btn soft slim" type="button" onClick={() => void logout()}>{me.guestUntil ? "Sair e apagar" : "Sair"}</button>
           </div>
         </div>

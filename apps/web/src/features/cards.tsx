@@ -103,7 +103,7 @@ export function CardsPage() {
             <section className="card">
               <div className="card-head">
                 <h2>{deck.due.length ? `${deck.due.length} ${deck.due.length === 1 ? "cartão" : "cartões"} para hoje` : "Nenhum cartão para hoje"}</h2>
-                {deck.due.length ? <button className="btn" type="button" onClick={() => { setSummary(null); setRunning(true); }}>Começar</button> : null}
+                {deck.due.length ? <button className="btn ritmo" type="button" onClick={() => { setSummary(null); setRunning(true); }}>Começar</button> : null}
               </div>
               <p className="sub">{deck.learned} aprendidos · {deck.learning} em revisão · {deck.total} cartões nas aulas</p>
               <Bar pct={deck.total ? (deck.learned / deck.total) * 100 : 0} tone="ok" />

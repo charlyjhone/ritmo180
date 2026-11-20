@@ -370,7 +370,7 @@ export function PracticePage() {
               </div>
             </div>
           ) : (
-            <div className="btn-row"><button className="btn" type="button" disabled={busy} onClick={() => { if (resume) setReplacing(true); else void start(); }}>{busy ? "Montando treino…" : "Começar treino"}</button><Link className="btn soft" to="/">Voltar ao painel</Link></div>
+            <div className="btn-row"><button className="btn ritmo" type="button" disabled={busy} onClick={() => { if (resume) setReplacing(true); else void start(); }}>{busy ? "Montando treino…" : "Começar treino"}</button><Link className="btn soft" to="/">Voltar ao painel</Link></div>
           )}
         </section>
         <section className="card">

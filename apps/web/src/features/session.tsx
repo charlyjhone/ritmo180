@@ -224,10 +224,26 @@ export function SessionGate({ children }: { children: ReactNode }) {
 }
 
 /** `external`: página fora da interface (o Laboratório, site próprio em /laboratorio/), aberta em outra aba. */
-export const NAV: Record<Role, { to: string; label: string; external?: true }[]> = {
-  student: [{ to: "/", label: "Painel" }, { to: "/plano", label: "Plano" }, { to: "/aulas", label: "Aulas" }, { to: "/treino", label: "Treino" }, { to: "/erros", label: "Erros" }, { to: "/cartoes", label: "Cartões" }, { to: "/leitura", label: "Leitura" }, { to: "/simulado", label: "Simulado" }, { to: LAB_PATH, label: "Laboratório", external: true }],
-  teacher: [{ to: "/", label: "Professor" }, { to: "/aulas", label: "Aulas" }, { to: LAB_PATH, label: "Laboratório", external: true }],
-  coordinator: [{ to: "/", label: "Direção" }, { to: "/professor", label: "Professor" }, { to: "/pessoas", label: "Pessoas" }, { to: "/implantacao", label: "Implantação" }],
-  guardian: [{ to: "/", label: "Família" }],
-  network_admin: [{ to: "/", label: "Rede" }],
+export interface NavLinkItem { to: string; label: string; external?: true }
+/** O menu vem em grupos na ordem do estudo: o dia, o que aprender, o que praticar. `group` dá nome ao grupo. */
+export interface NavGroup { group?: string; items: NavLinkItem[] }
+
+const LAB: NavLinkItem = { to: LAB_PATH, label: "Laboratório", external: true };
+
+export const NAV: Record<Role, NavGroup[]> = {
+  student: [
+    { items: [{ to: "/", label: "Painel" }, { to: "/plano", label: "Plano" }] },
+    { group: "Estudar", items: [{ to: "/aulas", label: "Aulas" }, { to: "/cartoes", label: "Cartões" }, { to: "/leitura", label: "Leitura" }] },
+    { group: "Praticar", items: [{ to: "/treino", label: "Treino" }, { to: "/simulado", label: "Simulado" }, { to: "/erros", label: "Erros" }] },
+    { items: [LAB] },
+  ],
+  teacher: [{ items: [{ to: "/", label: "Professor" }, { to: "/aulas", label: "Aulas" }] }, { items: [LAB] }],
+  coordinator: [
+    { items: [{ to: "/", label: "Direção" }] },
+    { group: "Escola", items: [{ to: "/professor", label: "Professor" }, { to: "/pessoas", label: "Pessoas" }, { to: "/implantacao", label: "Implantação" }] },
+  ],
+  guardian: [{ items: [{ to: "/", label: "Família" }] }],
+  network_admin: [{ items: [{ to: "/", label: "Rede" }] }],
 };
+
+export const navLinks = (role: Role): NavLinkItem[] => NAV[role].flatMap((g) => g.items);
