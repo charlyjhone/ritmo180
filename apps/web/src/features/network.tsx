@@ -2,7 +2,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ItemSuggestionView, LessonSuggestionView, NetworkDashboard } from "@ritmo/contracts";
+import type { ItemSuggestionView, LessonSuggestionView, Milestone, NetworkDashboard } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
 import { Async, Html, Metric, Metrics, number, PageHead, Pill } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
@@ -144,6 +144,65 @@ function LessonQueue() {
   );
 }
 
+const fullDate = (date: string) => new Date(`${date}T12:00:00`).toLocaleDateString("pt-BR");
+
+/** Datas do edital do ENEM. Só a rede cadastra, e só depois de conferir no site do INEP. */
+function EnemCalendar() {
+  const client = useQueryClient();
+  const toast = useToast();
+  const query = useQuery({ queryKey: ["calendar"], queryFn: () => api.get<Milestone[]>("/api/study/calendar") });
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const target = event.currentTarget;
+    const form = new FormData(target);
+    try {
+      await api.post("/api/study/calendar", { title: form.get("title"), startsOn: form.get("startsOn"), endsOn: String(form.get("endsOn") || "") || null, note: form.get("note") });
+      target.reset();
+      toast("Data cadastrada.");
+      await client.invalidateQueries({ queryKey: ["calendar"] });
+    } catch (error) {
+      toast(error instanceof ApiError ? error.message : "Não foi possível cadastrar.");
+    }
+  }
+  async function del(m: Milestone) {
+    try {
+      await api.del(`/api/study/calendar/${m.id}`);
+      toast("Data removida.");
+      await client.invalidateQueries({ queryKey: ["calendar"] });
+    } catch (error) {
+      toast(error instanceof ApiError ? error.message : "Não foi possível remover.");
+    }
+  }
+  return (
+    <section className="card" aria-labelledby="enem-cal-title">
+      <h2 id="enem-cal-title">Calendário do ENEM</h2>
+      <p className="sub">Cadastre as datas do edital (isenção, inscrição, provas, resultados) depois de conferir no site do INEP. Os alunos veem as próximas no Plano.</p>
+      <form onSubmit={(e) => void submit(e)}>
+        <div className="form-grid" style={{ marginTop: 8 }}>
+          <label className="field">O quê<input className="input" name="title" required minLength={3} maxLength={120} placeholder="Inscrições do ENEM" /></label>
+          <label className="field">Início<input className="input" name="startsOn" type="date" required /></label>
+          <label className="field">Fim (opcional)<input className="input" name="endsOn" type="date" /></label>
+          <label className="field">Observação (opcional)<input className="input" name="note" maxLength={300} placeholder="Pelo site do INEP" /></label>
+        </div>
+        <div className="btn-row"><button className="btn" type="submit">Cadastrar data</button></div>
+      </form>
+      <Async query={query}>
+        {(list) => (
+          <div className="stack" style={{ marginTop: 12 }}>
+            {list.length === 0 ? <p className="sub">Nenhuma data cadastrada.</p> : null}
+            {list.map((m) => (
+              <div className="row-box" key={m.id}>
+                <div className="grow"><div className="row-title">{m.title}</div><div className="row-sub">{fullDate(m.startsOn)}{m.endsOn ? ` a ${fullDate(m.endsOn)}` : ""}{m.note ? ` · ${m.note}` : ""}</div></div>
+                <button className="btn soft slim" type="button" onClick={() => void del(m)}>Remover</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </Async>
+    </section>
+  );
+}
+
 function Board({ d }: { d: NetworkDashboard }) {
   const m = d.metrics;
   const maxFunnel = Math.max(1, ...d.funnel.map((f) => f.count));
@@ -180,6 +239,7 @@ function Board({ d }: { d: NetworkDashboard }) {
       <ReviewQueue />
       <SuggestionQueue />
       <LessonQueue />
+      <EnemCalendar />
       <section className="card" aria-labelledby="esc-title">
         <h2 id="esc-title">Escolas</h2>
         <div className="table-wrap">

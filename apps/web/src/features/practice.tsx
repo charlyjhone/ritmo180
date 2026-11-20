@@ -2,9 +2,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { CONFIDENCE_LABELS, CONFIDENCES, type Confidence, type HintResponse, type Letter, type PhaseTimes, type PracticeSessionPack } from "@ritmo/contracts";
+import { CONFIDENCE_LABELS, CONFIDENCES, MISS_REASON_LABELS, MISS_REASONS, type Confidence, type HintResponse, type Letter, type MissReason, type PhaseTimes, type PracticeSessionPack } from "@ritmo/contracts";
+import { strategyReport, type StrategyAnswer, type StrategyReport } from "@ritmo/engine";
 import { api, ApiError } from "../lib/api.ts";
-import { clearPack, flushQueue, loadPack, queueAttempt, savePack } from "../lib/offline.ts";
+import { clearPack, flushQueue, loadPack, queueAttempt, queueMissReason, savePack } from "../lib/offline.ts";
+import { ReadAloud } from "../ui/a11y.tsx";
 import { Bar, clock, Html, Pill, useInterval } from "../ui/kit.tsx";
 import { FocusPicker } from "./focus-picker.tsx";
 import { useMe } from "./session.tsx";
@@ -17,13 +19,48 @@ type Stage = 0 | 1 | 2 | 3 | 4;
 
 const PHASE_ROWS: [keyof PhaseTimes, string, string][] = [["readMs", "Leitura", "amber"], ["pathMs", "Caminho", ""], ["calcMs", "Cálculo", "calc"], ["checkMs", "Conferência", ""]];
 
-function Question({ item, mode, position, total, sessionId, onAnswered, onNext }: { item: Item; mode: "guided" | "exam"; position: number; total: number; sessionId: string; onAnswered: () => void; onNext: () => void }) {
+type Sibling = (itemId: string) => Promise<"added" | "none" | "offline">;
+
+/** Depois do erro: o aluno diz o motivo e pode tentar uma questão parecida. */
+function AfterMiss({ attemptId, item, onSibling }: { attemptId: string; item: Item; onSibling: Sibling }) {
+  const [reason, setReason] = useState<MissReason | null>(null);
+  const [sibling, setSibling] = useState<"idle" | "busy" | "added" | "none" | "offline">("idle");
+  async function choose(next: MissReason) {
+    setReason(next);
+    await queueMissReason({ attemptId, itemId: item.id, reason: next }).catch(() => {});
+  }
+  async function askSibling() {
+    setSibling("busy");
+    setSibling(await onSibling(item.id));
+  }
+  return (
+    <div className="miss-reasons" role="group" aria-labelledby={`miss-${attemptId}`}>
+      <div className="label-caps" id={`miss-${attemptId}`}>POR QUE VOCÊ ERROU?</div>
+      <div className="btn-row">
+        {MISS_REASONS.map((r) => (
+          <button key={r} className={`btn slim ${reason === r ? "" : "soft"}`} type="button" aria-pressed={reason === r} onClick={() => void choose(r)}>{MISS_REASON_LABELS[r]}</button>
+        ))}
+      </div>
+      {reason ? <p className="note" role="status">Anotado. O Ritmo usa o motivo dos seus erros para escolher o que você treina.</p> : null}
+      <div className="btn-row">
+        <button className="btn soft slim" type="button" disabled={sibling !== "idle"} onClick={() => void askSibling()}>
+          {sibling === "busy" ? "Procurando…" : sibling === "added" ? "Questão irmã é a próxima" : "Tentar uma questão parecida"}
+        </button>
+      </div>
+      {sibling === "none" ? <p className="note" role="status">Não há outra questão inédita deste assunto agora. Ela fica no caderno de erros para você refazer.</p> : null}
+      {sibling === "offline" ? <p className="note" role="status">A questão parecida precisa de internet. Tente de novo quando a conexão voltar.</p> : null}
+    </div>
+  );
+}
+
+function Question({ item, mode, position, total, sessionId, onAnswered, onNext, onSibling }: { item: Item; mode: "guided" | "exam"; position: number; total: number; sessionId: string; onAnswered: (answer: StrategyAnswer) => void; onNext: () => void; onSibling: Sibling }) {
   const guided = mode === "guided";
   const [stage, setStage] = useState<Stage>(guided ? 0 : 2);
   const [marks, setMarks] = useState<number[]>([performance.now()]);
   const [choice, setChoice] = useState<Letter | null>(null);
   const [finalChoice, setFinalChoice] = useState<Letter | null>(null);
   const [confidence, setConfidence] = useState<Confidence | null>(null);
+  const [attemptId, setAttemptId] = useState<string | null>(null);
   const [hint, setHint] = useState<HintResponse | null>(null);
   const [, redraw] = useState(0);
   const hidden = useRef({ since: null as number | null, total: 0 });
@@ -71,11 +108,14 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext }
     const phases: PhaseTimes | null = guided
       ? { readMs: Math.round(all[1]! - all[0]!), pathMs: Math.round(all[2]! - all[1]!), calcMs: Math.round(all[3]! - all[2]!), checkMs: Math.round(all[4]! - all[3]!) }
       : null;
+    const id = crypto.randomUUID();
+    setAttemptId(id);
+    const totalMs = Math.round(end - marks[0]!);
     await queueAttempt({
-      id: crypto.randomUUID(), sessionId, itemId: item.id, mode, choice: letter, totalMs: Math.round(end - marks[0]!), phases,
+      id, sessionId, itemId: item.id, mode, choice: letter, totalMs, phases,
       usedHint: hint !== null, hiddenMs: Math.round(hidden.current.total), position, answeredAt: Date.now(), confidence: sure,
     });
-    onAnswered();
+    onAnswered({ position, correct: letter === item.key.answer, totalMs, targetMs: item.targetSeconds * 1000 });
   }
 
   function pick(letter: Letter) {
@@ -105,6 +145,7 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext }
           <Pill tone="brand">{guided ? "Treino guiado" : "Modo prova"}</Pill>
           <Pill>{[item.area, item.discipline, item.skill].filter(Boolean).join(" · ")}</Pill>
           <Pill>Questão {position + 1} de {total}</Pill>
+          <ReadAloud html={`${item.contextHtml} ${stage >= 1 ? item.stemHtml : ""} ${stage >= 2 ? item.alternatives.map((a) => `${a.letter}) ${a.html}`).join(" ") : ""}`} label="Ouvir a questão" />
         </div>
         <p className="note" style={{ marginTop: 10 }}>{item.reason}</p>
         {item.contextHtml ? (
@@ -153,6 +194,7 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext }
               {review ? <p className="note" role="status">{review}</p> : null}
               {item.key.solutionHtml ? <><p className="solution"><strong>Resolução:</strong></p><Html className="solution-html" html={item.key.solutionHtml} /></> : null}
             </div>
+            {!right && attemptId ? <AfterMiss attemptId={attemptId} item={item} onSibling={onSibling} /> : null}
             {!right || confidence === "guess" ? (
               <p className="note"><a href={lessonLink(item)} target="_blank" rel="noopener">Ver a aula rápida de {item.topic}</a> (abre em outra aba; seu treino continua aqui).</p>
             ) : null}
@@ -195,6 +237,18 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext }
   );
 }
 
+const STRATEGY_MINUTES = 30;
+
+function StrategyCard({ report }: { report: StrategyReport }) {
+  return (
+    <section className="card strategy" aria-labelledby="strategy-title">
+      <h2 id="strategy-title">Sua estratégia de prova: {report.correct} de {report.questions} certas em {clock(report.usedMs / 1000)}</h2>
+      <p className="sub">No ritmo do ENEM, estas {report.questions} questões caberiam em cerca de {clock(report.budgetMs / 1000)}.</p>
+      <ul>{report.tips.map((tip) => <li key={tip}>{tip}</li>)}</ul>
+    </section>
+  );
+}
+
 export function PracticePage() {
   const client = useQueryClient();
   const { id: owner } = useMe();
@@ -202,6 +256,9 @@ export function PracticePage() {
   const [index, setIndex] = useState(0);
   const [resume, setResume] = useState<{ pack: PracticeSessionPack; done: number } | null>(null);
   const [mode, setMode] = useState<"guided" | "exam">("guided");
+  const [strategy, setStrategy] = useState(false);
+  const [answers, setAnswers] = useState<StrategyAnswer[]>([]);
+  const [report, setReport] = useState<StrategyReport | null>(null);
   const [params] = useSearchParams();
   const mistakes = params.get("erros") === "1";
   const minutes = Math.min(90, Math.max(5, Number(params.get("minutos")) || 25));
@@ -221,7 +278,7 @@ export function PracticePage() {
     setBusy(true);
     setMessage(null);
     try {
-      const next = await api.post<PracticeSessionPack>("/api/practice/sessions", { mode, minutes, discipline: discipline || undefined, topic: topic || undefined, mistakes });
+      const next = await api.post<PracticeSessionPack>("/api/practice/sessions", { mode: strategy ? "exam" : mode, minutes: strategy ? STRATEGY_MINUTES : minutes, discipline: discipline || undefined, topic: topic || undefined, mistakes });
       if (next.items.length === 0) {
         setMessage(next.notice);
         return;
@@ -230,6 +287,8 @@ export function PracticePage() {
       setMessage(next.notice);
       setPack(next);
       setIndex(0);
+      setAnswers([]);
+      setReport(null);
       setResume(null);
       setReplacing(false);
     } catch (error) {
@@ -248,15 +307,31 @@ export function PracticePage() {
     await clearPack().catch(() => {});
     await flushQueue();
     await client.invalidateQueries({ queryKey: ["student"] });
+    if (pack?.mode === "exam" && answers.length) setReport(strategyReport(answers));
     setPack(null);
     setIndex(0);
     setResume(null);
     setMessage("Treino concluído. Seus resultados já contam no painel.");
   }
 
+  /** Põe a questão irmã logo depois da atual. */
+  async function addSibling(itemId: string): Promise<"added" | "none" | "offline"> {
+    if (!pack) return "none";
+    try {
+      const { item } = await api.post<{ item: Item | null }>("/api/practice/sibling", { sessionId: pack.sessionId, itemId, exclude: pack.items.map((i) => i.id) });
+      if (!item) return "none";
+      const next = { ...pack, items: [...pack.items.slice(0, index + 1), item, ...pack.items.slice(index + 1)] };
+      setPack(next);
+      await savePack({ owner, pack: next, done: index + 1 }).catch(() => {});
+      return "added";
+    } catch (error) {
+      return error instanceof ApiError ? "none" : "offline";
+    }
+  }
+
   if (pack) {
     const item = pack.items[index]!;
-    return <Question key={item.id} item={item} mode={pack.mode} position={index} total={pack.items.length} sessionId={pack.sessionId} onAnswered={() => void savePack({ owner, pack, done: index + 1 }).catch(() => {})} onNext={() => void next()} />;
+    return <Question key={item.id} item={item} mode={pack.mode} position={index} total={pack.items.length} sessionId={pack.sessionId} onAnswered={(answer) => { setAnswers((list) => [...list, answer]); void savePack({ owner, pack, done: index + 1 }).catch(() => {}); }} onNext={() => void next()} onSibling={addSibling} />;
   }
 
   return (
@@ -268,6 +343,7 @@ export function PracticePage() {
         </div>
       </div>
       {message ? <div className="notice" role="status">{message}</div> : null}
+      {report ? <StrategyCard report={report} /> : null}
       {mistakes ? <div className="notice" role="status">Este treino usa só as questões do seu caderno de erros.</div> : null}
       {resume ? (
         <section className="card">
@@ -280,8 +356,9 @@ export function PracticePage() {
         <section className="card">
           <fieldset style={{ border: 0, padding: 0, margin: 0 }}>
             <legend style={{ padding: 0 }}>MODO</legend>
-            <button className={`opt`} type="button" aria-pressed={mode === "guided"} onClick={() => setMode("guided")}><strong>Guiado.</strong> A questão aparece em partes e o Raio-X mede cada fase.</button>
-            <button className={`opt`} type="button" aria-pressed={mode === "exam"} onClick={() => setMode("exam")}><strong>Prova.</strong> Tudo de uma vez, como no ENEM. Conta para a sua nota.</button>
+            <button className={`opt`} type="button" aria-pressed={mode === "guided" && !strategy} onClick={() => { setMode("guided"); setStrategy(false); }}><strong>Guiado.</strong> A questão aparece em partes e o Raio-X mede cada fase.</button>
+            <button className={`opt`} type="button" aria-pressed={mode === "exam" && !strategy} onClick={() => { setMode("exam"); setStrategy(false); }}><strong>Prova.</strong> Tudo de uma vez, como no ENEM. Conta para a sua nota.</button>
+            <button className={`opt`} type="button" aria-pressed={strategy} onClick={() => { setMode("exam"); setStrategy(true); }}><strong>Estratégia de prova.</strong> {STRATEGY_MINUTES / 3} questões no ritmo do ENEM, cerca de 3 min cada. No fim, você vê onde devia ter pulado e voltado.</button>
           </fieldset>
           <FocusPicker title="O QUE TREINAR" anyLabel="Deixar o Ritmo 180 escolher pelas suas lacunas" scope={discipline} topic={topic} onScope={(value) => { setDiscipline(value); setTopic(""); }} onTopic={setTopic} />
           {replacing && resume ? (

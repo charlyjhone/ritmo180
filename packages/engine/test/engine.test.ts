@@ -324,3 +324,88 @@ describe("revisão espaçada", () => {
     expect(reviewState([fact(false, 0), fact(true, 0.01, "guess")]).status).toBe("redo");
   });
 });
+
+describe("ferramentas de estudo", async () => {
+  const { cardState, cardsFromLesson, CARD_DAYS, finalStretchTopics, isCardDue, missAdvice, strategyReport } = await import("../src/index.ts");
+  const DAY = 86_400_000;
+  const T0 = Date.parse("2026-03-02T15:00:00Z");
+
+  it("o cartão sobe de nível a cada lembrança no dia certo e volta ao início quando esquecido", () => {
+    expect(cardState([])).toMatchObject({ status: "new" });
+    expect(isCardDue(cardState([]), T0)).toBe(true);
+    const once = cardState([{ remembered: true, at: T0 }]);
+    expect(once).toMatchObject({ status: "learning", level: 1 });
+    expect(isCardDue(once, T0 + 6 * 3_600_000)).toBe(false);
+    expect(isCardDue(once, T0 + CARD_DAYS[0] * DAY)).toBe(true);
+    // Lembrar antes da data não adianta.
+    expect(cardState([{ remembered: true, at: T0 }, { remembered: true, at: T0 + 3_600_000 }]).level).toBe(1);
+    const forgot = cardState([{ remembered: true, at: T0 }, { remembered: false, at: T0 + 2 * DAY }]);
+    expect(forgot).toMatchObject({ status: "learning", level: 0 });
+    expect(isCardDue(forgot, T0 + 2 * DAY)).toBe(true);
+    let at = T0;
+    const facts = [];
+    for (const wait of [0, ...CARD_DAYS]) {
+      at += wait * DAY;
+      facts.push({ remembered: true, at });
+    }
+    expect(cardState(facts)).toMatchObject({ status: "learned", dueAt: null });
+  });
+
+  it("tira cartões dos termos em destaque e do exemplo resolvido", () => {
+    const cards = cardsFromLesson({
+      discipline: "Física", topic: "Óptica",
+      explanationHtml: "<ul><li><strong>Reflexão</strong>: a luz volta ao meio de origem.</li><li>Sem destaque.</li><li><b>Refração</b> (mudança de meio): a luz muda de velocidade &gt; e de direção.</li></ul>",
+      exampleHtml: "<p>Por que o lápis parece quebrado na água?</p><p>Por causa da <strong>refração</strong> da luz.</p>",
+    });
+    expect(cards.map((c) => c.front)).toEqual(["Reflexão", "Refração", "Por que o lápis parece quebrado na água?"]);
+    expect(cards[1]!.back).toBe("(mudança de meio): a luz muda de velocidade > e de direção.");
+    expect(cards[2]!.back).toBe("Por causa da refração da luz.");
+    expect(new Set(cards.map((c) => c.key)).size).toBe(3);
+  });
+
+  it("só aconselha com respostas suficientes e aponta o motivo que mais pesa", () => {
+    expect(missAdvice({ content: 2 })).toBeNull();
+    expect(missAdvice({ content: 1, calc: 3, reading: 1 })).toMatchObject({ dominant: "calc", share: 60, total: 5 });
+  });
+
+  it("o relatório de estratégia aponta onde travou, onde correu e o tempo além do ritmo do ENEM", () => {
+    const good = strategyReport([{ position: 0, correct: true, totalMs: 120_000, targetMs: 180_000 }]);
+    expect(good.tips).toEqual(["Ritmo de prova em dia: você ficou dentro do tempo e não travou em nenhuma questão."]);
+    const bad = strategyReport([
+      { position: 0, correct: false, totalMs: 400_000, targetMs: 180_000 },
+      { position: 1, correct: false, totalMs: 20_000, targetMs: 180_000 },
+      { position: 2, correct: false, totalMs: 30_000, targetMs: 180_000 },
+    ]);
+    expect(bad.stuck).toEqual([1]);
+    expect(bad.rushed).toEqual([2, 3]);
+    expect(bad.tips).toHaveLength(2);
+    expect(bad.tips[0]).toContain("4 min a mais");
+    expect(strategyReport([{ position: 0, correct: true, totalMs: 300_000, targetMs: 180_000 }]).tips[0]).toContain("2 min a mais do que o ritmo do ENEM");
+  });
+
+  it("na reta final só ficam assuntos já vistos e fracos, os que mais caem primeiro", () => {
+    const topics = [
+      { discipline: "F", topic: "Novo", weight: 0.9, mastery: null },
+      { discipline: "F", topic: "Forte", weight: 0.8, mastery: 0.9 },
+      { discipline: "F", topic: "Fraco leve", weight: 0.2, mastery: 0.3 },
+      { discipline: "F", topic: "Fraco pesado", weight: 0.7, mastery: 0.5 },
+    ];
+    expect(finalStretchTopics(topics).map((t) => t.topic)).toEqual(["Fraco pesado", "Fraco leve"]);
+    expect(finalStretchTopics(topics, 1)).toHaveLength(1);
+  });
+
+  it("perto da prova, o plano deixa de abrir assunto novo", () => {
+    const now = Date.parse("2026-10-20T15:00:00Z");
+    const priorities = [
+      { discipline: "A", topic: "Nunca visto", weight: 0.99, mastery: null },
+      { discipline: "B", topic: "Fraco 1", weight: 0.5, mastery: 0.4 },
+      { discipline: "C", topic: "Fraco 2", weight: 0.4, mastery: 0.3 },
+      { discipline: "D", topic: "Fraco 3", weight: 0.3, mastery: 0.2 },
+    ];
+    const focus = planUntilEnem(now, priorities).filter((d) => d.kind === "focus").map((d) => d.topic);
+    expect(focus.length).toBeGreaterThan(0);
+    expect(focus).not.toContain("Nunca visto");
+    const far = Date.parse("2027-03-01T15:00:00Z");
+    expect(planUntilEnem(far, priorities).filter((d) => d.kind === "focus").map((d) => d.topic)).toContain("Nunca visto");
+  });
+});

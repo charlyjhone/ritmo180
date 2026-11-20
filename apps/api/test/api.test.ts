@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { LightMyRequestResponse } from "fastify";
-import type { ClassExamReport, CreatedPerson, DeletionRequestView, RosterCommitResult, SchoolClass, ExamResultView, ExamSittingView, ExamSummary, ItemSuggestionView, LessonIndex, LessonSuggestionView, LessonView, MistakeBook, Person, PracticeSessionPack, StudentDashboard, StudyPlan, SyncResult, TrainingCatalog } from "@ritmo/contracts";
+import type { CardDeck, ClassExamReport, CourseGoalView, CreatedPerson, Milestone, DeletionRequestView, RosterCommitResult, SchoolClass, ExamResultView, ExamSittingView, ExamSummary, ItemSuggestionView, LessonIndex, LessonSuggestionView, LessonView, MistakeBook, Person, PracticeSessionPack, StudentDashboard, StudyPlan, SyncResult, TeacherDashboard, TrainingCatalog } from "@ritmo/contracts";
 import { normalizeItems, parseCanonicalJson } from "@ritmo/ingest";
 import { buildApp } from "../src/app.ts";
 import { openPglite } from "../src/platform/db-pglite.ts";
@@ -509,6 +509,138 @@ describe("aulas rápidas", () => {
     expect(published.imported).toBe(pending.imported);
     const again = await importLessons(db, sample, { now: Date.now() });
     expect(again).toMatchObject({ imported: 0, kept: published.imported + published.kept });
+  });
+});
+
+describe("ferramentas de estudo", () => {
+  type Pack = PracticeSessionPack;
+  /** Um assunto de Física que existe no banco de teste. */
+  const physicsTopic = async () => (await db.system((tx) => tx.query(
+    `SELECT topic FROM items i WHERE status = 'published' AND discipline = 'Física'
+       AND NOT EXISTS (SELECT 1 FROM lessons l WHERE l.discipline = i.discipline AND l.topic = i.topic AND l.status = 'published' AND l.model <> 'autoral')
+     GROUP BY topic ORDER BY count(*) DESC, topic LIMIT 1`)))[0]!.topic as string;
+  const wrongLetter = (item: Pack["items"][number]) => (["A", "B", "C", "D", "E"] as const).find((l) => l !== item.key.answer)!;
+
+  it("o motivo do erro vira conselho no painel e a questão irmã é do mesmo assunto", async () => {
+    const student = as(await login(a.students[2]!));
+    const pack = json<Pack>(await student.post("/api/practice/sessions", { mode: "guided", minutes: 15, discipline: "Física" }));
+    const items = pack.items.slice(0, 3);
+    expect(items.length).toBe(3);
+    const attempts = items.map((item, position) => ({
+      id: randomUUID(), sessionId: pack.sessionId, itemId: item.id, mode: "guided", choice: wrongLetter(item), totalMs: 90_000, phases: null,
+      usedHint: false, hiddenMs: 0, position, answeredAt: NOW - 60_000 + position, confidence: "think",
+    }));
+    expect((await student.post("/api/practice/sync", { attempts })).statusCode).toBe(200);
+    expect((await student.post("/api/study/miss-reason", { attemptId: attempts[0]!.id, itemId: items[0]!.id, reason: "preguiça" })).statusCode).toBe(400);
+    for (const [i, attempt] of attempts.entries()) {
+      expect((await student.post("/api/study/miss-reason", { attemptId: attempt.id, itemId: items[i]!.id, reason: "content" })).statusCode).toBe(200);
+    }
+    // Reenviar o mesmo motivo (fila offline) não duplica.
+    expect((await student.post("/api/study/miss-reason", { attemptId: attempts[0]!.id, itemId: items[0]!.id, reason: "content" })).statusCode).toBe(200);
+    const board = json<StudentDashboard>(await student.get("/api/insights/student"));
+    expect(board.missAdvice).toMatchObject({ dominant: "content", total: 3, share: 100 });
+    expect(board.missAdvice!.action.to).toMatch(/^\/aula\?/);
+
+    const { item: sibling } = json<{ item: Pack["items"][number] | null }>(await student.post("/api/practice/sibling", { sessionId: pack.sessionId, itemId: items[0]!.id, exclude: pack.items.map((i) => i.id) }));
+    if (sibling) {
+      expect(sibling.topic).toBe(items[0]!.topic);
+      expect(pack.items.map((i) => i.id)).not.toContain(sibling.id);
+      expect(sibling.key.answer).toMatch(/^[A-E]$/);
+    }
+    const other = as(await login(a.students[3]!));
+    expect((await other.post("/api/practice/sibling", { sessionId: pack.sessionId, itemId: items[0]!.id })).statusCode).toBe(404);
+  });
+
+  it("os cartões saem das aulas publicadas e a resposta tira o cartão da fila de hoje", async () => {
+    const topic = await physicsTopic();
+    await importLessons(db, [{
+      discipline: "Física", topic, title: "Movimento: velocidade e aceleração",
+      explanationHtml: "<ul><li><strong>Velocidade média</strong>: distância dividida pelo tempo, v = Δs/Δt.</li><li><strong>Aceleração</strong>: quanto a velocidade muda por segundo.</li><li>Item sem termo em destaque não vira cartão.</li></ul>",
+      exampleHtml: "<p>Um carro anda 120 km em 2 h. Qual a velocidade média?</p><p>v = 120 / 2 = <strong>60 km/h</strong>.</p>",
+      pitfallsHtml: "<ul><li>Confundir velocidade média com a média das velocidades.</li></ul>",
+    }], { publishedBy: "Revisor", now: NOW });
+    const student = as(await login(a.students[4]!));
+    const deck = json<CardDeck>(await student.get(`/api/study/cards?${new URLSearchParams({ disciplina: "Física", assunto: topic })}`));
+    expect(deck.due.map((c) => c.front)).toEqual(expect.arrayContaining(["Velocidade média", "Aceleração", "Um carro anda 120 km em 2 h. Qual a velocidade média?"]));
+    expect(deck.due.every((c) => c.status === "new" && c.topic === topic)).toBe(true);
+    const card = deck.due.find((c) => c.front === "Velocidade média")!;
+    expect(card.back).toBe("distância dividida pelo tempo, v = Δs/Δt.");
+
+    const review = { id: randomUUID(), key: card.key, remembered: true, at: NOW };
+    expect(json<{ saved: number }>(await student.post("/api/study/cards", { reviews: [review] })).saved).toBe(1);
+    expect(json<{ saved: number }>(await student.post("/api/study/cards", { reviews: [review] })).saved).toBe(0);
+    const after = json<CardDeck>(await student.get(`/api/study/cards?${new URLSearchParams({ disciplina: "Física", assunto: topic })}`));
+    expect(after.due.map((c) => c.key)).not.toContain(card.key);
+    expect(after.learning).toBe(1);
+    expect((await as(await login(a.teacher)).get("/api/study/cards")).statusCode).toBe(403);
+  });
+
+  it("a meta de curso compara a nota de corte com a média estimada e pode ser apagada", async () => {
+    const cookie = await login(a.students[4]!);
+    const student = as(cookie);
+    expect((await student.put("/api/study/course-goal", { course: "Medicina", cutoff: 1200 })).statusCode).toBe(400);
+    const saved = json<CourseGoalView>(await student.put("/api/study/course-goal", { course: "Enfermagem", institution: "Federal", cutoff: 680.5 }));
+    expect(saved.goal).toEqual({ course: "Enfermagem", institution: "Federal", cutoff: 680.5 });
+    expect(saved.gap === null || saved.gap === Math.round(680.5 - saved.estimate!)).toBe(true);
+    const copy = json<Record<string, unknown[]>>(await student.get("/api/privacy/my-data"));
+    expect(copy.meta_de_curso).toHaveLength(1);
+    expect((await app.inject({ method: "DELETE", url: "/api/study/course-goal", cookies: { ritmo_session: cookie } })).statusCode).toBe(200);
+    expect(json<CourseGoalView>(await student.get("/api/study/course-goal")).goal).toBeNull();
+  });
+
+  it("só a rede cadastra datas do ENEM, e o aluno vê as que ainda não passaram", async () => {
+    const student = as(await login(a.students[4]!));
+    const networkCookie = await login(a.network);
+    const network = as(networkCookie);
+    expect((await student.post("/api/study/calendar", { title: "Inscrições", startsOn: "2026-11-01" })).statusCode).toBe(403);
+    expect((await network.post("/api/study/calendar", { title: "Prazo trocado", startsOn: "2026-11-05", endsOn: "2026-11-01" })).statusCode).toBe(400);
+    const { id } = json<{ id: string }>(await network.post("/api/study/calendar", { title: "Resultado", startsOn: "2027-01-16", note: "Site do INEP" }));
+    await network.post("/api/study/calendar", { title: "Já passou", startsOn: "2026-05-01", endsOn: "2026-05-10" });
+    const seen = json<Milestone[]>(await student.get("/api/study/calendar"));
+    expect(seen.map((m) => m.title)).toContain("Resultado");
+    expect(seen.map((m) => m.title)).not.toContain("Já passou");
+    expect(seen.find((m) => m.id === id)).toMatchObject({ startsOn: "2027-01-16", endsOn: null, note: "Site do INEP" });
+    const del = () => app.inject({ method: "DELETE", url: `/api/study/calendar/${id}`, cookies: { ritmo_session: networkCookie } });
+    expect((await del()).statusCode).toBe(200);
+    expect((await del()).statusCode).toBe(404);
+  });
+
+  it("a tarefa com prazo chega ao aluno da turma e o professor acompanha quem fez", async () => {
+    const { classId, email, studentId, otherClass } = await db.system(async (tx) => {
+      const row = (await tx.query(
+        `SELECT ct.class_id, u.email, u.id FROM class_teachers ct JOIN users t ON t.id = ct.teacher_id
+         JOIN class_students cs ON cs.class_id = ct.class_id JOIN users u ON u.id = cs.student_id
+         WHERE t.email = $1 AND u.email IS NOT NULL ORDER BY u.email LIMIT 1`, [a.teacher]))[0]!;
+      const other = (await tx.query(`SELECT c.id FROM classes c WHERE c.school_id = $1 AND c.id NOT IN (SELECT class_id FROM class_teachers ct JOIN users t ON t.id = ct.teacher_id WHERE t.email = $2) LIMIT 1`, [a.schoolId, a.teacher]))[0];
+      return { classId: row.class_id as string, email: row.email as string, studentId: row.id as string, otherClass: other?.id as string | undefined };
+    });
+    const topic = await physicsTopic();
+    const teacher = as(await login(a.teacher));
+    expect((await teacher.post("/api/teacher/assignments", { classId, topic, title: "Lista", questions: 0 })).statusCode).toBe(400);
+    if (otherClass) expect((await teacher.post("/api/teacher/assignments", { classId: otherClass, topic, title: "Lista" })).statusCode).toBe(403);
+    expect((await teacher.post("/api/teacher/assignments", { classId, topic, title: "Lista de Cinemática", questions: 4, dueOn: "2026-10-27" })).statusCode).toBe(200);
+
+    const student = as(await login(email));
+    const board = json<StudentDashboard>(await student.get("/api/insights/student"));
+    const task = board.assignments.find((t) => t.title === "Lista de Cinemática")!;
+    expect(task).toMatchObject({ topic, discipline: "Física", questions: 4, dueOn: "2026-10-27", done: 0 });
+    expect(board.challenge).toMatchObject({ target: board.challenge!.students * 30 });
+    expect(board.finalStretch?.daysLeft).toBe(19);
+
+    const dashboard = json<TeacherDashboard>(await teacher.get(`/api/teacher/classes/${classId}`));
+    const tracked = dashboard.assignments.find((t) => t.title === "Lista de Cinemática")!;
+    expect(tracked).toMatchObject({ questions: 4, completed: 0, studentName: null, dueOn: "2026-10-27" });
+    expect(tracked.total).toBe(dashboard.class.students);
+    expect(Array.isArray(dashboard.skills)).toBe(true);
+    for (const skill of dashboard.skills) expect(skill.skill).toMatch(/^H\d+$/);
+    expect(dashboard.alerts.every((al) => al.talk.length > 10)).toBe(true);
+    expect(dashboard.challenge.students).toBe(dashboard.class.students);
+    void studentId;
+  });
+
+  it("na reta final o plano só volta a assuntos já vistos", async () => {
+    const plan = json<StudyPlan>(await as(await login(a.student)).get("/api/practice/plan"));
+    expect(plan.finalStretch).toBe(true);
   });
 });
 

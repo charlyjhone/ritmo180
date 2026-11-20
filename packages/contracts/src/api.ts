@@ -134,6 +134,15 @@ export const AttemptInput = z.object({
 });
 export type AttemptInput = z.infer<typeof AttemptInput>;
 
+export const MISS_REASONS = ["content", "calc", "reading", "distraction"] as const;
+export type MissReason = (typeof MISS_REASONS)[number];
+export const MISS_REASON_LABELS: Record<MissReason, string> = { content: "Não sabia o conteúdo", calc: "Errei a conta", reading: "Li errado o enunciado", distraction: "Me distraí" };
+export const MissReasonInput = z.object({ attemptId: z.string().uuid(), itemId: z.string().uuid(), reason: z.enum(MISS_REASONS) });
+export type MissReasonInput = z.infer<typeof MissReasonInput>;
+
+/** Pede uma questão parecida com a que o aluno acabou de errar. */
+export const SiblingRequest = z.object({ sessionId: z.string().uuid(), itemId: z.string().uuid(), exclude: z.array(z.string().uuid()).max(200).default([]) });
+
 export const CONFIDENCE_LABELS: Record<Confidence, string> = { sure: "Tenho certeza", think: "Acho que sim", guess: "Chutei" };
 
 export const SyncInput = z.object({ attempts: z.array(AttemptInput).min(1).max(500) });
@@ -207,6 +216,36 @@ export interface StudentDashboard {
   enem: StudyPlan["enem"];
   goal: { target: number; done: number; trainedToday: boolean };
   reviews: { due: number; upcoming: number };
+  /** Conselho a partir dos motivos que o aluno deu para os próprios erros. */
+  missAdvice: { dominant: MissReason; share: number; total: number; advice: string; action: { label: string; to: string } } | null;
+  /** Cartões de memorização para rever hoje. */
+  cards: { due: number };
+  assignments: StudentAssignment[];
+  challenge: ClassChallenge | null;
+  /** Assuntos para rever na reta final; nulo fora dela. */
+  finalStretch: { daysLeft: number; topics: { discipline: string; topic: string; mastery: number }[] } | null;
+}
+
+export interface StudentAssignment {
+  id: string;
+  title: string;
+  discipline: string;
+  topic: string;
+  teacher: string;
+  dueOn: string | null;
+  questions: number;
+  done: number;
+}
+
+/** Desafio coletivo da semana: premia constância, sem ranking entre colegas. */
+export interface ClassChallenge {
+  className: string;
+  target: number;
+  done: number;
+  students: number;
+  /** Colegas que treinaram em pelo menos 3 dias da semana. */
+  steady: number;
+  steadyDays: number;
 }
 
 export const ReadingSubmit = z.object({
@@ -312,6 +351,8 @@ export const REVIEW_STEPS = 3;
 export interface StudyPlan {
   /** `estimated` indica que o edital ainda não saiu. */
   enem: { year: number; nextDay: string; daysLeft: number; days: readonly string[]; estimated: boolean } | null;
+  /** Nos últimos 30 dias o plano só revisa assuntos já vistos que ainda pesam. */
+  finalStretch: boolean;
   days: { date: string; kind: "focus" | "simulado" | "light" | "exam"; discipline?: string; topic?: string; areas?: readonly Area[]; done?: boolean }[];
 }
 
@@ -368,12 +409,23 @@ export interface TeacherDashboard {
   time: TimeBreakdown | null;
   suggestion: string | null;
   traps: { name: string; where: string; share: number }[];
-  alerts: { studentId: string; name: string; why: string; action: "ver_trilha" | "enviar_sprints" | "avisar_familia" }[];
+  alerts: { studentId: string; name: string; why: string; action: "ver_trilha" | "enviar_sprints" | "avisar_familia"; severity: "high" | "medium"; talk: string }[];
+  /** Habilidades da Matriz do ENEM em que a turma mais erra. */
+  skills: { area: Area; skill: string; accuracy: number; answers: number; topics: string[] }[];
+  assignments: { id: string; title: string; topic: string; dueOn: string | null; questions: number; completed: number; total: number; studentName: string | null }[];
+  challenge: ClassChallenge;
   flags: { id: string; itemId: string; label: string; area: string; why: string }[];
   assignableTopics: { topic: string; discipline: string; items: number }[];
 }
 
-export const CreateAssignment = z.object({ classId: z.string().uuid(), topic: z.string().min(1), title: z.string().min(3).max(120), studentId: z.string().uuid().optional() });
+export const CreateAssignment = z.object({
+  classId: z.string().uuid(),
+  topic: z.string().min(1),
+  title: z.string().min(3).max(120),
+  studentId: z.string().uuid().optional(),
+  questions: z.number().int().min(1).max(100).default(10),
+  dueOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use uma data válida.").optional(),
+});
 export const ResolveFlag = z.object({ resolution: z.enum(["kept", "retired"]) });
 export const NotifyFamily = z.object({ studentId: z.string().uuid(), message: z.string().min(3).max(500) });
 
@@ -508,4 +560,62 @@ export interface LessonIndex {
 export interface LessonSuggestionView extends LessonContent {
   discipline: string;
   topic: string;
+}
+
+/** Cartão de memorização tirado de uma aula revisada. */
+export interface CardView {
+  key: string;
+  discipline: string;
+  topic: string;
+  front: string;
+  back: string;
+  status: "new" | "learning";
+}
+
+export interface CardDeck {
+  due: CardView[];
+  /** Total de cartões das aulas publicadas. */
+  total: number;
+  learned: number;
+  learning: number;
+  topics: { discipline: string; topic: string; due: number }[];
+}
+
+export const CardReviewInput = z.object({
+  reviews: z.array(z.object({ id: z.string().uuid(), key: z.string().min(3).max(400), remembered: z.boolean(), at: z.number().int().positive() })).min(1).max(300),
+});
+export type CardReview = z.infer<typeof CardReviewInput>["reviews"][number];
+
+export const CourseGoalInput = z.object({
+  course: z.string().trim().min(2, "Diga o curso.").max(120),
+  institution: z.string().trim().max(160).default(""),
+  cutoff: z.number().min(300, "A nota de corte vai de 300 a 1000.").max(1000, "A nota de corte vai de 300 a 1000."),
+});
+
+export interface CourseGoalView {
+  goal: { course: string; institution: string; cutoff: number } | null;
+  /** Média das notas estimadas nas áreas já medidas. Não inclui a redação. */
+  estimate: number | null;
+  measured: Area[];
+  gap: number | null;
+}
+
+export interface Milestone {
+  id: string;
+  title: string;
+  startsOn: string;
+  endsOn: string | null;
+  note: string;
+}
+
+export const MilestoneInput = z.object({
+  title: z.string().trim().min(3).max(120),
+  startsOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use uma data válida."),
+  endsOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullish(),
+  note: z.string().trim().max(300).default(""),
+});
+
+/** Todas as aulas publicadas, para estudar sem internet. Não traz dado de aluno. */
+export interface LessonBundle {
+  lessons: (LessonContent & { discipline: string; topic: string })[];
 }

@@ -225,7 +225,7 @@ export function SessionGate({ children }: { children: ReactNode }) {
 
 /** `external`: página fora da interface (o Laboratório, site próprio em /laboratorio/), aberta em outra aba. */
 export const NAV: Record<Role, { to: string; label: string; external?: true }[]> = {
-  student: [{ to: "/", label: "Painel" }, { to: "/plano", label: "Plano" }, { to: "/aulas", label: "Aulas" }, { to: "/treino", label: "Treino" }, { to: "/erros", label: "Erros" }, { to: "/leitura", label: "Leitura" }, { to: "/simulado", label: "Simulado" }, { to: LAB_PATH, label: "Laboratório", external: true }],
+  student: [{ to: "/", label: "Painel" }, { to: "/plano", label: "Plano" }, { to: "/aulas", label: "Aulas" }, { to: "/treino", label: "Treino" }, { to: "/erros", label: "Erros" }, { to: "/cartoes", label: "Cartões" }, { to: "/leitura", label: "Leitura" }, { to: "/simulado", label: "Simulado" }, { to: LAB_PATH, label: "Laboratório", external: true }],
   teacher: [{ to: "/", label: "Professor" }, { to: "/aulas", label: "Aulas" }, { to: LAB_PATH, label: "Laboratório", external: true }],
   coordinator: [{ to: "/", label: "Direção" }, { to: "/professor", label: "Professor" }, { to: "/pessoas", label: "Pessoas" }, { to: "/implantacao", label: "Implantação" }],
   guardian: [{ to: "/", label: "Família" }],

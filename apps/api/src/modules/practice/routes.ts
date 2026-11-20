@@ -1,4 +1,4 @@
-import { AREAS, DiagnosticAnswer, GoalInput, HintRequest, NextSessionInput, SyncInput, type Area, type HintResponse } from "@ritmo/contracts";
+import { AREAS, DiagnosticAnswer, GoalInput, HintRequest, NextSessionInput, SiblingRequest, SyncInput, type Area, type HintResponse } from "@ritmo/contracts";
 import { HttpError, type ModuleRoutes } from "../../platform/http.ts";
 import { requireActor, tenantOf, type Actor } from "../identity/index.ts";
 import { loadItems, loadTrainingCatalog } from "../catalog/index.ts";
@@ -7,6 +7,7 @@ import { answerDiagnostic, startDiagnostic } from "./diagnostic.ts";
 import { mistakeBook } from "./mistakes.ts";
 import { studyPlan } from "./plan.ts";
 import { createPracticeSession } from "./planner.ts";
+import { siblingItem } from "./sibling.ts";
 
 const student = (actor: Actor) => ({ id: actor.id, schoolId: actor.schoolId! });
 
@@ -47,6 +48,13 @@ export const practiceRoutes: ModuleRoutes = (app, { db, llm, now }) => {
     const actor = requireActor(request, "student");
     const input = NextSessionInput.parse(request.body ?? {});
     return db.tenant(tenantOf(actor), (tx) => createPracticeSession(tx, student(actor), input, now()));
+  });
+
+  app.post("/api/practice/sibling", async (request) => {
+    const actor = requireActor(request, "student");
+    const input = SiblingRequest.parse(request.body);
+    const item = await db.tenant(tenantOf(actor), (tx) => siblingItem(tx, actor, input, now()));
+    return { item };
   });
 
   app.post("/api/practice/sync", async (request) => {

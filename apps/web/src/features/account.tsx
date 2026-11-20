@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { FamilyChild } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
 import { PageHead, saveFile } from "../ui/kit.tsx";
+import { TextSizeSetting } from "../ui/a11y.tsx";
 import { useToast } from "../ui/toast.tsx";
 import { guestDate, logout, PasswordForm, useMe } from "./session.tsx";
 
@@ -87,6 +88,11 @@ export function AccountPage() {
     <div className="page" style={{ maxWidth: 640 }}>
       {me.role === "guardian" ? <Link to="/">Voltar ao portal</Link> : null}
       <PageHead kicker={me.name} title="Minha conta" />
+      <section className="card" aria-labelledby="acess-title">
+        <h2 id="acess-title">Acessibilidade</h2>
+        <p className="sub">Aumente o texto de todas as telas neste aparelho. Nas questões, nas aulas e nos cartões, o botão «Ouvir» lê o texto em voz alta.</p>
+        <TextSizeSetting />
+      </section>
       <section className="card" aria-labelledby="senha-title">
         <h2 id="senha-title">Trocar senha</h2>
         <PasswordForm onDone={() => toast("Senha alterada.")} />

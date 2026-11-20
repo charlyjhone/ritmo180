@@ -1,7 +1,7 @@
 // Painel do aluno e resumo da família. Tudo vem das tentativas, sem número fixo.
 import { AREAS, type FamilyChild, type StudentDashboard } from "@ritmo/contracts";
 import {
-  bestStreak, DEFAULT_SECONDS_PER_QUESTION, diagnoseTime, nextEnem, PHASE_LABEL, ritmoSummary, STAGES, trainingStreak, weeklyRitmo,
+  bestStreak, DEFAULT_SECONDS_PER_QUESTION, diagnoseTime, finalStretchTopics, isFinalStretch, nextEnem, PHASE_LABEL, ritmoSummary, STAGES, trainingStreak, weeklyRitmo,
   type Phase,
 } from "@ritmo/engine";
 import type { Tx } from "../../platform/db.ts";
@@ -9,6 +9,19 @@ import { HttpError } from "../../platform/http.ts";
 import { loadItems } from "../catalog/index.ts";
 import { computeSnapshot, extraMinutesOf, irtFor, loadAttempts, pendingDiagnostics, previewPlan, reviewCounts, scoreViewOf, type StoredAttempt } from "../practice/index.ts";
 import { readingHistory } from "../reading/index.ts";
+import { classChallenge, dueCardCount, missSummary, studentAssignments, studentClassId } from "../study/index.ts";
+
+const STRETCH_TOPICS = 5;
+
+/** Na reta final: os assuntos já vistos, ainda fracos, que mais caem. */
+async function finalStretchOf(tx: Tx, mastery: Record<string, { mastery: number }>, now: number): Promise<StudentDashboard["finalStretch"]> {
+  const enem = nextEnem(now);
+  if (!enem || !isFinalStretch(enem)) return null;
+  const topics = Object.keys(mastery);
+  const rows = topics.length ? await tx.query(`SELECT discipline, topic, max(weight) AS weight FROM topics WHERE topic = ANY($1::text[]) GROUP BY discipline, topic`, [topics]) : [];
+  const picked = finalStretchTopics(rows.map((r) => ({ discipline: r.discipline as string, topic: r.topic as string, weight: Number(r.weight), mastery: mastery[r.topic]!.mastery })), STRETCH_TOPICS);
+  return { daysLeft: enem.daysLeft, topics: picked.map((t) => ({ discipline: t.discipline, topic: t.topic, mastery: Math.round(t.mastery! * 100) })) };
+}
 
 const WEEKS = 6;
 const DEFAULT_WEEKLY_QUESTIONS = 35;
@@ -69,7 +82,17 @@ export async function studentDashboard(tx: Tx, student: { id: string; name: stri
     enem: nextEnem(now),
     goal: await weeklyGoal(tx, student.id, timestamps, now),
     reviews: await reviewCounts(tx, student.id, now),
+    missAdvice: await missSummary(tx, student.id, now),
+    cards: { due: await dueCardCount(tx, student.id, now) },
+    assignments: await studentAssignments(tx, student.id, now),
+    challenge: await challengeOf(tx, student.id, now),
+    finalStretch: await finalStretchOf(tx, snapshot.mastery, now),
   };
+}
+
+async function challengeOf(tx: Tx, studentId: string, now: number) {
+  const classId = await studentClassId(tx, studentId);
+  return classId ? classChallenge(tx, classId, now) : null;
 }
 
 /** A semana começa na segunda-feira, no horário de Brasília. */

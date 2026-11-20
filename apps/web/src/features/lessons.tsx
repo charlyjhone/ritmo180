@@ -1,14 +1,72 @@
 // Aulas rápidas: o índice por disciplina e a aula de cada assunto, com as bases que ele usa.
+import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { AREA_NAMES, type LessonIndex, type LessonView } from "@ritmo/contracts";
-import { api } from "../lib/api.ts";
+import { AREA_NAMES, type LessonBundle, type LessonIndex, type LessonView } from "@ritmo/contracts";
+import { api, ApiError } from "../lib/api.ts";
+import { loadLessons, saveLessons } from "../lib/offline.ts";
+import { ReadAloud } from "../ui/a11y.tsx";
 import { Async, Bar, Html, PageHead, Pill } from "../ui/kit.tsx";
 import { trainingLink } from "./focus-picker.tsx";
 import { useMe } from "./session.tsx";
 
 /** Treino curto depois da aula: cerca de 3 questões. */
 const CHECK_MINUTES = 9;
+
+/** Sem internet, a aula sai da cópia baixada no aparelho (sem pré-requisitos nem domínio do aluno). */
+async function offlineLesson(discipline: string, topic: string): Promise<LessonView | null> {
+  const saved = await loadLessons().catch(() => undefined);
+  const lesson = saved?.lessons.find((l) => l.discipline === discipline && l.topic === topic);
+  if (!lesson) return null;
+  const { title, explanationHtml, exampleHtml, pitfallsHtml } = lesson;
+  return { area: "CN", discipline, topic, lesson: { title, explanationHtml, exampleHtml, pitfallsHtml }, questions: 0, mastery: null, prerequisites: [], calcBottleneck: false };
+}
+
+async function fetchLesson(discipline: string, topic: string): Promise<LessonView & { offline?: boolean }> {
+  try {
+    return await api.get<LessonView>(`/api/lessons/topic?${new URLSearchParams({ disciplina: discipline, assunto: topic })}`);
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    const saved = await offlineLesson(discipline, topic);
+    if (!saved) throw error;
+    return { ...saved, offline: true };
+  }
+}
+
+function DownloadLessons() {
+  const [saved, setSaved] = useState<number | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(false);
+  useEffect(() => {
+    void loadLessons().then((b) => setSaved(b ? b.savedAt : null)).catch(() => {});
+  }, []);
+  async function download() {
+    setBusy(true);
+    setError(false);
+    try {
+      const bundle = await api.get<LessonBundle>("/api/study/lessons-bundle");
+      const savedAt = Date.now();
+      await saveLessons({ ...bundle, savedAt });
+      setSaved(savedAt);
+    } catch {
+      setError(true);
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <section className="card">
+      <div className="card-head">
+        <h2>Estudar sem internet</h2>
+        <button className="btn soft" type="button" disabled={busy} onClick={() => void download()}>{busy ? "Baixando…" : saved ? "Atualizar aulas no aparelho" : "Baixar todas as aulas"}</button>
+      </div>
+      <p className="sub">
+        {saved ? `Aulas guardadas neste aparelho em ${new Date(saved).toLocaleDateString("pt-BR")}. Elas abrem mesmo sem conexão.` : "Baixe as aulas uma vez, com Wi-Fi, e leia depois mesmo sem conexão. Ocupa pouco espaço e não guarda dados seus."}
+      </p>
+      {error ? <p className="sub" role="alert">Não foi possível baixar agora. Tente de novo com internet.</p> : null}
+    </section>
+  );
+}
 
 export function lessonLink(subject: { discipline: string; topic: string }): string {
   return `/aula?${new URLSearchParams({ disciplina: subject.discipline, assunto: subject.topic })}`;
@@ -56,7 +114,7 @@ export function LessonPage() {
   const student = useMe().role === "student";
   const query = useQuery({
     queryKey: ["lesson", discipline, topic],
-    queryFn: () => api.get<LessonView>(`/api/lessons/topic?${new URLSearchParams({ disciplina: discipline, assunto: topic })}`),
+    queryFn: () => fetchLesson(discipline, topic),
     enabled: Boolean(discipline && topic),
   });
   return (
@@ -69,6 +127,7 @@ export function LessonPage() {
       <Async query={query}>
         {(view) => (
           <>
+            {"offline" in view && view.offline ? <div className="notice warn" role="status">Sem internet: esta é a cópia da aula guardada no aparelho.</div> : null}
             {student && view.mastery !== null ? (
               <div className="notice">
                 Seu domínio em {view.topic}: <b>{view.mastery}%</b>. Depois da aula, pratique 3 questões para fixar e ver o domínio subir.
@@ -78,6 +137,10 @@ export function LessonPage() {
             <Prerequisites view={view} student={student} />
             {view.lesson ? (
               <>
+                <div className="btn-row no-print">
+                  <ReadAloud html={`${view.lesson.title}. ${view.lesson.explanationHtml} Exemplo resolvido. ${view.lesson.exampleHtml} Pegadinhas do ENEM. ${view.lesson.pitfallsHtml}`} label="Ouvir a aula" />
+                  {student ? <Link className="btn soft slim" to={`/cartoes?${new URLSearchParams({ disciplina: discipline, assunto: topic })}`}>Cartões deste assunto</Link> : null}
+                </div>
                 <section className="card lesson" aria-labelledby="exp-title">
                   <h2 id="exp-title">O essencial</h2>
                   <Html className="q-html lesson-body" html={view.lesson.explanationHtml} />
@@ -115,6 +178,7 @@ export function LessonsIndexPage() {
     <div className="page">
       <PageHead kicker="Aulas rápidas" title="Entenda o conteúdo antes de treinar" />
       <p className="sub">Cada aula leva de 5 a 8 minutos: o essencial do assunto, um exemplo resolvido e as pegadinhas do ENEM. Os assuntos estão em ordem de peso na prova.</p>
+      <DownloadLessons />
       <Async query={query}>
         {(index) => (
           <div className="stack">

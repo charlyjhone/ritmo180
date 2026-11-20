@@ -1,5 +1,6 @@
 // Plano até o ENEM: contagem regressiva e um foco por dia, a partir das lacunas do aluno.
 import type { Area } from "./types.ts";
+import { FINAL_STRETCH_DAYS, finalStretchTopics } from "./study.ts";
 
 const DAY_MS = 86_400_000;
 const BRASILIA_MS = 3 * 3_600_000;
@@ -70,10 +71,16 @@ function focusQueue(priorities: readonly PlanPriority[]): PlanPriority[] {
   return queue;
 }
 
+const MIN_STRETCH_TOPICS = 3;
+
+export const isFinalStretch = (enem: EnemCountdown | null) => enem !== null && enem.daysLeft <= FINAL_STRETCH_DAYS;
+
 export function planUntilEnem(now: number, priorities: readonly PlanPriority[], maxDays = 21): PlanDay[] {
   const enem = nextEnem(now);
   if (!enem) return [];
-  const queue = focusQueue(priorities);
+  // Na reta final o plano deixa de abrir assunto novo: só volta ao que já foi visto, ainda erra e mais cai.
+  const stretch = isFinalStretch(enem) ? finalStretchTopics(priorities) : [];
+  const queue = focusQueue(stretch.length >= MIN_STRETCH_TOPICS ? stretch : priorities);
   const last = enem.days.at(-1)!;
   const days: PlanDay[] = [];
   let trained = 0;
