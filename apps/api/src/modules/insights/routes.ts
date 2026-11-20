@@ -33,7 +33,11 @@ export const insightsRoutes: ModuleRoutes = (app, { db, now }) => {
   app.post("/api/teacher/assignments", async (request) => {
     const actor = requireActor(request, ...STAFF);
     const input = CreateAssignment.parse(request.body);
-    const id = await db.tenant(tenantOf(actor), (tx) => createAssignment(tx, { ...input, schoolId: actor.schoolId!, teacherId: actor.id }));
+    const id = await db.tenant(tenantOf(actor), async (tx) => {
+      if (!(await teacherClasses(tx, actor)).some((c) => c.id === input.classId)) throw new HttpError(403, "forbidden", "Esta turma não está atribuída a você.");
+      if (input.studentId && !(await tx.query(`SELECT 1 FROM class_students WHERE class_id = $1 AND student_id = $2`, [input.classId, input.studentId])).length) throw new HttpError(400, "bad_student", "Este aluno não está na turma.");
+      return createAssignment(tx, { ...input, schoolId: actor.schoolId!, teacherId: actor.id });
+    });
     return { id };
   });
 

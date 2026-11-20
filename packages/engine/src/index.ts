@@ -14,3 +14,4 @@ export * from "./calibration.ts";
 export * from "./simulation.ts";
 export * from "./lab.ts";
 export * from "./review.ts";
+export * from "./study.ts";

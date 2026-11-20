@@ -1,5 +1,5 @@
 // Treino sem internet: o pacote fica no aparelho e as respostas aguardam numa fila até voltarem a ser enviadas.
-import type { AttemptInput, PracticeSessionPack, SyncResult } from "@ritmo/contracts";
+import type { AttemptInput, CardReview, LessonBundle, MissReasonInput, PracticeSessionPack, SyncResult } from "@ritmo/contracts";
 import { api } from "./api.ts";
 
 const DB = "ritmo-offline";
@@ -61,6 +61,42 @@ export async function queueAttempt(attempt: AttemptInput): Promise<void> {
   void flushQueue();
 }
 
+// Motivos de erro e respostas aos cartões também esperam a internet voltar. Ficam no aparelho só até serem enviados.
+const MISS_KEY = "miss-outbox";
+const CARD_KEY = "card-outbox";
+const LESSONS_KEY = "lessons";
+
+async function append<T>(key: string, entry: T): Promise<void> {
+  const list = (await store<T[] | undefined>(STATE, "readonly", (s) => s.get(key))) ?? [];
+  await store(STATE, "readwrite", (s) => s.put([...list, entry], key));
+}
+
+export async function queueMissReason(input: MissReasonInput): Promise<void> {
+  await append(MISS_KEY, input);
+  void flushQueue();
+}
+
+export async function queueCardReview(review: CardReview): Promise<void> {
+  await append(CARD_KEY, review);
+}
+
+/** Envia o que está guardado em `key` e tira da fila só o que foi aceito. */
+async function flushList<T>(key: string, send: (list: T[]) => Promise<unknown>): Promise<void> {
+  const list = (await store<T[] | undefined>(STATE, "readonly", (s) => s.get(key))) ?? [];
+  if (!list.length) return;
+  await send(list);
+  const now = (await store<T[] | undefined>(STATE, "readonly", (s) => s.get(key))) ?? [];
+  await store(STATE, "readwrite", (s) => s.put(now.slice(list.length), key));
+}
+
+export const flushCardReviews = () => flushList<CardReview>(CARD_KEY, async (reviews) => {
+  for (let i = 0; i < reviews.length; i += 300) await api.post("/api/study/cards", { reviews: reviews.slice(i, i + 300) });
+});
+
+/** Aulas guardadas para ler sem internet. Não têm dado de aluno. */
+export const saveLessons = (bundle: LessonBundle & { savedAt: number }) => store(STATE, "readwrite", (s) => s.put(bundle, LESSONS_KEY));
+export const loadLessons = () => store<(LessonBundle & { savedAt: number }) | undefined>(STATE, "readonly", (s) => s.get(LESSONS_KEY));
+
 let flushing = false;
 
 /** Envia a fila em lotes. O servidor ignora repetições, então reenviar é seguro. */
@@ -68,6 +104,7 @@ export async function flushQueue(): Promise<void> {
   if (flushing || !navigator.onLine) return;
   flushing = true;
   try {
+    // A tentativa vai antes do motivo do erro, que se refere a ela.
     const attempts = await store<AttemptInput[]>(OUTBOX, "readonly", (s) => s.getAll());
     for (let i = 0; i < attempts.length; i += 100) {
       const batch = attempts.slice(i, i + 100);
@@ -77,6 +114,10 @@ export async function flushQueue(): Promise<void> {
       }
       notify();
     }
+    await flushList<MissReasonInput>(MISS_KEY, async (list) => {
+      for (const input of list) await api.post("/api/study/miss-reason", input);
+    });
+    await flushCardReviews();
   } catch {
     // Continua na fila para a próxima tentativa.
   } finally {

@@ -20,6 +20,8 @@ import { FamilyHome } from "./features/family.tsx";
 import { NetworkHome } from "./features/network.tsx";
 import { OnboardingPage } from "./features/onboarding.tsx";
 import { MistakesPage } from "./features/mistakes.tsx";
+import { CardsPage } from "./features/cards.tsx";
+import { applyTextSize, loadTextSize } from "./ui/a11y.tsx";
 import { LessonPage, LessonsIndexPage } from "./features/lessons.tsx";
 import { PeoplePage } from "./features/people.tsx";
 import { PlanPage } from "./features/plan.tsx";
@@ -115,6 +117,7 @@ function Router() {
             <Route path="treino" element={<PracticePage />} />
             <Route path="plano" element={<PlanPage />} />
             <Route path="erros" element={<MistakesPage />} />
+            <Route path="cartoes" element={<CardsPage />} />
             <Route path="leitura" element={<ReadingPage />} />
             <Route path="simulado" element={<ExamList />} />
             <Route path="simulado/:id" element={<SittingPage />} />
@@ -147,6 +150,7 @@ function Router() {
 }
 
 startSync();
+applyTextSize(loadTextSize());
 if (import.meta.env.PROD && "serviceWorker" in navigator) void navigator.serviceWorker.register("/sw.js");
 
 createRoot(document.getElementById("root")!).render(

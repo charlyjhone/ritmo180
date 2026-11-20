@@ -7,6 +7,7 @@ import { STAGES } from "@ritmo/engine";
 import { api } from "../lib/api.ts";
 import { trainingLink } from "./focus-picker.tsx";
 import { lessonLink } from "./lessons.tsx";
+import { cardsLink } from "./cards.tsx";
 import { Async, Bar, clock, clockOrDash, LineChart, Metric, Metrics, PageHead, ScoreMetric, points, TimeStrip } from "../ui/kit.tsx";
 
 const GOAL_CHOICES = [20, 35, 50, 70, 100, 150];
@@ -42,6 +43,64 @@ function WeeklyGoal({ goal }: { goal: StudentDashboard["goal"] }) {
   );
 }
 
+const dueLabel = (date: string) => new Date(`${date}T12:00:00`).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+
+function Assignments({ list }: { list: StudentDashboard["assignments"] }) {
+  if (!list.length) return null;
+  return (
+    <section className="card" aria-labelledby="tarefas-title">
+      <h2 id="tarefas-title">Tarefas do professor</h2>
+      <div className="stack">
+        {list.map((a) => {
+          const finished = a.done >= a.questions;
+          return (
+            <div className="row-box" key={a.id}>
+              <div className="grow">
+                <div className="row-title">{a.title}</div>
+                <div className="row-sub">{a.teacher} · {a.done} de {a.questions} questões de {a.topic}{a.dueOn ? ` · até ${dueLabel(a.dueOn)}` : ""}</div>
+                <div style={{ marginTop: 6 }}><Bar pct={(a.done / a.questions) * 100} tone={finished ? "ok" : ""} size="h6" /></div>
+              </div>
+              {finished ? <span className="pill good">Feita</span> : a.discipline ? <Link className="btn soft slim" to={trainingLink({ discipline: a.discipline, topic: a.topic })}>Fazer</Link> : null}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function Challenge({ c }: { c: NonNullable<StudentDashboard["challenge"]> }) {
+  const pct = Math.min(100, (c.done / c.target) * 100);
+  return (
+    <section className="card" aria-labelledby="desafio-title">
+      <h2 id="desafio-title">Desafio da turma {c.className}: {c.done} de {c.target} questões nesta semana</h2>
+      <Bar pct={pct} tone={pct >= 100 ? "ok" : ""} />
+      <p className="sub">{c.done >= c.target ? "Desafio cumprido! A turma inteira fez a parte dela." : `Cada questão sua conta para a turma. ${c.steady} de ${c.students} colegas já treinaram em ${c.steadyDays} dias ou mais nesta semana.`}</p>
+    </section>
+  );
+}
+
+function FinalStretch({ f }: { f: NonNullable<StudentDashboard["finalStretch"]> }) {
+  return (
+    <section className="card" aria-labelledby="reta-title">
+      <h2 id="reta-title">Reta final: {f.daysLeft === 1 ? "falta 1 dia" : `faltam ${f.daysLeft} dias`}</h2>
+      <p className="sub">Agora não é hora de assunto novo. Revise o que você já estudou, ainda erra e mais cai na prova. Na véspera, releia as pegadinhas destas aulas.</p>
+      {f.topics.length ? (
+        <div className="stack">
+          {f.topics.map((t) => (
+            <div className="row-box" key={`${t.discipline}${t.topic}`}>
+              <div className="grow"><div className="row-title">{t.topic}</div><div className="row-sub">{t.discipline} · {t.mastery}% de domínio</div></div>
+              <Link className="btn soft slim" to={lessonLink(t)}>Aula</Link>
+              <Link className="btn soft slim" to={cardsLink(t)}>Cartões</Link>
+              <Link className="btn soft slim" to={trainingLink(t)}>Treinar</Link>
+            </div>
+          ))}
+        </div>
+      ) : <p className="sub">Seus assuntos já vistos estão acima de 70% de domínio. Mantenha o caderno de erros e os cartões em dia.</p>}
+    </section>
+  );
+}
+
 function Dashboard({ d }: { d: StudentDashboard }) {
   const first = d.student.name.split(" ")[0];
   const { time, ritmo } = d;
@@ -72,7 +131,21 @@ function Dashboard({ d }: { d: StudentDashboard }) {
           <Link to={trainingLink({ mistakes: true })}>Rever agora</Link>
         </div>
       ) : null}
+      {d.cards.due > 0 ? (
+        <div className="notice">
+          {d.cards.due === 1 ? "1 cartão de memorização para rever hoje" : `${d.cards.due} cartões de memorização para rever hoje`}. <Link to={cardsLink()}>Rever cartões</Link>
+        </div>
+      ) : null}
+      {d.missAdvice ? (
+        <div className="notice">
+          <b>Por que você erra:</b> {d.missAdvice.advice} ({d.missAdvice.share}% dos {d.missAdvice.total} erros que você explicou.){" "}
+          <Link to={d.missAdvice.action.to}>{d.missAdvice.action.label}</Link>
+        </div>
+      ) : null}
+      {d.finalStretch ? <FinalStretch f={d.finalStretch} /> : null}
       <WeeklyGoal goal={d.goal} />
+      <Assignments list={d.assignments} />
+      {d.challenge ? <Challenge c={d.challenge} /> : null}
       <Metrics label="Indicadores principais">
         <Metric xl label="Índice Ritmo" value={ritmo.index === null ? "—" : `${ritmo.index}%`} note={ritmo.weekDelta === null ? `${ritmo.samples} questões válidas` : `${points(ritmo.weekDelta)} nesta semana`} tone={ritmo.weekDelta === null ? "" : ritmo.weekDelta >= 0 ? "up" : "down"} hint="Questões certas dentro do tempo-alvo" />
         <Metric xl label="Tempo médio por questão" value={clockOrDash(time.avgSeconds)} valueTone={time.avgSeconds !== null && time.avgSeconds > time.goalSeconds ? "amber" : "ok"} note={`Meta: ${clock(time.goalSeconds)}`} extra={time.avgSeconds !== null ? <div style={{ marginTop: 12 }}><Bar pct={(time.goalSeconds / time.avgSeconds) * 100} tone={time.avgSeconds > time.goalSeconds ? "amber" : ""} /></div> : null} />

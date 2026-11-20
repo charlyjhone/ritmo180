@@ -11,15 +11,24 @@ const DAY_MS = 86_400_000;
 const ASSIGNMENT_DAYS = 7;
 const ASSIGNMENT_BOOST = 1;
 
+/**
+ * Assuntos que sobem na fila: tarefas do professor ainda abertas e assuntos em que o aluno disse
+ * mais de uma vez que errou por não saber o conteúdo.
+ */
 async function assignedTopics(tx: Tx, studentId: string, now: number): Promise<Set<string>> {
   const rows = await tx.query(
     `SELECT DISTINCT a.topic FROM assignments a
      LEFT JOIN class_students cs ON cs.class_id = a.class_id AND cs.student_id = $1
-     WHERE a.created_at >= $2 AND (a.student_id = $1 OR (a.student_id IS NULL AND cs.student_id IS NOT NULL))`,
-    [studentId, new Date(now - ASSIGNMENT_DAYS * DAY_MS)],
+     WHERE (a.student_id = $1 OR (a.student_id IS NULL AND cs.student_id IS NOT NULL))
+       AND CASE WHEN a.due_on IS NULL THEN a.created_at >= $2 ELSE a.due_on >= ($3::timestamptz - interval '3 hours')::date END
+     UNION
+     SELECT topic FROM miss_reasons WHERE student_id = $1 AND reason = 'content' AND at >= $4 GROUP BY topic HAVING count(*) >= $5`,
+    [studentId, new Date(now - ASSIGNMENT_DAYS * DAY_MS), new Date(now), new Date(now - CONTENT_MISS_DAYS * DAY_MS), CONTENT_MISSES_TO_BOOST],
   );
   return new Set(rows.map((r) => r.topic));
 }
+const CONTENT_MISS_DAYS = 21;
+const CONTENT_MISSES_TO_BOOST = 2;
 
 interface Focus {
   discipline?: string;
