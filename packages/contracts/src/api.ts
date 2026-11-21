@@ -147,6 +147,26 @@ export const ITEM_PROBLEM_LABELS: Record<ItemProblem, string> = { answer: "O gab
 export const ItemReportInput = z.object({ itemId: z.string().uuid(), problem: z.enum(ITEM_PROBLEMS) });
 export type ItemReportInput = z.infer<typeof ItemReportInput>;
 
+/** Aluno pede (ou desiste de pedir) para ver a questão resolvida em sala. */
+export const ClassRequestInput = z.object({ itemId: z.string().uuid(), wanted: z.boolean() });
+export type ClassRequestInput = z.infer<typeof ClassRequestInput>;
+export const ClassRequestDone = z.object({ classId: z.string().uuid(), itemId: z.string().uuid() });
+
+/** Questão que alunos da turma pediram para ver em sala. Só a contagem: o professor não vê quem pediu. */
+export interface ClassRequestView {
+  itemId: string;
+  discipline: string;
+  topic: string;
+  contextHtml: string;
+  stemHtml: string;
+  alternatives: { letter: Letter; html: string }[];
+  answer: Letter;
+  solutionHtml: string;
+  students: number;
+  /** Letra errada mais marcada pela turma nesta questão, quando houver. */
+  commonWrong: { letter: Letter; students: number } | null;
+}
+
 /** Pede uma questão parecida com a que o aluno acabou de errar. */
 export const SiblingRequest = z.object({ sessionId: z.string().uuid(), itemId: z.string().uuid(), exclude: z.array(z.string().uuid()).max(200).default([]) });
 
@@ -422,6 +442,8 @@ export interface TeacherDashboard {
   assignments: { id: string; title: string; topic: string; dueOn: string | null; questions: number; completed: number; total: number; studentName: string | null }[];
   challenge: ClassChallenge;
   flags: { id: string; itemId: string; label: string; area: string; why: string }[];
+  /** Questões que a turma pediu para ver resolvidas em sala, das mais pedidas para as menos. */
+  requests: ClassRequestView[];
   assignableTopics: { topic: string; discipline: string; items: number }[];
 }
 

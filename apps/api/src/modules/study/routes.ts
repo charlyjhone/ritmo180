@@ -1,7 +1,7 @@
 // Rotas das ferramentas de estudo: cartões, motivo do erro, meta de curso, calendário e aulas offline.
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { CardReviewInput, CourseGoalInput, ItemReportInput, MilestoneInput, MissReasonInput, type LessonBundle } from "@ritmo/contracts";
+import { CardReviewInput, ClassRequestInput, CourseGoalInput, ItemReportInput, MilestoneInput, MissReasonInput, type LessonBundle } from "@ritmo/contracts";
 import { HttpError, type ModuleRoutes } from "../../platform/http.ts";
 import { requireActor, tenantOf } from "../identity/index.ts";
 import { computeSnapshot, irtFor, loadAttempts } from "../practice/index.ts";
@@ -9,6 +9,7 @@ import { allMilestones, upcomingMilestones } from "./calendar.ts";
 import { cardDeck, recordCardReviews } from "./cards.ts";
 import { clearCourseGoal, courseGoal, saveCourseGoal } from "./goals.ts";
 import { recordMissReason } from "./misses.ts";
+import { setClassRequest } from "./class-requests.ts";
 import { reportItem } from "./reports.ts";
 
 const DeckQuery = z.object({ disciplina: z.string().min(1).max(60).optional(), assunto: z.string().min(1).max(160).optional() });
@@ -26,6 +27,13 @@ export const studyRoutes: ModuleRoutes = (app, { db, now }) => {
     if (actor.guestUntil) throw new HttpError(403, "guest", "Visitantes não enviam relatos. Peça uma conta à sua escola.");
     const input = ItemReportInput.parse(request.body);
     return db.tenant(tenantOf(actor), (tx) => reportItem(tx, { id: actor.id, schoolId: actor.schoolId! }, input, now()));
+  });
+
+  app.post("/api/study/class-request", async (request) => {
+    const actor = requireActor(request, "student");
+    if (actor.guestUntil) throw new HttpError(403, "guest", "Visitantes não fazem pedidos ao professor. Peça uma conta à sua escola.");
+    const input = ClassRequestInput.parse(request.body);
+    return db.tenant(tenantOf(actor), (tx) => setClassRequest(tx, { id: actor.id, schoolId: actor.schoolId! }, input, now()));
   });
 
   app.get("/api/study/cards", async (request) => {

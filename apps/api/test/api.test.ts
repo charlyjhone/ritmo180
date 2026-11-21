@@ -627,6 +627,56 @@ describe("ferramentas de estudo", () => {
     expect((await del()).statusCode).toBe(404);
   });
 
+  it("o aluno pede a questão em sala e o professor vê só a contagem, até marcar como corrigida", async () => {
+    const { classId, emails, otherClass } = await db.system(async (tx) => {
+      const rows = await tx.query(
+        `SELECT ct.class_id, u.email FROM class_teachers ct JOIN users t ON t.id = ct.teacher_id
+         JOIN class_students cs ON cs.class_id = ct.class_id JOIN users u ON u.id = cs.student_id
+         WHERE t.email = $1 AND u.email IS NOT NULL ORDER BY ct.class_id, u.email`, [a.teacher]);
+      const first = rows[0]!.class_id as string;
+      const other = (await tx.query(`SELECT c.id FROM classes c WHERE c.school_id = $1 AND c.id NOT IN (SELECT class_id FROM class_teachers ct JOIN users t ON t.id = ct.teacher_id WHERE t.email = $2) LIMIT 1`, [a.schoolId, a.teacher]))[0];
+      return { classId: first, emails: rows.filter((r) => r.class_id === first).map((r) => r.email as string).slice(-2), otherClass: other?.id as string | undefined };
+    });
+    expect(emails).toHaveLength(2);
+    const [one, two] = [as(await login(emails[0]!)), as(await login(emails[1]!))];
+    const pack = json<Pack>(await one.post("/api/practice/sessions", { mode: "guided", minutes: 15, discipline: "Física" }));
+    const item = pack.items[0]!;
+    const wrong = (["A", "B", "C", "D", "E"] as const).find((l) => l !== item.key.answer)!;
+    await one.post("/api/practice/sync", { attempts: [{ id: randomUUID(), sessionId: pack.sessionId, itemId: item.id, mode: "guided", choice: wrong, totalMs: 60_000, phases: null, usedHint: false, hiddenMs: 0, position: 0, answeredAt: NOW - 1_000, confidence: "think" }] });
+
+    expect((await one.post("/api/study/class-request", { itemId: randomUUID(), wanted: true })).statusCode).toBe(404);
+    expect(json<{ wanted: boolean }>(await one.post("/api/study/class-request", { itemId: item.id, wanted: true }))).toEqual({ wanted: true });
+    expect((await one.post("/api/study/class-request", { itemId: item.id, wanted: true })).statusCode).toBe(200);
+    expect((await two.post("/api/study/class-request", { itemId: item.id, wanted: true })).statusCode).toBe(200);
+
+    const teacher = as(await login(a.teacher));
+    expect((await teacher.post("/api/study/class-request", { itemId: item.id, wanted: true })).statusCode).toBe(403);
+    let board = json<TeacherDashboard>(await teacher.get(`/api/teacher/classes/${classId}`));
+    const request = board.requests.find((r) => r.itemId === item.id)!;
+    expect(request).toMatchObject({ students: 2, answer: item.key.answer });
+    // A turma da demonstração já tem respostas: o erro mais comum é de quem errou, nunca o gabarito.
+    expect(request.commonWrong!.letter).not.toBe(item.key.answer);
+    expect(request.commonWrong!.students).toBeGreaterThanOrEqual(1);
+    expect(JSON.stringify(request)).not.toContain(emails[0]!);
+
+    // Desistir tira o pedido; pedir de novo volta.
+    await two.post("/api/study/class-request", { itemId: item.id, wanted: false });
+    board = json<TeacherDashboard>(await teacher.get(`/api/teacher/classes/${classId}`));
+    expect(board.requests.find((r) => r.itemId === item.id)!.students).toBe(1);
+
+    if (otherClass) expect((await teacher.post("/api/teacher/requests/done", { classId: otherClass, itemId: item.id })).statusCode).toBe(403);
+    expect(json<{ closed: number }>(await teacher.post("/api/teacher/requests/done", { classId, itemId: item.id })).closed).toBe(1);
+    board = json<TeacherDashboard>(await teacher.get(`/api/teacher/classes/${classId}`));
+    expect(board.requests.find((r) => r.itemId === item.id)).toBeUndefined();
+
+    const copy = json<{ pedidos_de_correcao_em_sala: unknown[] }>(await one.get("/api/privacy/my-data"));
+    expect(copy.pedidos_de_correcao_em_sala).toHaveLength(1);
+
+    // Aluno sem turma recebe explicação, não erro genérico.
+    const loner = await db.system(async (tx) => (await tx.query(`SELECT u.email FROM users u WHERE u.role = 'student' AND u.email IS NOT NULL AND u.school_id = $1 AND NOT EXISTS (SELECT 1 FROM class_students cs WHERE cs.student_id = u.id) LIMIT 1`, [a.schoolId]))[0]);
+    if (loner) expect((await as(await login(loner.email)).post("/api/study/class-request", { itemId: item.id, wanted: true })).statusCode).toBe(409);
+  });
+
   it("a tarefa com prazo chega ao aluno da turma e o professor acompanha quem fez", async () => {
     const { classId, email, studentId, otherClass } = await db.system(async (tx) => {
       const row = (await tx.query(
@@ -883,6 +933,7 @@ describe("visitante", () => {
     expect((await visitor.get("/api/insights/student")).statusCode).toBe(200);
     // Relato de erro em questão é só para contas da escola, para a fila de revisão não virar alvo de abuso.
     expect((await visitor.post("/api/study/item-report", { itemId: pack.items[0]!.id, problem: "answer" })).statusCode).toBe(403);
+    expect((await visitor.post("/api/study/class-request", { itemId: pack.items[0]!.id, wanted: true })).statusCode).toBe(403);
   });
 
   it("não entra na estatística das questões", async () => {

@@ -9,6 +9,7 @@ import { clearPack, flushQueue, loadPack, queueAttempt, queueMissReason, savePac
 import { ReadAloud } from "../ui/a11y.tsx";
 import { Bar, clock, Html, Pill, useInterval } from "../ui/kit.tsx";
 import { FocusPicker } from "./focus-picker.tsx";
+import { AskInClass } from "./class-request.tsx";
 import { useMe } from "./session.tsx";
 import { LabLinks } from "./lab-links.tsx";
 import { lessonLink } from "./lessons.tsx";
@@ -231,6 +232,7 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext, 
               <p className="note"><a href={lessonLink(item)} target="_blank" rel="noopener">Ver a aula rápida de {item.topic}</a> (abre em outra aba; seu treino continua aqui).</p>
             ) : null}
             <LabLinks discipline={item.discipline} topic={item.topic} text={`${item.contextHtml} ${item.stemHtml}`} solutionHtml={item.key.solutionHtml} />
+            {!right || confidence === "guess" ? <AskInClass itemId={item.id} /> : null}
             <div className="btn-row">
               <button ref={focusRef} className="btn" type="button" onClick={onNext}>{position + 1 < total ? "Próxima questão" : "Concluir treino"}</button>
             </div>

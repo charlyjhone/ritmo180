@@ -2,9 +2,11 @@
 import type { ReactNode } from "react";
 import type { ReviewedQuestion } from "@ritmo/contracts";
 import { Html, Pill } from "../ui/kit.tsx";
+import { AskInClass } from "./class-request.tsx";
 import { LabLinks } from "./lab-links.tsx";
 
-export function QuestionReview({ heading, status, q }: { heading: ReactNode; status: string; q: ReviewedQuestion }) {
+/** Com `itemId`, o aluno pode pedir para ver a questão resolvida em sala. */
+export function QuestionReview({ heading, status, q, itemId }: { heading: ReactNode; status: string; q: ReviewedQuestion; itemId?: string }) {
   const right = q.choice === q.answer;
   const trap = q.choice && !right ? q.alternatives.find((a) => a.letter === q.choice)?.trap : undefined;
   return (
@@ -28,6 +30,7 @@ export function QuestionReview({ heading, status, q }: { heading: ReactNode; sta
         {trap ? <div className="feedback"><b>Por que a alternativa {q.choice} engana</b><p>{trap}</p></div> : null}
         {q.solutionHtml ? <><p className="solution"><strong>Resolução:</strong></p><Html className="solution-html" html={q.solutionHtml} /></> : <p className="note">Esta questão ainda não tem resolução comentada.</p>}
         <LabLinks discipline={q.discipline} topic={q.topic} text={`${q.contextHtml} ${q.stemHtml}`} solutionHtml={q.solutionHtml ?? ""} />
+        {itemId ? <AskInClass itemId={itemId} /> : null}
       </div>
     </details>
   );
