@@ -1000,7 +1000,11 @@ describe("visitante", () => {
     const visitor = guest(cookie);
     const { id } = json<any>(await visitor.get("/api/me"));
     await visitor.post("/api/practice/sessions", { minutes: 15 });
-    expect((await visitor.post("/api/auth/logout")).statusCode).toBe(200);
+    // O simulado que o visitante monta tem ele como autor: não pode travar a saída.
+    expect((await visitor.post("/api/exams/mine", { discipline: "Física", questions: 5 })).statusCode).toBe(200);
+    const out = await visitor.post("/api/auth/logout");
+    expect(out.statusCode).toBe(200);
+    expect(String(out.headers["set-cookie"])).toMatch(/ritmo_session=;/);
     expect(await db.system((tx) => tx.query(`SELECT 1 FROM users WHERE id = $1`, [id]))).toEqual([]);
     expect(await db.system((tx) => tx.query(`SELECT 1 FROM practice_sessions WHERE student_id = $1`, [id]))).toEqual([]);
   });

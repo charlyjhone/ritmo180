@@ -95,8 +95,9 @@ export const identityRoutes: ModuleRoutes = (app, { db, now, secureCookies, logi
     const token = request.cookies[COOKIE];
     const guest = request.actor?.guestUntil ? request.actor.id : null;
     // Visitante que sai não volta: a conta e o que ele respondeu são apagados na hora.
-    if (guest) await db.system((tx) => removeGuest(tx, guest));
-    else if (token) await db.system((tx) => tx.query(`DELETE FROM sessions WHERE token_hash = $1`, [sha256(token)]));
+    // Se apagar o visitante falhar, a sessão sai mesmo assim: a conta some quando o prazo acabar.
+    const removed = guest ? await db.system((tx) => removeGuest(tx, guest)).then(() => true, (error) => (request.log.error(error), false)) : false;
+    if (!removed && token) await db.system((tx) => tx.query(`DELETE FROM sessions WHERE token_hash = $1`, [sha256(token)]));
     reply.clearCookie(COOKIE, { path: "/" });
     return { ok: true };
   });
