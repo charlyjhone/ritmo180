@@ -41,6 +41,7 @@ const ExamList = lazy(() => import("./features/exam.tsx").then((m) => ({ default
 const SittingPage = lazy(() => import("./features/exam.tsx").then((m) => ({ default: m.SittingPage })));
 const ResultPage = lazy(() => import("./features/exam.tsx").then((m) => ({ default: m.ResultPage })));
 const ReadingPage = lazy(() => import("./features/reading.tsx").then((m) => ({ default: m.ReadingPage })));
+const CommandReadingPage = lazy(() => import("./features/command-reading.tsx").then((m) => ({ default: m.CommandReadingPage })));
 const PrivacyPolicy = lazy(() => import("./features/privacy-policy.tsx").then((m) => ({ default: m.PrivacyPolicy })));
 const Loading = () => <div className="state" role="status">Carregando…</div>;
 
@@ -71,7 +72,7 @@ function Shell() {
   const location = useLocation();
   const main = useRef<HTMLElement>(null);
   useEffect(() => {
-    const section = navLinks(me.role).find((link) => !link.external && (link.to === "/" ? location.pathname === "/" : location.pathname.startsWith(link.to)));
+    const section = navLinks(me.role).find((link) => !link.external && (link.to === "/" ? location.pathname === "/" : location.pathname === link.to || location.pathname.startsWith(`${link.to}/`)));
     const label = location.pathname === "/conta" ? "Minha conta" : section?.label;
     document.title = label ? `${label} · Ritmo 180` : "Ritmo 180";
     main.current?.focus();
@@ -135,6 +136,7 @@ function Router() {
             <Route path="erros" element={<MistakesPage />} />
             <Route path="cartoes" element={<CardsPage />} />
             <Route path="leitura" element={<ReadingPage />} />
+            <Route path="leitura-de-comando" element={<CommandReadingPage />} />
             <Route path="simulado" element={<ExamList />} />
             <Route path="simulado/:id" element={<SittingPage />} />
             <Route path="simulado/:id/resultado" element={<ResultPage />} />

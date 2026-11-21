@@ -5,14 +5,15 @@ import type { Database } from "../platform/db.ts";
 import { saveCatalogEntry, saveItem, setTopicWeights } from "../modules/catalog/index.ts";
 import { countWords, PREREQUISITES, READING_TEXTS } from "./content.ts";
 
-export async function importBatch(db: Database, batch: IngestBatch, adapter: string, origin: string) {
+/** `review`: as questões vão para a fila de revisão em vez de serem publicadas direto. */
+export async function importBatch(db: Database, batch: IngestBatch, adapter: string, origin: string, review = false) {
   return db.system(async (tx) => {
     const runId = randomUUID();
     await tx.query(`INSERT INTO ingest_runs (id, adapter, origin) VALUES ($1,$2,$3)`, [runId, adapter, origin]);
     const counts = { created: 0, updated: 0, unchanged: 0, rejected: batch.rejected.length, toReview: 0 };
     for (const item of batch.items) {
-      counts[await saveItem(tx, item, runId)]++;
-      if (!item.rightsCleared) counts.toReview++;
+      counts[await saveItem(tx, item, runId, undefined, review)]++;
+      if (!item.rightsCleared || review) counts.toReview++;
     }
     await tx.query(`UPDATE ingest_runs SET created = $2, updated = $3, rejected = $4 WHERE id = $1`, [runId, counts.created, counts.updated, counts.rejected]);
     await setTopicWeights(tx);

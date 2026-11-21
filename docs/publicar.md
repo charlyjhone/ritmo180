@@ -86,6 +86,22 @@ npm run content:aulas:importar
 
 Depois, no painel da rede, leia e aprove cada uma.
 
+## 7. Apostilas autorais para revisão
+
+As apostilas em PDF (Física 30, Simulado de CN e Geografia 40) viram questões com `scripts/importar_apostilas.py`. Gráficos, tabelas e equações entram como recorte do próprio PDF. Só roda no Mac, porque lê o PDF com o PDFKit:
+
+```bash
+python3 -I scripts/importar_apostilas.py ~/Documents/"ENEM NOTA MIL" data/importacao/apostilas-autorais.json
+```
+
+Com `--revisar`, as questões novas vão para a fila de revisão da rede em vez de serem publicadas; uma questão já aprovada ou recusada mantém a decisão se for importada de novo:
+
+```bash
+DATABASE_URL=... npm run ingest -- data/importacao/apostilas-autorais.json --revisar
+```
+
+Depois, no painel da rede, confira enunciado, figura, alternativas e resolução de cada uma antes de aprovar.
+
 ## Antes de receber alunos
 
 - Revisão jurídica da página `/privacidade` e do contrato com a escola.

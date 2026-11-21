@@ -123,7 +123,7 @@ export async function generateItems(db: Database, llm: Llm, request: GenerationR
 export async function reviewQueue(tx: Tx) {
   const rows = await tx.query(
     `SELECT id, discipline, topic, context_html, stem_html, alternatives, answer, solution_html FROM items
-     WHERE status = 'review' AND source = 'ai_generated' ORDER BY created_at LIMIT 50`,
+     WHERE status = 'review' AND source IN ('ai_generated', 'authored') ORDER BY created_at LIMIT 50`,
   );
   return rows.map((r) => ({
     id: r.id, discipline: r.discipline, topic: r.topic, contextHtml: r.context_html, stemHtml: r.stem_html,

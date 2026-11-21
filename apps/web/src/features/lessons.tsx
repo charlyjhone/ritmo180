@@ -8,6 +8,7 @@ import { loadLessons, saveLessons } from "../lib/offline.ts";
 import { ReadAloud } from "../ui/a11y.tsx";
 import { Async, Bar, Html, PageHead, Pill } from "../ui/kit.tsx";
 import { trainingLink } from "./focus-picker.tsx";
+import { LabLinks } from "./lab-links.tsx";
 import { useMe } from "./session.tsx";
 
 /** Treino curto depois da aula: cerca de 3 questões. */
@@ -153,6 +154,7 @@ export function LessonPage() {
                   <h2 id="pit-title">Pegadinhas do ENEM</h2>
                   <Html className="q-html lesson-body" html={view.lesson.pitfallsHtml} />
                 </section>
+                <div className="no-print"><LabLinks discipline={discipline} topic={topic} text={`${view.lesson.explanationHtml} ${view.lesson.exampleHtml}`} /></div>
                 {student ? (
                   <section className="card">
                     <h2>Agora, pratique</h2>

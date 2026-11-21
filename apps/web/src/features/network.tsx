@@ -13,7 +13,9 @@ interface ReviewItem {
   topic: string;
   contextHtml: string;
   stemHtml: string;
+  alternatives: { letter: string; html: string; trap?: string }[];
   answer: string;
+  solutionHtml: string;
 }
 
 function NewSchool() {
@@ -53,7 +55,7 @@ function ReviewQueue() {
   }
   return (
     <section className="card" aria-labelledby="rev-title">
-      <h2 id="rev-title">Questões de IA aguardando revisão</h2>
+      <h2 id="rev-title">Questões aguardando revisão</h2>
       <Async query={query}>
         {(items) => items.length === 0 ? <p className="sub">Nada na fila.</p> : (
           <div className="stack">
@@ -61,6 +63,15 @@ function ReviewQueue() {
               <div className="flag" key={item.id}>
                 <div className="flag-head">{item.discipline}<span>{item.topic} · gabarito {item.answer}</span></div>
                 <Html html={item.contextHtml + item.stemHtml} />
+                <ol className="review-alts">
+                  {item.alternatives.map((a) => (
+                    <li key={a.letter} className={a.letter === item.answer ? "right" : undefined}>
+                      <b>{a.letter})</b> <Html className="inline" html={a.html} />
+                      {a.letter === item.answer ? <span className="sub"> · gabarito</span> : a.trap ? <span className="sub"> · erro previsto: {a.trap.replace(/<[^>]+>/g, "")}</span> : null}
+                    </li>
+                  ))}
+                </ol>
+                {item.solutionHtml ? <><p className="sub"><b>Resolução</b></p><Html html={item.solutionHtml} /></> : null}
                 <div className="btn-row">
                   <button className="btn slim" type="button" onClick={() => void decide(item.id, true)}>Aprovar</button>
                   <button className="btn outline slim" type="button" onClick={() => void decide(item.id, false)}>Recusar</button>
