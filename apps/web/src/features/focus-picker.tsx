@@ -4,6 +4,7 @@ import { AREA_NAMES, AREAS, type Area, type TrainingCatalog } from "@ritmo/contr
 import { api } from "../lib/api.ts";
 
 const AREA_PREFIX = "area:";
+const TOPIC_SEPARATOR = "\u0001";
 
 /** A disciplina pode vir como `area:CN`, quando a escolha é a área inteira. */
 export function parseScope(scope: string): { area?: Area; discipline?: string } {
@@ -34,6 +35,9 @@ export function FocusPicker({ scope, topic, onScope, onTopic, title, anyLabel, a
   const query = useQuery({ queryKey: ["practice-catalog"], queryFn: () => api.get<TrainingCatalog>("/api/practice/catalog") });
   const disciplines = query.data?.disciplines ?? [];
   const chosen = disciplines.find((d) => d.discipline === scope);
+  const { area } = parseScope(scope);
+  // Assuntos oferecidos antes de escolher a disciplina: todos, ou só os da área escolhida.
+  const open = area ? disciplines.filter((d) => d.area === area) : disciplines;
   return (
     <fieldset style={{ border: 0, padding: 0, margin: "20px 0 0", display: "grid", gap: 12 }}>
       <legend style={{ padding: 0 }}>{title}</legend>
@@ -49,10 +53,27 @@ export function FocusPicker({ scope, topic, onScope, onTopic, title, anyLabel, a
         </select>
       </label>
       <label className="field">Assunto
-        <select className="input" value={topic} disabled={!chosen} onChange={(e) => onTopic(e.target.value)}>
-          <option value="">{chosen ? "Todos os assuntos" : "Escolha uma disciplina primeiro"}</option>
-          {chosen?.topics.map((t) => <option key={t.topic} value={t.topic}>{t.topic} ({t.questions})</option>)}
-        </select>
+        {chosen ? (
+          <select className="input" value={topic} onChange={(e) => onTopic(e.target.value)}>
+            <option value="">Todos os assuntos</option>
+            {chosen.topics.map((t) => <option key={t.topic} value={t.topic}>{t.topic} ({t.questions})</option>)}
+          </select>
+        ) : (
+          // Sem disciplina escolhida, o assunto também serve de ponto de partida: escolher um preenche a disciplina.
+          <select className="input" value="" disabled={!open.length} onChange={(e) => {
+            const [discipline, picked] = e.target.value.split(TOPIC_SEPARATOR);
+            if (!discipline || !picked) return;
+            onScope(discipline);
+            onTopic(picked);
+          }}>
+            <option value="">{area ? `Todos os assuntos de ${AREA_NAMES[area]}` : "Todos os assuntos"}</option>
+            {open.map((d) => (
+              <optgroup key={d.discipline} label={d.discipline}>
+                {d.topics.map((t) => <option key={t.topic} value={`${d.discipline}${TOPIC_SEPARATOR}${t.topic}`}>{t.topic} ({t.questions})</option>)}
+              </optgroup>
+            ))}
+          </select>
+        )}
       </label>
     </fieldset>
   );
