@@ -154,12 +154,13 @@ export type SaveOutcome = "created" | "updated" | "unchanged";
 /**
  * Grava uma questão canônica. Parâmetros oficiais já catalogados são preservados
  * quando o texto chega depois, e item de IA nunca é publicado sem revisão.
+ * `review`: a questão nova vai para a fila de revisão; a que já foi aprovada ou recusada mantém a decisão.
  */
-export async function saveItem(tx: Tx, item: CanonicalItem, runId: string, calibrationOverride?: string): Promise<SaveOutcome> {
+export async function saveItem(tx: Tx, item: CanonicalItem, runId: string, calibrationOverride?: string, review = false): Promise<SaveOutcome> {
   const hash = createHash("sha256").update(JSON.stringify(item)).digest("hex");
   const current = (await tx.query(`SELECT id, content_hash, calibration, irt_a FROM items WHERE external_id = $1`, [item.externalId]))[0];
   if (current?.content_hash === hash) return "unchanged";
-  const status = item.rightsCleared && item.source !== "ai_generated" ? "published" : "review";
+  const status = item.rightsCleared && item.source !== "ai_generated" && !review ? "published" : "review";
   const hasOfficial = !item.irt && current?.calibration === "official";
   const calibration = calibrationOverride ?? (hasOfficial ? "official" : item.irt && item.source === "inep_official" ? "official" : "provisional");
   await tx.query(
@@ -172,13 +173,13 @@ export async function saveItem(tx: Tx, item: CanonicalItem, runId: string, calib
        year = coalesce(excluded.year, items.year), application = coalesce(excluded.application, items.application),
        context_html = excluded.context_html, stem_html = excluded.stem_html, alternatives = excluded.alternatives, answer = excluded.answer,
        solution_html = excluded.solution_html, hint = excluded.hint, prerequisites = excluded.prerequisites, word_count = excluded.word_count,
-       status = excluded.status, rights_cleared = excluded.rights_cleared, rights_note = excluded.rights_note, calibration = excluded.calibration,
+       status = CASE WHEN $27 AND items.status IN ('published', 'retired') THEN items.status ELSE excluded.status END, rights_cleared = excluded.rights_cleared, rights_note = excluded.rights_note, calibration = excluded.calibration,
        irt_a = coalesce(excluded.irt_a, items.irt_a), irt_b = coalesce(excluded.irt_b, items.irt_b), irt_c = coalesce(excluded.irt_c, items.irt_c),
        content_hash = excluded.content_hash, ingest_run_id = excluded.ingest_run_id, updated_at = now()`,
     [item.externalId, item.source, item.area, item.discipline, item.topic, item.skill ?? null, item.competency ?? null, item.year ?? null,
      item.application ?? null, item.contextHtml, item.stemHtml, JSON.stringify(item.alternatives), item.answer, item.solutionHtml,
      item.hint ?? null, item.prerequisites, countWords(item), status, item.rightsCleared, item.rightsNote ?? null, calibration,
-     item.irt?.a ?? null, item.irt?.b ?? null, item.irt?.c ?? null, hash, runId],
+     item.irt?.a ?? null, item.irt?.b ?? null, item.irt?.c ?? null, hash, runId, review],
   );
   return current ? "updated" : "created";
 }

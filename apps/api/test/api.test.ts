@@ -393,6 +393,23 @@ describe("conteúdo com IA", () => {
   });
 });
 
+describe("importação para revisão", () => {
+  it("apostila autoral vai para a fila, a aprovação publica e reimportar não desfaz a decisão", async () => {
+    const [example] = parseCanonicalJson(readFileSync(new URL("../../../packages/ingest/examples/exemplo-disciplinas.json", import.meta.url), "utf8")) as Record<string, unknown>[];
+    const authored = { ...example, source: "authored", rightsCleared: true, rightsNote: "Autoria própria", externalId: "apostila-teste-01" };
+    const statusOf = () => db.system(async (tx) => (await tx.query(`SELECT id, status FROM items WHERE external_id = 'apostila-teste-01'`))[0]!);
+    expect((await importBatch(db, normalizeItems([authored]), "json", "apostila", true)).toReview).toBe(1);
+    const item = await statusOf();
+    expect(item.status).toBe("review");
+    const queued = (await db.system(reviewQueue)).find((q) => q.id === item.id)!;
+    expect(queued.alternatives).toHaveLength(5);
+    await db.system((tx) => reviewItem(tx, item.id, true, "Teste"));
+    expect((await statusOf()).status).toBe("published");
+    await importBatch(db, normalizeItems([{ ...authored, solutionHtml: "<p>Resolução revista.</p>" }]), "json", "apostila", true);
+    expect((await statusOf()).status).toBe("published");
+  });
+});
+
 describe("complemento com IA", () => {
   it("sugere para questão oficial sem resolução, recusa figura e só preenche o que está vazio", async () => {
     const [example] = parseCanonicalJson(readFileSync(new URL("../../../packages/ingest/examples/exemplo-disciplinas.json", import.meta.url), "utf8")) as Record<string, unknown>[];
@@ -675,6 +692,26 @@ describe("ferramentas de estudo", () => {
     // Aluno sem turma recebe explicação, não erro genérico.
     const loner = await db.system(async (tx) => (await tx.query(`SELECT u.email FROM users u WHERE u.role = 'student' AND u.email IS NOT NULL AND u.school_id = $1 AND NOT EXISTS (SELECT 1 FROM class_students cs WHERE cs.student_id = u.id) LIMIT 1`, [a.schoolId]))[0]);
     if (loner) expect((await as(await login(loner.email)).post("/api/study/class-request", { itemId: item.id, wanted: true })).statusCode).toBe(409);
+  });
+
+  it("o módulo de leitura de comando abre as questões do guia, na ordem, com a explicação de cada alternativa", async () => {
+    // O banco de teste não tem as questões oficiais: duas publicadas recebem os códigos do módulo L1.
+    const ids = await db.system(async (tx) => {
+      const rows = await tx.query(`SELECT id FROM items WHERE status = 'published' ORDER BY external_id DESC LIMIT 2`);
+      await tx.query(`UPDATE items SET external_id = 'FIS-0145' WHERE id = $1`, [rows[0]!.id]);
+      await tx.query(`UPDATE items SET external_id = 'MAT-1688' WHERE id = $1`, [rows[1]!.id]);
+      return rows.map((r) => r.id as string);
+    });
+    const student = as(await login(a.student));
+    const pack = json<PracticeSessionPack>(await student.post("/api/practice/command/L1"));
+    expect(pack.mode).toBe("guided");
+    expect(pack.items.map((i) => i.id)).toEqual([ids[1], ids[0]]);
+    expect(pack.items[1]!.key.traps.E).toContain("4 pessoas");
+    expect(pack.items[0]!.reason).toContain("Condição pulada");
+    expect(pack.blocks[0]!.kind).toBe("command");
+    expect((await student.post("/api/practice/command/L9")).statusCode).toBe(404);
+    expect((await as(await login(a.teacher)).post("/api/practice/command/L1")).statusCode).toBe(403);
+    expect(json<PracticeSessionPack>(await student.post("/api/practice/command/L3")).notice).toContain("ainda não estão");
   });
 
   it("a tarefa com prazo chega ao aluno da turma e o professor acompanha quem fez", async () => {

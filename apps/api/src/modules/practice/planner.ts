@@ -1,5 +1,5 @@
 // Monta o treino do dia a partir do banco de questões e do histórico do aluno.
-import type { PlannedBlockView, PracticeSessionPack } from "@ritmo/contracts";
+import type { CommandModule, PlannedBlockView, PracticeSessionPack } from "@ritmo/contracts";
 import { diagnoseTime, estimateTheta, planSession, sumPhases, type LearnerSnapshot, type PlannedBlock } from "@ritmo/engine";
 import type { Tx } from "../../platform/db.ts";
 import { loadCandidates, loadItems, toAnswerKey, toPracticeItem } from "../catalog/index.ts";
@@ -86,4 +86,30 @@ export async function createPracticeSession(
   else if (chosen.length === 0) notice = input.discipline ? "Você já praticou todas as questões desta escolha nas últimas semanas. Escolha outro assunto ou volte em alguns dias." : "Você já praticou todas as questões disponíveis nas últimas semanas. Novas questões aparecem aqui assim que entrarem no banco.";
   else if (chosen.length < wanted) notice = `Só há ${chosen.length} ${chosen.length === 1 ? "questão inédita" : "questões inéditas"} para você agora; o restante do tempo fica para quando o banco crescer.`;
   return { sessionId, mode: input.mode, blocks: views, items: chosen, notice };
+}
+
+/**
+ * Leitura de comando: as questões do módulo, na ordem do guia, com a explicação de cada
+ * alternativa errada. Questão que não estiver publicada neste banco fica de fora.
+ */
+export async function createCommandSession(
+  tx: Tx,
+  student: { id: string; schoolId: string },
+  module: CommandModule,
+): Promise<PracticeSessionPack> {
+  const rows = await tx.query(`SELECT id, external_id FROM items WHERE status = 'published' AND external_id = ANY($1)`, [module.items.map((i) => i.externalId)]);
+  const idOf = new Map(rows.map((r) => [r.external_id as string, r.id as string]));
+  const present = module.items.filter((i) => idOf.has(i.externalId));
+  const items = await loadItems(tx, present.map((i) => idOf.get(i.externalId)!));
+  const extra = await extraMinutesOf(tx, student.id);
+  const reason = `Leitura de comando ${module.id} · ${module.errorName}. ${module.check}`;
+  const chosen = present.map((entry) => {
+    const item = items.get(idOf.get(entry.externalId)!)!;
+    const key = toAnswerKey(item);
+    return { ...toPracticeItem(item, extra), key: { ...key, traps: { ...key.traps, ...entry.traps } }, reason };
+  });
+  const view: PlannedBlockView = { kind: "command", title: `Leitura de comando ${module.id}: ${module.title}`, reason: module.problem, minutes: chosen.length * 4, itemIds: chosen.map((i) => i.id) };
+  const sessionId = await createSessionRow(tx, student, "guided", [view]);
+  const notice = chosen.length ? null : "As questões deste módulo ainda não estão no banco da sua escola.";
+  return { sessionId, mode: "guided", blocks: [view], items: chosen, notice };
 }

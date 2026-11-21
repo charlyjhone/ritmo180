@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { CONFIDENCE_LABELS, CONFIDENCES, ITEM_PROBLEM_LABELS, ITEM_PROBLEMS, MISS_REASON_LABELS, MISS_REASONS, type ItemProblem, type Confidence, type HintResponse, type Letter, type MissReason, type PhaseTimes, type PracticeSessionPack } from "@ritmo/contracts";
+import { commandModule, CONFIDENCE_LABELS, CONFIDENCES, ITEM_PROBLEM_LABELS, ITEM_PROBLEMS, MISS_REASON_LABELS, MISS_REASONS, type ItemProblem, type Confidence, type HintResponse, type Letter, type MissReason, type PhaseTimes, type PracticeSessionPack } from "@ritmo/contracts";
 import { strategyReport, type StrategyAnswer, type StrategyReport } from "@ritmo/engine";
 import { api, ApiError } from "../lib/api.ts";
 import { clearPack, flushQueue, loadPack, queueAttempt, queueMissReason, savePack } from "../lib/offline.ts";
@@ -116,7 +116,8 @@ function Question({ item, mode, position, total, sessionId, onAnswered, onNext, 
   const now = marks.length > 4 ? marks[4]! : performance.now();
   const seconds = (now - marks[0]!) / 1000;
   const over = seconds > item.targetSeconds;
-  const lengths = PHASE_ROWS.map((_, i) => Math.max(0, (marks[i + 1] ?? (i === marks.length - 1 ? now : marks[i]!)) - (marks[i] ?? now)));
+  // Fase que ainda não começou vale zero (sem isso o Raio-X mostrava "NaN:NaN").
+  const lengths = PHASE_ROWS.map((_, i) => Math.max(0, (marks[i + 1] ?? (i === marks.length - 1 ? now : marks[i]!)) - (marks[i] ?? now)) || 0);
   const lengthTotal = lengths.reduce((s, v) => s + v, 0) || 1;
   const advance = (next: Stage) => {
     setMarks((m) => [...m, performance.now()]);
@@ -296,6 +297,7 @@ export function PracticePage() {
   const [report, setReport] = useState<StrategyReport | null>(null);
   const [params] = useSearchParams();
   const mistakes = params.get("erros") === "1";
+  const command = commandModule(params.get("leitura") ?? "");
   const minutes = Math.min(90, Math.max(5, Number(params.get("minutos")) || 25));
   const [discipline, setDiscipline] = useState(params.get("disciplina") ?? "");
   const [topic, setTopic] = useState(params.get("assunto") ?? "");
@@ -313,7 +315,9 @@ export function PracticePage() {
     setBusy(true);
     setMessage(null);
     try {
-      const next = await api.post<PracticeSessionPack>("/api/practice/sessions", { mode: strategy ? "exam" : mode, minutes: strategy ? STRATEGY_MINUTES : minutes, discipline: discipline || undefined, topic: topic || undefined, mistakes });
+      const next = command
+        ? await api.post<PracticeSessionPack>(`/api/practice/command/${command.id}`)
+        : await api.post<PracticeSessionPack>("/api/practice/sessions", { mode: strategy ? "exam" : mode, minutes: strategy ? STRATEGY_MINUTES : minutes, discipline: discipline || undefined, topic: topic || undefined, mistakes });
       if (next.items.length === 0) {
         setMessage(next.notice);
         return;
@@ -373,8 +377,8 @@ export function PracticePage() {
     <div className="page">
       <div className="page-head">
         <div>
-          <div className="kicker">Treino do dia</div>
-          <h1 id="headline">Escolha como treinar hoje</h1>
+          <div className="kicker">{command ? "Leitura de comando" : "Treino do dia"}</div>
+          <h1 id="headline">{command ? "Leia o comando antes de responder" : "Escolha como treinar hoje"}</h1>
         </div>
       </div>
       {message ? <div className="notice" role="status">{message}</div> : null}
@@ -387,6 +391,26 @@ export function PracticePage() {
           <div className="btn-row"><button className="btn" type="button" onClick={() => { setPack(resume.pack); setIndex(resume.done); }}>Continuar treino</button></div>
         </section>
       ) : null}
+      {command ? (
+        <section className="card" aria-labelledby="command-title">
+          <div className="kicker">Leitura de comando {command.id} · {command.items.length} questões oficiais do ENEM</div>
+          <h2 id="command-title">{command.title}</h2>
+          <p className="sub">{command.problem}</p>
+          <div className="notice"><b>A regra:</b> {command.rule}</div>
+          <p className="sub"><b>Nestas questões:</b> {command.check} O treino é guiado: primeiro o texto, depois o comando, só então as alternativas.</p>
+          {replacing && resume ? (
+            <div className="notice warn" role="alert" style={{ marginTop: 16 }}>
+              <b>Trocar de treino?</b> Você fez {resume.done} de {resume.pack.items.length} questões do treino em andamento. As respostas dadas ficam salvas, mas as questões restantes saem da fila.
+              <div className="btn-row">
+                <button className="btn" type="button" disabled={busy} onClick={() => void start()}>{busy ? "Montando treino…" : "Trocar de treino"}</button>
+                <button className="btn soft" type="button" onClick={() => { setPack(resume.pack); setIndex(resume.done); }}>Continuar o treino atual</button>
+              </div>
+            </div>
+          ) : (
+            <div className="btn-row"><button className="btn ritmo" type="button" disabled={busy} onClick={() => { if (resume) setReplacing(true); else void start(); }}>{busy ? "Montando treino…" : `Começar o módulo ${command.id}`}</button><Link className="btn soft" to="/leitura-de-comando">Ver o protocolo e os módulos</Link></div>
+          )}
+        </section>
+      ) : (
       <div className="grid-2">
         <section className="card">
           <fieldset style={{ border: 0, padding: 0, margin: 0 }}>
@@ -411,8 +435,10 @@ export function PracticePage() {
         <section className="card">
           <h2>Funciona sem internet</h2>
           <p className="sub">Ao começar, o treino é baixado para este aparelho. Se a conexão cair, continue normalmente: as respostas ficam guardadas e são enviadas quando a internet voltar. O simulado precisa de conexão.</p>
+          <p className="sub">Erra questões sabendo a matéria? Treine a <Link to="/leitura-de-comando">leitura de comando</Link>.</p>
         </section>
       </div>
+      )}
     </div>
   );
 }

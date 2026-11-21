@@ -614,3 +614,10 @@ select.input { width: 100%; }
 .requests .alts-mini { list-style: none; padding: 0; margin: 8px 0; display: grid; gap: 4px; font-size: 14px; }
 .requests .alts-mini li.right { font-weight: 700; }
 .requests .alts-mini .inline, .requests .alts-mini .inline p { display: inline; margin: 0; }
+
+/* Leitura de comando */
+.protocol { margin: 12px 0 0; padding-left: 22px; display: grid; gap: 8px; font-size: 15px; line-height: 1.5; color: var(--body); }
+.command-modules { display: grid; gap: 16px; align-content: start; }
+.review-alts { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 4px; font-size: 14px; }
+.review-alts li.right { font-weight: 600; }
+.review-alts .inline, .review-alts .inline p { display: inline; margin: 0; }

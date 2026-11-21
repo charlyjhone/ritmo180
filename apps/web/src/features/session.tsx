@@ -233,7 +233,7 @@ const LAB: NavLinkItem = { to: LAB_PATH, label: "Laboratório", external: true }
 export const NAV: Record<Role, NavGroup[]> = {
   student: [
     { items: [{ to: "/", label: "Painel" }, { to: "/plano", label: "Plano" }] },
-    { group: "Estudar", items: [{ to: "/aulas", label: "Aulas" }, { to: "/cartoes", label: "Cartões" }, { to: "/leitura", label: "Leitura" }] },
+    { group: "Estudar", items: [{ to: "/aulas", label: "Aulas" }, { to: "/cartoes", label: "Cartões" }, { to: "/leitura", label: "Leitura" }, { to: "/leitura-de-comando", label: "Comando" }] },
     { group: "Praticar", items: [{ to: "/treino", label: "Treino" }, { to: "/simulado", label: "Simulado" }, { to: "/erros", label: "Erros" }] },
     { items: [LAB] },
   ],

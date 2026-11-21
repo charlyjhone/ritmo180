@@ -1,4 +1,4 @@
-import { AREAS, DiagnosticAnswer, GoalInput, HintRequest, NextSessionInput, SiblingRequest, SyncInput, type Area, type HintResponse } from "@ritmo/contracts";
+import { AREAS, CommandModuleId, commandModule, DiagnosticAnswer, GoalInput, HintRequest, NextSessionInput, SiblingRequest, SyncInput, type Area, type HintResponse } from "@ritmo/contracts";
 import { HttpError, type ModuleRoutes } from "../../platform/http.ts";
 import { requireActor, tenantOf, type Actor } from "../identity/index.ts";
 import { loadItems, loadTrainingCatalog } from "../catalog/index.ts";
@@ -6,7 +6,7 @@ import { recordAttempts } from "./attempts.ts";
 import { answerDiagnostic, startDiagnostic } from "./diagnostic.ts";
 import { mistakeBook } from "./mistakes.ts";
 import { studyPlan } from "./plan.ts";
-import { createPracticeSession } from "./planner.ts";
+import { createCommandSession, createPracticeSession } from "./planner.ts";
 import { siblingItem } from "./sibling.ts";
 
 const student = (actor: Actor) => ({ id: actor.id, schoolId: actor.schoolId! });
@@ -48,6 +48,13 @@ export const practiceRoutes: ModuleRoutes = (app, { db, llm, now }) => {
     const actor = requireActor(request, "student");
     const input = NextSessionInput.parse(request.body ?? {});
     return db.tenant(tenantOf(actor), (tx) => createPracticeSession(tx, student(actor), input, now()));
+  });
+
+  app.post<{ Params: { module: string } }>("/api/practice/command/:module", async (request) => {
+    const actor = requireActor(request, "student");
+    const parsed = CommandModuleId.safeParse(request.params.module);
+    if (!parsed.success) throw new HttpError(404, "not_found", "Módulo de leitura de comando não encontrado.");
+    return db.tenant(tenantOf(actor), (tx) => createCommandSession(tx, student(actor), commandModule(parsed.data)!));
   });
 
   app.post("/api/practice/sibling", async (request) => {
