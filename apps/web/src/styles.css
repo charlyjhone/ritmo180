@@ -602,3 +602,15 @@ select.input { width: 100%; }
   *, *::before, *::after { transition: none !important; }
   .btn:hover, .row-box:hover, .skill:hover, .queue-item:hover, .alt:hover, .navlink:hover, .grid-metrics > .card:hover { transform: none !important; }
 }
+
+/* Pedido de correção em sala */
+.ask-class { margin-top: 14px; }
+.ask-class .note { margin: 0; }
+.requests .req { border: 1px solid var(--line-strong); border-radius: 12px; padding: 14px 16px; }
+.requests .req-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; justify-content: space-between; }
+.requests .req-count { font-weight: 700; }
+.requests details { margin-top: 8px; }
+.requests summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+.requests .alts-mini { list-style: none; padding: 0; margin: 8px 0; display: grid; gap: 4px; font-size: 14px; }
+.requests .alts-mini li.right { font-weight: 700; }
+.requests .alts-mini .inline, .requests .alts-mini .inline p { display: inline; margin: 0; }

@@ -1,11 +1,12 @@
 import { randomUUID } from "node:crypto";
-import { CreateAssignment, FamilyMessageInput, NotifyFamily, ResolveFlag, type Role } from "@ritmo/contracts";
+import { ClassRequestDone, CreateAssignment, FamilyMessageInput, NotifyFamily, ResolveFlag, type Role } from "@ritmo/contracts";
 import { HttpError, type ModuleRoutes } from "../../platform/http.ts";
 import { audit, requireActor, tenantOf } from "../identity/index.ts";
 import { createAssignment } from "../practice/index.ts";
 import { networkDashboard } from "./network.ts";
 import { schoolDashboard } from "./school.ts";
 import { assertGuardianOf, familyChildren, studentDashboard } from "./student.ts";
+import { closeClassRequests } from "../study/index.ts";
 import { teacherClasses, teacherDashboard } from "./teacher.ts";
 
 const STAFF: Role[] = ["teacher", "coordinator"];
@@ -50,6 +51,16 @@ export const insightsRoutes: ModuleRoutes = (app, { db, now }) => {
       if (resolution === "retired") await tx.query(`UPDATE items SET status = 'retired', updated_at = now() WHERE id = $1`, [flag.item_id]);
     });
     return { ok: true };
+  });
+
+  app.post("/api/teacher/requests/done", async (request) => {
+    const actor = requireActor(request, ...STAFF);
+    const { classId, itemId } = ClassRequestDone.parse(request.body);
+    const closed = await db.tenant(tenantOf(actor), async (tx) => {
+      if (!(await teacherClasses(tx, actor)).some((c) => c.id === classId)) throw new HttpError(403, "forbidden", "Esta turma não está atribuída a você.");
+      return closeClassRequests(tx, classId, itemId, now());
+    });
+    return { closed };
   });
 
   app.post("/api/teacher/notify-family", async (request) => {

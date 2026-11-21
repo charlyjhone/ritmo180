@@ -37,7 +37,7 @@ export function MistakesPage() {
               </select>
             </label>
             <div className="stack">
-              {book.questions.map((q) => <QuestionReview key={q.itemId} q={q} heading={`${q.discipline} · ${q.topic}`} status={statusOf(q)} />)}
+              {book.questions.map((q) => <QuestionReview key={q.itemId} itemId={q.itemId} q={q} heading={`${q.discipline} · ${q.topic}`} status={statusOf(q)} />)}
             </div>
           </>
         )}

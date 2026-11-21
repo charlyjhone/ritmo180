@@ -5,7 +5,7 @@ import type { Row, Tx } from "../../platform/db.ts";
 import { HttpError } from "../../platform/http.ts";
 import { loadItems } from "../catalog/index.ts";
 import { loadSchoolAttempts, loadSnapshots, scoreViewOf, type Snapshot } from "../practice/index.ts";
-import { classChallenge } from "../study/index.ts";
+import { classChallenge, classRequests } from "../study/index.ts";
 
 const DAY_MS = 86_400_000;
 const WEEK_MS = 7 * DAY_MS;
@@ -192,6 +192,7 @@ export async function teacherDashboard(tx: Tx, actor: { id: string; role: string
     traps,
     alerts: alerts.slice(0, MAX_ALERTS),
     flags: flagRows.map((f) => ({ id: f.id, itemId: f.item_id, label: f.external_id, area: `${f.discipline} · ${f.topic}`, why: f.reason })),
+    requests: await classRequests(tx, ids),
     assignableTopics: assignable,
   };
 }

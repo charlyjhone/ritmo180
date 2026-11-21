@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AREA_NAMES, type ClassRef, type TeacherDashboard } from "@ritmo/contracts";
 import { api, ApiError } from "../lib/api.ts";
 import { ClassExams } from "./class-exams.tsx";
-import { Async, Bar, clock, clockOrDash, Empty, Metric, Metrics, PageHead, Pill, points, saveFile, TimeStrip } from "../ui/kit.tsx";
+import { Async, Bar, clock, clockOrDash, Empty, Html, Metric, Metrics, PageHead, Pill, points, saveFile, TimeStrip } from "../ui/kit.tsx";
 import { useToast } from "../ui/toast.tsx";
 
 const initials = (name: string) => name.split(/\s+/).map((p) => p[0]).join("").slice(0, 2).toUpperCase();
@@ -60,6 +60,44 @@ function NewAssignment({ d, onCreated }: { d: TeacherDashboard; onCreated: () =>
 /** Os primeiros da lista já mostram as prioridades; o resto abre sob pedido para não esticar a página. */
 const ALERTS_SHOWN = 5;
 
+/** Questões que a turma pediu para ver resolvidas: o professor projeta, corrige e marca como feita. */
+function ClassRequests({ d, run }: { d: TeacherDashboard; run: (action: () => Promise<unknown>, done: string) => Promise<void> }) {
+  const total = d.requests.length;
+  return (
+    <section className="card requests" aria-labelledby="req-title">
+      <h2 id="req-title">{total ? `A turma quer ver ${total === 1 ? "1 questão" : `${total} questões`} resolvida${total === 1 ? "" : "s"} em sala` : "Pedidos para a aula"}</h2>
+      <p className="sub">Os alunos tocam em “Quero ver essa em sala” depois de errar. Você vê quantos pediram cada questão, nunca quem.</p>
+      {total === 0 ? <Empty icon="done" title="Nenhum pedido em aberto">Quando alguém pedir, a questão aparece aqui com a resolução, pronta para projetar.</Empty> : (
+        <div className="stack">
+          {d.requests.map((r) => (
+            <div className="req" key={r.itemId}>
+              <div className="req-head">
+                <span className="row-title">{r.discipline} · {r.topic}</span>
+                <span className="req-count">{r.students === 1 ? "1 aluno pediu" : `${r.students} alunos pediram`}</span>
+              </div>
+              {r.commonWrong ? <p className="sub">Erro mais comum na turma: marcar {r.commonWrong.letter} ({r.commonWrong.students === 1 ? "1 aluno" : `${r.commonWrong.students} alunos`}). O gabarito é {r.answer}.</p> : <p className="sub">Gabarito: {r.answer}.</p>}
+              <details>
+                <summary>Ver a questão e a resolução</summary>
+                {r.contextHtml ? <Html className="q-html" html={r.contextHtml} /> : null}
+                <Html className="q-html b" html={r.stemHtml} />
+                <ol className="alts-mini">
+                  {r.alternatives.map((a) => (
+                    <li key={a.letter} className={a.letter === r.answer ? "right" : undefined}><b>{a.letter})</b> <Html className="inline" html={a.html} /></li>
+                  ))}
+                </ol>
+                {r.solutionHtml ? <><p className="solution"><strong>Resolução:</strong></p><Html className="solution-html" html={r.solutionHtml} /></> : <p className="note">Esta questão ainda não tem resolução comentada.</p>}
+              </details>
+              <div className="btn-row">
+                <button className="btn slim" type="button" onClick={() => void run(() => api.post("/api/teacher/requests/done", { classId: d.class.id, itemId: r.itemId }), "Questão marcada como corrigida em sala.")}>Corrigida em sala</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
 function Board({ d, refresh }: { d: TeacherDashboard; refresh: () => void }) {
   const toast = useToast();
   const [allAlerts, setAllAlerts] = useState(false);
@@ -109,6 +147,7 @@ function Board({ d, refresh }: { d: TeacherDashboard; refresh: () => void }) {
         <Metric label={`Nota TRI estimada · ${m.score?.area ?? "—"}`} value={m.score?.score ?? "—"} note={m.score?.score != null ? `Média da turma` : "Faltam respostas de prova"} />
         <Metric label="Alunos ativos na semana" value={`${m.activeWeek} / ${m.total}`} note={m.total > m.activeWeek ? `${m.total - m.activeWeek} sem treinar nesta semana` : "Todos treinaram"} tone={m.total > m.activeWeek ? "down" : "up"} />
       </Metrics>
+      <ClassRequests d={d} run={run} />
       <section className="card" aria-labelledby="heat-title">
         <div className="card-head">
           <h2 className="lg" id="heat-title">Domínio por assunto{weakest ? `: ${weakest} é o mais fraco` : ""}</h2>

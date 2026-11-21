@@ -18,6 +18,7 @@ export async function studentDataCopy(tx: Tx, studentId: string) {
     cartoes: await list(`SELECT card_key, remembered, at FROM card_reviews WHERE student_id = $1 ORDER BY at`),
     mensagens: await list(`SELECT direction, author, body, created_at FROM family_messages WHERE student_id = $1`),
     relatos_de_questao: await list(`SELECT problem, at FROM item_reports WHERE student_id = $1 ORDER BY at`),
+    pedidos_de_correcao_em_sala: await list(`SELECT item_id, at, done_at FROM class_requests WHERE student_id = $1 ORDER BY at`),
   };
 }
 
@@ -28,7 +29,7 @@ export async function anonymizeStudent(tx: Tx, studentId: string, schoolId: stri
      WHERE id = $1 AND school_id = $2 AND role = 'student'`,
     [studentId, schoolId, when],
   );
-  for (const table of ["guardian_contacts", "guardian_links", "accommodations", "family_messages", "class_students", "student_goals", "course_goals", "assignments", "learner_snapshots", "item_reports"]) {
+  for (const table of ["guardian_contacts", "guardian_links", "accommodations", "family_messages", "class_students", "student_goals", "course_goals", "assignments", "learner_snapshots", "item_reports", "class_requests"]) {
     await tx.query(`DELETE FROM ${table} WHERE student_id = $1`, [studentId]);
   }
   await tx.query(`DELETE FROM sessions WHERE user_id = $1`, [studentId]);
