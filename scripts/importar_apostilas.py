@@ -28,7 +28,16 @@ LEGENDA = re.compile(r"^(Fonte|Elaboração|Texto autoral|Figura autoral|Dados h
 def e_legenda(texto):
     """Legenda ou crédito de figura: não pode virar o comando da questão."""
     return bool(LEGENDA.match(texto)) or texto.endswith(("Figura autoral.", "elaboração própria.", "Elaboração própria.")) \
-        or (len(texto) < 140 and re.search(r"sem escala|hipotétic|elaboração própria", texto, re.I) is not None)
+        or (len(texto) < 140 and re.search(r"sem escala|hipotétic|elaboração própria|para fins didáticos|definidas para a situação", texto, re.I) is not None)
+
+
+# Começo de frase que costuma abrir o comando quando ele vem colado ao texto-base, sem ponto antes.
+ABERTURA = re.compile(r"(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚÂÊÔÃÕÀÇ])|\s(?=(?:Ao|Considerando|Com base|De acordo|Admitindo|Desprezando|A partir)\s)")
+
+
+def comando_aberto(texto):
+    """Comando que termina sem pontuação ("... é o", "deve-se"): a frase continua nas alternativas."""
+    return not re.search(r"[.!?:;)]$", texto.strip())
 TITULO = "\x00"
 
 # ---------------------------------------------------------------- leitura do PDF
@@ -67,6 +76,7 @@ class Linha:
         self.page, self.x, self.y, self.w, self.h, self.text = d["page"], d["x"], d["y"], d["w"], d["h"], d["text"]
         self.col = 0 if self.x + min(self.w, 40) / 2 < largura_pagina / 2 - 8 else 1
         self.segs = [self]
+        self.forca = False  # dentro de uma figura marcada à mão: nunca vira texto
 
     @property
     def fim(self):
@@ -185,7 +195,8 @@ def montar_html(linhas, largura_coluna, pdf_info, figuras):
             return
         x0, x1 = limites[base.col]
         fecha_texto()
-        alt = " ".join(l.text for l in pendente).strip()
+        # Texto sobreposto no PDF sai embaralhado (com vãos duplos): fica fora da descrição da figura.
+        alt = " ".join(l.text for l in pendente if not (l.forca and "  " in l.text)).strip()
         partes.append(("fig", {"page": base.page, "x": x0, "y": topo, "w": x1 - x0, "h": max(fundo - topo, 10), "alt": alt}))
         pendente = []
 
@@ -194,8 +205,8 @@ def montar_html(linhas, largura_coluna, pdf_info, figuras):
                 and l.w < 0.85 * largura_coluna and not re.search(r"[.:?!]$", l.text) and not LEGENDA.match(l.text):
             pendente.append(l)  # linha curta colada à tabela: continua na tabela
             continue
-        corrido = texto_corrido(l, largura_coluna)
-        continua = ultima is not None and ultima.page == l.page and ultima.col == l.col and 0 <= l.y - ultima.fim <= 7 and not pendente
+        corrido = texto_corrido(l, largura_coluna) and not l.forca
+        continua = not l.forca and ultima is not None and ultima.page == l.page and ultima.col == l.col and 0 <= l.y - ultima.fim <= 7 and not pendente
         if corrido or (continua and len(l.segs) == 1 and not re.search("  |\x00|\ufffd", l.text)):
             vazio = ultima is not None and ultima.page == l.page and ultima.col == l.col and l.y - ultima.fim > 16
             if pendente or vazio:
@@ -237,11 +248,15 @@ def html_dos_blocos(blocos, imagens):
     return "".join(saida)
 
 
-def questoes_do_caderno(pdf, trabalho, cabecalho, fim=None, base_compartilhada=None, topo=40):
-    """Devolve {número: {"contexto": blocos, "comando": blocos, "alternativas": [blocos]}} e os recortes."""
+def questoes_do_caderno(pdf, trabalho, cabecalho, fim=None, base_compartilhada=None, topo=40, figuras_forcadas=()):
+    """Devolve {número: {"contexto": blocos, "comando": blocos, "alternativas": [blocos]}} e os recortes.
+    figuras_forcadas: [(página, coluna, y0, y1)] em que todo texto pertence à figura (rótulos soltos
+    que a leitura automática tomaria por parágrafo e que partiriam o desenho em pedaços)."""
     sizes, brutas = linhas_do_pdf(pdf, trabalho)
     largura = sizes[0][0]
     linhas = fluxo(sizes, brutas, topo)
+    for l in linhas:
+        l.forca = any(l.page == p and l.col == c and y0 <= l.y <= y1 for p, c, y0, y1 in figuras_forcadas)
     if fim:
         corte = next((i for i, l in enumerate(linhas) if re.search(fim, l.text)), len(linhas))
         linhas = linhas[:corte]
@@ -297,10 +312,24 @@ def questoes_do_caderno(pdf, trabalho, cabecalho, fim=None, base_compartilhada=N
         corte = textos[-1]
         ultimo = corpo[corte][1]
         frases = re.split(r"(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚÂÊÔÃÕÀÇ])", ultimo)
-        if len(textos) == 1 and len(frases) > 1:
+        anterior = [i for i in textos if i < corte]
+        if re.match(r"[a-zà-ú]", ultimo.lstrip(TITULO)) and anterior and comando_aberto(corpo[anterior[-1]][1]):
+            # Comando partido por uma legenda no meio: o começo dele ficou no parágrafo anterior.
+            j = anterior[-1]
+            junto = corpo[j][1].lstrip(TITULO) + " " + ultimo.lstrip(TITULO)
+            corpo = corpo[:j] + corpo[j + 1:corte] + [("p", junto)] + corpo[corte + 1:]
+            corte -= 1
+        elif len(textos) == 1 and len(frases) > 1:
             # Enunciado de um parágrafo só: a última frase é o comando, o resto é texto-base.
             corpo = corpo[:corte] + [("p", " ".join(frases[:-1])), ("p", frases[-1])] + corpo[corte + 1:]
             corte += 1
+        elif comando_aberto(ultimo):
+            # Comando colado ao fim do texto-base (dados, lista de constantes): separa na última frase.
+            cortes = [m.end() for m in ABERTURA.finditer(ultimo)]
+            if cortes:
+                k = cortes[-1]
+                corpo = corpo[:corte] + [("p", ultimo[:k].strip()), ("p", ultimo[k:].strip())] + corpo[corte + 1:]
+                corte += 1
         # A figura que vem depois do comando no PDF fica antes dele, no texto-base.
         contexto = compartilhado.get(n, []) + corpo[:corte] + corpo[corte + 1:]
         comando = [corpo[corte]]
@@ -537,6 +566,36 @@ def item(external, area, disciplina, q, gab):
     return saida
 
 
+def revisar(itens):
+    """Aplica a revisão editorial de scripts/apostilas_revisao.json: assunto, resolução e posição do
+    gabarito de Geografia, e trocas de texto pontuais."""
+    with open(os.path.join(AQUI, "apostilas_revisao.json"), encoding="utf-8") as f:
+        rev = json.load(f)
+    ordem, manter = rev["geografia_gabarito"]["ordem"], set(rev["geografia_gabarito"]["manter"])
+    for it in itens:
+        correcoes = rev["correcoes"].get(it["externalId"], [])
+        for campo in ("contextHtml", "stemHtml"):
+            for padrao, troca in correcoes:
+                it[campo] = re.sub(padrao, troca, it[campo])
+        m = re.match(r"apostila-geografia40-2026-(\d+)$", it["externalId"])
+        if not m:
+            continue
+        n = int(m.group(1))
+        it["topic"] = rev["geografia_assunto"].get(str(n), it["topic"])
+        nova = rev["geografia_resolucao"].get(str(n))
+        if nova:
+            it["solutionHtml"] = f"<p>{html.escape(nova, quote=False)}</p>"
+        # A resolução não cita a letra: ela muda de lugar logo abaixo.
+        it["solutionHtml"] = re.sub(r"[Aa] alternativa [A-E]\b", "A alternativa correta", it["solutionHtml"])
+        alvo = it["answer"] if n in manter else ordem[n - 1]
+        if alvo != it["answer"]:
+            alts = {a["letter"]: a for a in it["alternatives"]}
+            alts[alvo]["html"], alts[it["answer"]]["html"] = alts[it["answer"]]["html"], alts[alvo]["html"]
+            alts[alvo].pop("trap", None)
+            it["answer"] = alvo
+    return itens
+
+
 def main():
     pasta, destino = sys.argv[1], sys.argv[2]
     trabalho = sys.argv[3] if len(sys.argv) > 3 else tempfile.mkdtemp(prefix="apostilas-")
@@ -559,12 +618,15 @@ def main():
         print(f"{nome}: {len(questoes)} questões lidas, {len(problemas)} com problema, {len(figuras)} recortes")
 
     lote("Física 30", "Fisica_30_Questoes_Caderno_do_Aluno.pdf", gabarito_fisica30(os.path.join(pasta, "Fisica_30_Questoes_Gabarito_Comentado.pdf"), trabalho),
-         "apostila-fisica30-2026", "CN", "Física", r"^QUESTÃO (\d+)$", base_compartilhada={2: [1, 2, 3, 4]})
+         "apostila-fisica30-2026", "CN", "Física", r"^QUESTÃO (\d+)$", fim=r"^Folha de respostas", base_compartilhada={2: [1, 2, 3, 4]},
+         # Q07 (esquema com legenda sobreposta), Q28 (fibra) e o rótulo do eixo vertical das Q22 e Q23.
+         figuras_forcadas=[(4, 1, 500, 672), (11, 0, 240, 410), (9, 1, 145, 150), (9, 0, 454, 460)])
     lote("Simulado CN", "Simulado_ENEM_Ciencias_da_Natureza_Caderno_Amarelo.pdf", gabarito_simulado(os.path.join(pasta, "Simulado_ENEM_Ciencias_da_Natureza_Gabarito_Comentado.pdf"), trabalho),
          "simulado-cn-2026", "CN", None, r"^QUESTÃO (\d+)$")
     lote("Geografia 40", "Apostila4_Profissional_Geografia_ENEM_40Q_com_Resolucao.pdf", gabarito_geografia(os.path.join(pasta, "Apostila4_Profissional_Geografia_ENEM_40Q_com_Resolucao.pdf"), trabalho),
          "apostila-geografia40-2026", "CH", "Geografia", r"^QUESTÃO (\d+)$", fim=r"RESOLUÇÕES DETALHADAS", topo=20)
 
+    revisar(itens)
     with open(destino, "w", encoding="utf-8") as f:
         json.dump(itens, f, ensure_ascii=False, indent=1)
     print(f"{len(itens)} questões gravadas em {destino}")
