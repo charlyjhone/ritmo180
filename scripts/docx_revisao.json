@@ -1,0 +1,49 @@
+{
+  "_sobre": "Revisão editorial das apostilas em DOCX (Eletrodinâmica e Eletrostática em Contexto), aplicada por scripts/importar_docx.py. Revisado em 21/11/2026.",
+  "ordem_eletrostatica": "CEADBDAECBEBDACADCEBBEDCAECDABEBDACEADCB",
+  "fora": [],
+  "questoes": {
+    "_sobre": "comando: a questão não tinha frase de comando no DOCX, e esta foi escrita na revisão. resolucao: o gabarito do DOCX só dava a letra.",
+    "EV01": {
+      "comando": "Qual conclusão sobre a relação entre a força elétrica e a distância é compatível com o gráfico?",
+      "resolucao": "Compare pontos do gráfico: em 0,10 m a força é cerca de 5,4 N; em 0,20 m, cerca de 1,35 N, um quarto do valor; em 0,30 m, cerca de 0,6 N, um nono. Dobrar a distância divide a força por 4 e triplicar divide por 9, como prevê a Lei de Coulomb: F é inversamente proporcional a r². Se fosse inversa simples, dobrar a distância só dividiria a força por 2."
+    },
+    "EV02": {
+      "comando": "Em que posição do eixo a microestrutura deve ser colocada?",
+      "resolucao": "A força sobre a microestrutura é F = qE. Para a força ser nula, o campo resultante precisa ser nulo, o que acontece onde a curva cruza o eixo horizontal (E = 0), no centro do sensor. Nos picos, positivo ou negativo, o módulo do campo é máximo e a força também."
+    },
+    "EV03": {
+      "comando": "Qual princípio explica o funcionamento desse sistema de mitigação de poeira?",
+      "resolucao": "Os eletrodos acionados em sequência criam um campo elétrico que varia no espaço e no tempo. Esse campo exerce forças sobre partículas carregadas ou polarizadas e as arrasta pela superfície. A massa das partículas não muda, não há gravidade artificial e o campo não é infinito."
+    },
+    "EV04": {
+      "comando": "O que permite à tela identificar a posição do toque?",
+      "resolucao": "O dedo, por ser condutor, altera a distribuição do campo elétrico perto dos eletrodos e, com isso, a capacitância daquela região. O circuito mede essa variação local. Não é preciso corrente intensa através do vidro, nem que o dedo tenha uma carga líquida conhecida."
+    },
+    "EV05": {
+      "comando": "Qual descrição do funcionamento desse sistema é fisicamente adequada?",
+      "resolucao": "No contato e na separação, os materiais trocam elétrons e ficam com cargas opostas: é a triboeletrização. A diferença de potencial resultante gera pulsos, que a etapa de condicionamento transforma em energia utilizável pelo sensor. A carga total se conserva, e tensão alta não significa muita energia disponível."
+    },
+    "EV06": {
+      "resolucao": "Piso dissipativo, pulseira de aterramento e umidade controlada têm o mesmo objetivo: impedir que se acumulem diferenças de potencial e escoar a carga de forma lenta e segura, sem descarga brusca sobre o chip. Nenhuma dessas medidas aumenta o acúmulo de carga nem impede o movimento de elétrons."
+    },
+    "EV07": {
+      "resolucao": "As gotículas carregadas sofrem força elétrica em direção à peça, que funciona como o outro polo do campo. Assim, mais tinta chega ao alvo, inclusive em regiões que o jato não atingiria em linha reta, e menos tinta se perde no ar. A massa e a carga das gotas continuam existindo."
+    },
+    "EV08": {
+      "resolucao": "A força elétrica sobre uma partícula de carga q é F = qE. Para avaliar a ação elétrica do precipitador, a grandeza a monitorar é o campo elétrico na região de coleta. As outras opções descrevem grandezas que não entram nessa força."
+    },
+    "EV09": {
+      "resolucao": "Um campo elétrico intenso perto do solo indica grande separação de cargas entre a nuvem e o solo. Quando o campo passa do limite de ruptura dielétrica do ar, o ar se torna condutor e ocorre a descarga. Campo alto aumenta o risco, mas não garante um raio no mesmo instante."
+    },
+    "EV10": {
+      "resolucao": "Mudar o potencial dos eletrodos altera o campo e a energia elétrica associada a cada posição da gota. A gota, carregada ou polarizada, tende a ir para onde essa energia é menor, e isso gera uma força que pode ser controlada. A massa da gota não some, e o potencial não é igual em todos os pontos."
+    },
+    "E3.03": {
+      "comando": "Qual critério de escolha do revestimento atende ao objetivo da equipe?"
+    },
+    "E4.02": {
+      "comando": "Qual interpretação da sequência é compatível com o funcionamento do dispositivo?"
+    }
+  }
+}

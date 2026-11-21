@@ -1,0 +1,56 @@
+{
+  "_sobre": "Revisão editorial das apostilas autorais, aplicada por scripts/importar_apostilas.py depois da conversão. Revisado em 21/11/2026.",
+  "geografia_gabarito": {
+    "_sobre": "No PDF, 32 das 40 respostas são B. A alternativa correta troca de lugar com a da letra indicada aqui; a questão 12 fica como está, porque suas alternativas são números em ordem crescente.",
+    "ordem": "EBACAABEBDDDECACBCDCEBEADCBBDCEEEBDCAADA",
+    "manter": [12]
+  },
+  "geografia_assunto": {
+    "9": "Economia",
+    "10": "Clima",
+    "17": "Geopolítica",
+    "19": "Impactos Ambientais",
+    "21": "Brasil: demografia, economia e sociedade",
+    "23": "Cartografia",
+    "24": "Cartografia",
+    "30": "Hidrografia",
+    "40": "Hidrografia"
+  },
+  "geografia_resolucao": {
+    "_sobre": "No PDF, as resoluções de 13 a 40 repetem um modelo (\"A alternativa B é a correta porque ...\"). Estas explicam o conceito e o erro das demais.",
+    "13": "Centros de dados consomem muita eletricidade, dependem de linhas de transmissão, de água para alguns sistemas de resfriamento e de cabos de alta capacidade. Por isso a escolha de onde instalá-los segue critérios territoriais, como em qualquer indústria. As alternativas que falam em fim da localização, de redes físicas ou da importância da energia ignoram justamente essa base material.",
+    "14": "Vulnerabilidade socioambiental é a combinação entre exposição ao perigo (morar em várzea, em área impermeabilizada) e capacidade de enfrentá-lo (renda, infraestrutura, drenagem). Bairros atingidos pela mesma chuva sofrem danos diferentes por causa dessa combinação. Continentalidade, isostasia, transição demográfica e divisão internacional do trabalho não explicam diferenças entre bairros de uma mesma cidade.",
+    "15": "A produção vai para cidades médias, onde terreno e incentivos são mais baratos, mas a gestão, a pesquisa e as finanças continuam na metrópole. Isso é desconcentração produtiva com permanência das funções de comando, e a hierarquia urbana se mantém. Falar em fim da hierarquia ou em autossuficiência das cidades médias contradiz o próprio texto.",
+    "16": "Parques eólicos e solares ocupam terra, mudam a paisagem e envolvem contratos com quem vive no lugar. A transição energética, portanto, também é um processo territorial, com conflitos e negociações. Tratá-la como simples troca técnica, ou supor que ela acaba com disputas fundiárias, ignora esses efeitos.",
+    "17": "Lítio, cobre, níquel e terras raras estão concentrados em poucos países e são essenciais para baterias e redes elétricas. A procura crescente cria novas dependências entre países e novas estratégias de acesso a esses minerais, chamados de críticos. A geopolítica dos recursos não termina: muda de foco.",
+    "18": "O princípio dos usos múltiplos, previsto na Política Nacional de Recursos Hídricos, exige dividir a água entre irrigação, abastecimento, energia e meio ambiente. Em anos secos isso se faz com negociação nos comitês de bacia, outorga e monitoramento das vazões. Dar toda a água ao usuário mais forte ou dispensar a outorga vai contra esse princípio.",
+    "19": "Recuperar manguezais usa um ecossistema para reduzir a energia das ondas e a erosão, além de manter habitats e armazenar carbono. Medidas assim são chamadas de soluções baseadas na natureza. Verticalização, impermeabilização e conurbação descrevem ocupação urbana, não adaptação apoiada no ecossistema.",
+    "20": "O pedido é feito no aplicativo, mas a entrega depende de entregadores circulando pelas ruas, de estabelecimentos e de distâncias reais. A rede informacional se apoia no território físico. Por isso não há desaparecimento da distância nem independência entre trabalho e espaço.",
+    "21": "Conurbação é a junção física de manchas urbanas de municípios vizinhos, que continuam com limites e prefeituras separados. Como a cidade passa a funcionar como uma só, transporte e saneamento exigem gestão compartilhada. Megalópole é a ligação entre metrópoles em escala muito maior, por isso não vale \"em qualquer caso\".",
+    "22": "Gentrificação é a valorização de uma área central que expulsa moradores e pequenos negócios que não conseguem pagar os novos preços. Conurbação trata da junção de cidades, e macrocefalia, do crescimento desproporcional de uma metrópole. Nenhum desses termos descreve a substituição de moradores.",
+    "23": "Imagens de satélite e de drones são obtidas por sensoriamento remoto, isto é, sem contato direto com o terreno. Combinadas a mapas e sistemas de informação geográfica, permitem identificar cicatrizes de deslizamento em áreas grandes e de difícil acesso. A observação astronômica estuda corpos celestes, não a superfície terrestre.",
+    "24": "Um SIG sobrepõe camadas georreferenciadas, como declividade, ocupação, drenagem e ocorrências, para encontrar onde os fatores de risco se combinam. Isso é análise espacial, que vai além de ilustrar um mapa. Os dados de campo continuam necessários para alimentar e conferir essas camadas.",
+    "25": "Correção da acidez do solo, pesquisa agronômica, máquinas, crédito e estradas transformaram o Cerrado em grande área produtora. Isso mostra que técnica e economia mudam o uso do território, o que contraria o determinismo natural. Não significa que a natureza deixou de influenciar, nem que não houve impactos ambientais.",
+    "26": "A agricultura de precisão parte do fato de que a fertilidade e a produtividade variam dentro de uma mesma propriedade. Com sensores e mapas, cada trecho recebe a dose adequada de insumo. Tratar a propriedade como homogênea é exatamente o que a técnica evita.",
+    "27": "As raízes da mata ciliar seguram o solo das margens e a vegetação freia o escoamento da chuva. Sem ela, a erosão aumenta e mais partículas chegam ao rio, o que causa assoreamento. A retirada das raízes diminui a coesão do solo, e não a aumenta.",
+    "28": "Sem vegetação, a chuva bate direto no solo, a infiltração muda, o escoamento superficial cresce e a encosta perde estabilidade. Por isso aumenta o risco de erosão e de deslizamentos. A gravidade continua agindo, e a chuva aumenta a saturação do solo em vez de reduzi-la.",
+    "29": "O El Niño aquece o Pacífico Equatorial e altera a circulação atmosférica. Esses efeitos chegam a regiões distantes por teleconexões e se combinam com as condições de cada lugar e estação. Por isso o Sul tende a ter mais chuva e o Norte e o Nordeste, mais seca. A interação entre oceano e atmosfera é justamente a causa do fenômeno.",
+    "30": "Parques lineares, jardins de chuva e pavimentos permeáveis guardam e infiltram parte da água da chuva e atrasam sua chegada aos rios. Assim, o pico das cheias diminui, ao contrário do modelo que só canaliza e acelera a água. Aumentar a impermeabilização ou ocupar várzeas agravaria as enchentes.",
+    "31": "O bônus demográfico só gera crescimento duradouro se a grande população em idade ativa for produtiva e encontrar emprego. Isso exige investimento em educação, saúde e qualificação. Reduzir a escolarização ou excluir mulheres do mercado de trabalho desperdiça a oportunidade.",
+    "32": "Com mais idosos e menos crianças, muda o tipo de serviço que o território precisa oferecer: mais atendimento de saúde, acessibilidade nas cidades e moradias adaptadas. A infraestrutura de saúde precisa crescer e se adaptar, não fechar. O envelhecimento não faz a fecundidade voltar a subir.",
+    "33": "Refugiado é quem deixa seu país por perseguição, guerra ou violação grave de direitos e, por isso, tem direito a proteção internacional. Migrantes econômicos se deslocam em busca de trabalho e renda. Turismo, deslocamentos pendulares e intercâmbios não envolvem essa necessidade de proteção.",
+    "34": "Choques recentes, como a pandemia e conflitos, mostraram o risco de depender de poucos fornecedores ou de poucas rotas. Diversificar fornecedores reduz essa vulnerabilidade da rede. A estratégia não acaba com o comércio internacional: reorganiza onde ele se apoia.",
+    "35": "Estreitos e canais como Ormuz, Malaca, Suez e Panamá concentram uma parcela enorme do comércio marítimo. Um bloqueio nesses gargalos atrasa entregas e aumenta fretes e preços em vários continentes. Por isso são pontos estratégicos, disputados e vigiados por Estados.",
+    "36": "A economia circular mantém os materiais em uso por meio de durabilidade, reparo, reúso e reciclagem. Com isso, diminuem a extração de matéria-prima e a geração de resíduos. Acelerar a obsolescência ou impedir reparos é a lógica linear que ela tenta superar.",
+    "37": "Quando consumidores também geram energia nos telhados, a eletricidade passa a circular nos dois sentidos da rede. A distribuidora precisa administrar essa geração distribuída, que varia com o sol, junto com o consumo e o armazenamento. As redes continuam necessárias e ficam mais complexas.",
+    "38": "Ônibus elétricos, ciclovias conectadas e zonas de baixa emissão diminuem o uso de carros a combustão. Com isso caem as emissões e a poluição do ar, e a cidade ganha outras formas de deslocamento. O objetivo é ampliar a acessibilidade, não reduzir a mobilidade.",
+    "39": "Corredores ecológicos ligam fragmentos de vegetação e permitem que animais e sementes circulem entre eles. Isso mantém o fluxo gênico e reduz os efeitos do isolamento, como a endogamia e a perda de diversidade genética. Eles diminuem a fragmentação, não a aumentam.",
+    "40": "Neve e geleiras guardam água no inverno e a liberam aos poucos no verão. Se o derretimento acontece mais cedo e o estoque diminui, a vazão dos rios muda ao longo do ano e pode faltar água justamente na estação seca. O ciclo hidrológico continua, mas fica menos regular."
+  },
+  "correcoes": {
+    "_sobre": "Trocas de texto por questão, depois da conversão: [expressão regular, substituição].",
+    "simulado-cn-2026-093": [
+      ["<p><img [^>]*alt=\"([^\"]*?) \\(seta\\) ([^\"]*)\"[^>]*></p>", "<p>\\1 ⇌ \\2</p>"]
+    ]
+  }
+}

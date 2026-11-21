@@ -94,10 +94,19 @@ As apostilas em PDF (Física 30, Simulado de CN e Geografia 40) viram questões 
 python3 -I scripts/importar_apostilas.py ~/Documents/"ENEM NOTA MIL" data/importacao/apostilas-autorais.json
 ```
 
+As apostilas em Word (Eletrodinâmica em Contexto e Eletrostática em Contexto) viram questões com `scripts/importar_docx.py`, que lê o gabarito comentado de cada uma e embute as figuras:
+
+```bash
+python3 -I scripts/importar_docx.py ~/Documents/"ENEM NOTA MIL" data/importacao/apostilas-docx.json
+```
+
+As correções da revisão editorial ficam fora do código, em `scripts/apostilas_revisao.json` (PDFs) e `scripts/docx_revisao.json` (Word): ordem do gabarito, assuntos, comandos e resoluções reescritos. Para corrigir uma questão, edite esses arquivos e rode a conversão de novo.
+
 Com `--revisar`, as questões novas vão para a fila de revisão da rede em vez de serem publicadas; uma questão já aprovada ou recusada mantém a decisão se for importada de novo:
 
 ```bash
 DATABASE_URL=... npm run ingest -- data/importacao/apostilas-autorais.json --revisar
+DATABASE_URL=... npm run ingest -- data/importacao/apostilas-docx.json --revisar
 ```
 
 Depois, no painel da rede, confira enunciado, figura, alternativas e resolução de cada uma antes de aprovar.
